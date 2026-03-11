@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>SmileFlow — Consultoria de Implementação Comercial para Clínicas Premium</title>
+<meta name="description" content="A SmileFlow audita conversas de WhatsApp e gravações de negociações, entrega pontuação, erros claros e plano de ação — e instala rotina para o time executar.">
+
+<link rel="icon" type="image/png" href="/favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --canvas:#f6f4f2;--canvas2:#eeedeb;--white:#fff;
+  --ink:#111114;--surface:#1a1a1f;
+  --brand:#2a1f3d;--brand-mid:#4a3f5c;--brand-soft:#6b5f82;--brand-light:#7b6fa2;--brand-pale:#9990b8;
+  --brand-wash:rgba(107,95,130,.07);--brand-glow:rgba(107,95,130,.10);
+  --d1:#1e1e24;--d2:rgba(30,30,36,.68);--d3:rgba(30,30,36,.58);--d4:rgba(30,30,36,.12);
+  --t1:#f4f3f1;--t2:rgba(244,243,241,.78);--t3:rgba(244,243,241,.58);--t4:rgba(244,243,241,.22);
+  --ok:#5a8a68;--ok-bg:rgba(90,138,104,.10);--alert:#c45c5c;--alert-bg:rgba(196,92,92,.10);
+  --f:'Manrope',sans-serif;--mw:1080px;--px:20px;--sy:72px;
+}
+@media(min-width:768px){:root{--px:40px;--sy:100px}}
+@media(min-width:1024px){:root{--px:56px;--sy:96px}}
+@media(prefers-reduced-motion:reduce){.fi{opacity:1!important;transform:none!important;transition:none!important}}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);font-weight:400;background:var(--canvas);color:var(--d1);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.c{max-width:var(--mw);margin:0 auto;padding-left:var(--px);padding-right:var(--px)}
+.s{padding-top:var(--sy);padding-bottom:var(--sy)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(246,244,242,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--d4)}
+.nav_i{max-width:var(--mw);margin:0 auto;padding:14px var(--px);display:flex;align-items:center;justify-content:space-between}
+.nav_logo{font-weight:800;font-size:20px;letter-spacing:-.03em}
+.nav_r{display:flex;align-items:center;gap:8px}
+.nav_link{font-size:13px;font-weight:500;color:var(--d3);transition:color .2s;display:none;padding:12px 14px;min-height:44px;align-items:center}
+.nav_link:hover{color:var(--d1)}
+@media(min-width:768px){.nav_link{display:inline-flex}}
+.nav_cta{font-size:12px;font-weight:700;padding:12px 22px;min-height:44px;background:var(--brand);color:var(--t1);border-radius:6px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center}
+.nav_cta:hover{background:var(--brand-mid)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--f);font-size:14px;font-weight:600;padding:15px 28px;min-height:48px;border-radius:6px;border:none;cursor:pointer;transition:all .2s}
+.btn--brand{background:var(--brand);color:var(--t1)}.btn--brand:hover{background:var(--brand-mid)}
+.btn--canvas{background:var(--t1);color:var(--ink)}.btn--canvas:hover{opacity:.88}
+.btn--ghost{background:none;color:var(--brand-soft);border:1px solid var(--d4);padding:14px 27px}.btn--ghost:hover{border-color:var(--brand-soft);color:var(--brand)}
+.la{font-size:13px;font-weight:500;color:var(--d3);display:inline-flex;align-items:center;gap:5px;transition:color .2s,gap .2s;cursor:pointer;padding:8px 0;min-height:44px}
+.la:hover{color:var(--brand);gap:9px}
+.la--dark{color:var(--t3)}.la--dark:hover{color:var(--brand-pale)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-soft);margin-bottom:16px}
+.tag::before{content:'';width:16px;height:1px;background:var(--brand-soft)}
+.tag--dark{color:var(--brand-pale)}.tag--dark::before{background:var(--brand-pale)}
+/* HERO (dark) */
+.hero{padding-top:calc(var(--sy) + 60px);padding-bottom:var(--sy);background:var(--ink);color:var(--t1);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-10%;top:5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(107,95,130,.12) 0%,transparent 70%);pointer-events:none}
+.hero_g{display:grid;grid-template-columns:1fr;gap:40px;align-items:center;position:relative;z-index:1}
+@media(min-width:768px){.hero_g{grid-template-columns:1.1fr .9fr;gap:48px}}
+.hero_h1{font-size:clamp(26px,4.5vw,42px);font-weight:800;line-height:1.13;letter-spacing:-.03em;margin-bottom:18px}
+.hero_h1 em{font-style:normal;color:var(--brand-pale)}
+.hero_sub{font-size:clamp(14px,1.5vw,16px);color:var(--t2);line-height:1.65;margin-bottom:16px;max-width:460px}
+.hero_sub2{font-size:13px;color:var(--t3);margin-bottom:24px;line-height:1.55;max-width:420px}
+.hero_acts{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+/* MOCKUP */
+.mk{background:var(--surface);border:1px solid var(--t4);border-radius:12px;overflow:hidden;position:relative}
+.mk::before{content:'';position:absolute;inset:-1px;border-radius:12px;background:linear-gradient(135deg,rgba(139,127,173,.15) 0%,transparent 50%);pointer-events:none;z-index:0}
+.mk>*{position:relative;z-index:1}
+.mk_bar{padding:10px 16px;border-bottom:1px solid var(--t4);display:flex;align-items:center;gap:6px}
+.mk_dot{width:7px;height:7px;border-radius:50%;background:var(--t4)}.mk_dot:first-child{background:var(--alert)}
+.mk_lbl{font-size:11px;color:var(--t2);margin-left:auto;font-weight:600;letter-spacing:.04em}
+.mk_body{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.mk_body{grid-template-columns:1fr;padding:12px}}
+.mk_card{background:var(--ink);border:1px solid var(--t4);border-radius:8px;padding:14px}
+.mk_card--wide{grid-column:1/-1}
+.mk_card_lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);margin-bottom:8px}
+.mk_card_val{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--t1)}
+.mk_card--score{text-align:center;padding:18px 14px}
+.mk_card--score .mk_card_val{font-size:32px}
+.mk_pbar{height:4px;border-radius:2px;background:var(--t4);margin-top:10px}
+.mk_pbar_f{height:100%;border-radius:2px;background:var(--brand-light)}
+.mk_row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(244,243,241,.06);font-size:13px}
+.mk_row:first-child{border-top:none}
+.mk_pip{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mk_pip--alert{background:var(--alert)}
+.mk_pip--ok{background:var(--ok)}
+.mk_row_t{color:var(--t1);flex:1}
+.mk_foot{padding:8px 16px;border-top:1px solid var(--t4);font-size:10px;color:var(--t3);font-style:italic;text-align:center}
+/* PROOF */
+.proof{padding:28px 0;background:var(--canvas);border-bottom:1px solid var(--d4)}
+.proof_i{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 40px}
+.proof_item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--d3)}
+.proof_num{font-size:16px;font-weight:800;color:var(--brand-soft)}
+/* MIRROR — identification diagnostic */
+.mirror{background:var(--canvas)}
+.mirror_h2{font-size:clamp(22px,3vw,30px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:28px;max-width:580px;text-wrap:balance}
+.mirror_stacks{max-width:660px;display:flex;flex-direction:column;gap:14px}
+.mirror_item{padding:20px 24px;border-left:3px solid var(--brand-soft);background:var(--white);border-radius:0 8px 8px 0}
+.mirror_trigger{font-size:clamp(15px,1.6vw,17px);font-weight:700;color:var(--d1);line-height:1.4;margin-bottom:4px}
+.mirror_detail{font-size:13px;color:var(--d3);line-height:1.55}
+.mirror_answer{max-width:660px;margin:28px 0 0;display:flex;align-items:center;gap:16px}
+.mirror_sep{width:32px;height:2px;background:var(--brand-soft);flex-shrink:0}
+.mirror_final{font-size:clamp(16px,2.2vw,20px);font-weight:700;line-height:1.4;letter-spacing:-.01em}
+.mirror_final em{font-style:normal;color:var(--brand-soft)}
+/* AUDIT */
+.audit{background:var(--canvas)}
+.audit_g{display:grid;grid-template-columns:1fr;gap:40px;align-items:start}
+@media(min-width:768px){.audit_g{grid-template-columns:1fr 1fr;gap:48px}}
+.audit_h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px}
+.audit_h2 em{font-style:normal;color:var(--brand-soft)}
+.audit_p{font-size:15px;color:var(--d2);line-height:1.65;margin-bottom:14px}
+.audit_list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.audit_list li{font-size:14px;color:var(--d2);padding-left:18px;position:relative;line-height:1.5}
+.audit_list li::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--brand-light)}
+.rhythm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:600px){.rhythm{grid-template-columns:1fr}}
+.rhythm_card{background:var(--white);border:1px solid var(--d4);border-radius:8px;padding:16px;border-top:2px solid var(--brand-soft)}
+.rhythm_lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-soft);margin-bottom:6px}
+.rhythm_t{font-size:14px;font-weight:700;margin-bottom:4px}
+.rhythm_d{font-size:12px;color:var(--d3);line-height:1.4}
+/* FUNNEL */
+.funnel{background:var(--ink);border-radius:12px;padding:24px;color:var(--t1);border:1px solid rgba(244,243,241,.08)}
+.funnel_lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-pale);margin-bottom:16px}
+.funnel_step{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--t4)}
+.funnel_step:last-child{border-bottom:none}
+.funnel_name{font-size:13px;font-weight:600;color:var(--t2);flex:1}
+.funnel_val{font-size:18px;font-weight:800;color:var(--t1);min-width:40px;text-align:right}
+.funnel_rate{font-size:11px;font-weight:700;color:var(--brand-pale);min-width:44px;text-align:right}
+.funnel_bar_wrap{height:3px;flex:1;max-width:80px;background:var(--t4);border-radius:2px;display:none}
+@media(min-width:500px){.funnel_bar_wrap{display:block}}
+.funnel_bar_f{height:100%;border-radius:2px;background:var(--brand-light)}
+.funnel_foot{font-size:10px;color:var(--t3);font-style:italic;margin-top:12px;text-align:center}
+/* CTA INLINE */
+.cta_inline{margin-top:28px;padding:22px;background:var(--white);border:1px solid var(--d4);border-radius:10px;display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.cta_inline_text{flex:1;min-width:200px}
+.cta_inline_h{font-size:16px;font-weight:700;margin-bottom:4px}
+.cta_inline_d{font-size:13px;color:var(--d3)}
+/* MECH (dark) */
+.mech{background:var(--ink);color:var(--t1)}
+.mech_top{margin-bottom:48px}
+.mech_h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:12px}
+.mech_sub{font-size:15px;color:var(--t2);margin-top:12px}
+.mech_flow{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:768px){.mech_flow{grid-template-columns:repeat(3,1fr)}}
+.mech_step{padding:24px 20px;border:1px solid var(--t4);border-radius:8px;background:var(--surface)}
+.mech_step_icon{width:44px;height:44px;border-radius:10px;background:rgba(107,95,130,.12);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.mech_step_icon svg{width:22px;height:22px;stroke:var(--brand-pale);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.mech_step_n{font-size:11px;font-weight:700;color:var(--brand-pale);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.mech_step_t{font-size:17px;font-weight:800;margin-bottom:4px}
+.mech_step_sub{font-size:12px;color:var(--brand-pale);margin-bottom:10px;font-weight:600}
+.mech_step_d{font-size:14px;color:var(--t2);line-height:1.6}
+/* SVC (canvas) */
+.svc{background:var(--canvas)}
+.svc_header{max-width:520px;margin-bottom:44px}
+.svc_h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:12px;margin-bottom:10px}
+.svc_sub{font-size:15px;color:var(--d2)}
+.svc_g{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:768px){.svc_g{grid-template-columns:repeat(2,1fr)}}
+.sc{padding:20px;background:var(--white);border:1px solid var(--d4);border-radius:8px;transition:border-color .2s;display:flex;gap:14px;align-items:flex-start}
+.sc:hover{border-color:rgba(30,30,36,.18)}
+.sc_icon{width:40px;height:40px;flex-shrink:0;border-radius:8px;background:var(--brand);display:flex;align-items:center;justify-content:center}
+.sc_icon svg{width:20px;height:20px;stroke:var(--brand-pale);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sc_body{flex:1}
+.sc_t{font-size:15px;font-weight:700;margin-bottom:4px}
+.sc_d{font-size:13px;color:var(--d2);line-height:1.55}
+/* DUAL */
+.dual{background:var(--canvas2)}
+.dual_g{display:grid;grid-template-columns:1fr;gap:44px;align-items:start}
+@media(min-width:768px){.dual_g{grid-template-columns:1fr 1fr;gap:56px}}
+.dual_h2{font-size:clamp(22px,3vw,28px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:18px}
+.dual_h2 em{font-style:normal;color:var(--brand-soft)}
+.dual_p{font-size:15px;color:var(--d2);line-height:1.65;margin-bottom:14px}
+.dual_list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.dual_li{display:flex;gap:10px;font-size:14px;line-height:1.5;color:var(--d2)}
+.dual_icon{flex-shrink:0;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.dual_icon svg{width:14px;height:14px;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.dual_icon--ok svg{stroke:var(--ok)}.dual_icon--no svg{stroke:var(--alert)}
+.callout{background:var(--white);border:1px solid var(--d4);border-radius:8px;padding:18px;margin-top:14px;border-left:3px solid var(--brand-soft)}
+.callout_lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-soft);margin-bottom:6px}
+.callout_t{font-size:14px;color:var(--d2);line-height:1.5}
+/* JORNADA */
+.jrn{background:var(--canvas)}
+.jrn_h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px}
+.jrn_sub{color:var(--d3);font-size:15px;margin-bottom:36px}
+.jrn_g{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:768px){.jrn_g{grid-template-columns:repeat(2,1fr)}}
+.jc{background:var(--white);border:1px solid var(--d4);border-radius:8px;padding:22px;padding-right:40px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s;text-decoration:none;position:relative}
+.jc:hover{border-color:var(--brand-soft)}
+.jc_stage{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-soft)}
+.jc_trigger{font-size:15px;font-weight:600;line-height:1.4}
+.jc_desc{font-size:13px;color:var(--d3);line-height:1.55}
+.jc_arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--d4);font-size:18px;transition:color .2s}
+.jc:hover .jc_arrow{color:var(--brand-soft)}
+/* RAIOX (dark) */
+.raiox{background:var(--ink);color:var(--t1)}
+.raiox_c{max-width:540px;margin:0 auto;text-align:center}
+.raiox_h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+.raiox_sub{font-size:15px;color:var(--t2);margin-bottom:28px;line-height:1.6}
+.raiox_box{background:var(--surface);border:1px solid var(--t4);border-radius:10px;padding:32px 24px}
+.raiox_steps{display:flex;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap}
+.raiox_s{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t3)}
+.raiox_s_n{width:22px;height:22px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--brand-pale)}
+.raiox_note{font-size:12px;color:var(--t3);margin-top:16px}
+/* CTA FINAL */
+.final{background:var(--canvas)}
+.final_c{text-align:center;max-width:540px;margin:0 auto}
+.final_phrase{font-size:clamp(22px,3.5vw,32px);font-weight:800;line-height:1.3;letter-spacing:-.02em;margin-bottom:28px}
+.final_phrase em{font-style:normal;color:var(--brand-soft)}
+.final_acts{display:flex;flex-direction:column;align-items:center;gap:14px}
+.final_note{font-size:12px;color:var(--d3);margin-top:16px}
+/* FOOTER (dark) */
+footer{background:var(--ink);color:var(--t1);padding:36px 0}
+.ft_i{display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+@media(min-width:768px){.ft_i{flex-direction:row;justify-content:space-between;text-align:left}}
+.ft_logo{font-weight:800;font-size:18px;letter-spacing:-.02em}
+.ft_meta{font-size:12px;color:var(--t3);line-height:1.6}
+.ft_copy{font-size:11px;color:var(--t4);text-align:center;margin-top:16px}
+/* WHATSAPP */
+.wpp{position:fixed;bottom:20px;right:20px;z-index:90;width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.18);cursor:pointer;transition:transform .2s,opacity .2s;transform:translateY(80px);opacity:0}
+.wpp--on{transform:translateY(0);opacity:1}.wpp:hover{transform:scale(1.06)}
+.wpp svg{width:26px;height:26px;fill:#fff}
+@media(max-width:767px){.wpp{bottom:68px}}
+/* STICKY */
+.sticky{position:fixed;bottom:0;left:0;right:0;z-index:91;padding:10px var(--px) calc(10px + env(safe-area-inset-bottom));background:rgba(246,244,242,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--d4);transform:translateY(100%);transition:transform .3s ease}
+.sticky--on{transform:translateY(0)}
+.sticky_btn{display:block;width:100%;text-align:center;font-family:var(--f);font-size:13px;font-weight:700;padding:14px;min-height:48px;background:var(--brand);color:var(--t1);border-radius:6px;border:none;cursor:pointer}
+@media(min-width:768px){.sticky{display:none}}
+/* TRANSITIONS */
+.t-dl{height:80px;background:linear-gradient(var(--ink),var(--canvas))}
+.t-ld{height:80px;background:linear-gradient(var(--canvas),var(--ink))}
+.t-l2{height:80px;background:linear-gradient(var(--ink),var(--canvas2))}
+.t-c2c{height:48px;background:linear-gradient(var(--canvas2),var(--canvas))}
+/* ANIM */
+.fi{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.fi--on{opacity:1;transform:translateY(0)}
+.fi--d1{transition-delay:.06s}.fi--d2{transition-delay:.12s}.fi--d3{transition-delay:.18s}.fi--d4{transition-delay:.24s}
+/* SKIP LINK */
+.skip{position:absolute;top:-100%;left:16px;z-index:200;padding:12px 20px;background:var(--brand);color:var(--t1);font-size:14px;font-weight:700;border-radius:0 0 6px 6px;transition:top .2s}
+.skip:focus{top:0}
+/* FOCUS-VISIBLE */
+:focus-visible{outline:2px solid var(--brand-light);outline-offset:3px;border-radius:4px}
+.nav_cta:focus-visible,.btn:focus-visible,.sticky_btn:focus-visible{outline-color:var(--brand-pale);outline-offset:2px}
+a:focus:not(:focus-visible){outline:none}
+/* MOBILE NAV */
+.nav_toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:none;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent}
+.nav_toggle svg{width:22px;height:22px;stroke:var(--d1);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(min-width:768px){.nav_toggle{display:none}}
+.nav_drawer{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(17,17,20,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;transition:opacity .25s ease}
+.nav_drawer--open{display:block;opacity:1}
+.nav_panel{position:fixed;top:0;right:0;bottom:0;width:min(280px,80vw);z-index:101;background:var(--canvas);padding:80px var(--px) 32px;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);transition:transform .3s ease;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+.nav_drawer--open .nav_panel{transform:translateX(0)}
+.nav_panel .nav_link{display:flex;font-size:16px;padding:14px 0;min-height:48px;border-bottom:1px solid var(--d4);color:var(--d2)}
+.nav_panel .nav_cta{width:100%;justify-content:center;margin-top:16px;padding:16px;font-size:14px}
+.nav_close{position:absolute;top:14px;right:var(--px);width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer}
+.nav_close svg{width:20px;height:20px;stroke:var(--d1);fill:none;stroke-width:2;stroke-linecap:round}
+@media(min-width:768px){.nav_drawer,.nav_panel{display:none!important}}
+/* TYPOGRAPHY FLOOR — raise 10px to 12px */
+.mk_card_lbl,.funnel_lbl,.rhythm_lbl,.callout_lbl,.jc_stage,.raiox_s_n,.mech_step_n,.mk_foot,.funnel_foot{font-size:12px}
+/* TEXT-WRAP: BALANCE for headings (2026) */
+.hero_h1,.audit_h2,.mech_h2,.svc_h2,.dual_h2,.jrn_h2,.raiox_h2,.final_phrase{text-wrap:balance}
+/* REDUCED MOTION — complete coverage */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .btn,.nav_cta,.la,.sc,.jc,.jc_arrow,.nav_link,.wpp,.sticky{transition:none!important}
+  .sticky{transform:translateY(0)!important}
+  .wpp{transform:translateY(0)!important;opacity:1!important}
+}
+/* TRANSITION DIVS — smaller */
+.t-dl,.t-ld,.t-l2{height:36px}
+.t-c2c{height:24px}
+/* SPACING FIXES — larger gaps for cards */
+.svc_g,.jrn_g{gap:16px}
+.mk_body{gap:12px}
+.mech_flow{gap:16px}
+.rhythm{gap:12px}
+/* MIRROR item compact at small widths */
+@media(max-width:380px){
+  .mirror_item{padding:16px 18px}
+}
+/* HERO mobile top-padding fix */
+@media(max-width:767px){.hero{padding-top:calc(var(--sy) + 24px)}}
+/* FOOTER copyright legibility fix */
+.ft_copy{color:var(--t3)}
+/* FOOTER expanded */
+.ft_links{display:flex;gap:20px;flex-wrap:wrap;margin-top:8px}
+.ft_links a{font-size:12px;color:var(--t3);transition:color .2s}
+.ft_links a:hover{color:var(--t1)}
+/* STICKY safe-area fix */
+@media(max-width:767px){
+  .wpp{bottom:calc(68px + env(safe-area-inset-bottom) + 8px);right:calc(16px + env(safe-area-inset-right))}
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+}
+/* HIDDEN elements — proper a11y hiding when not shown */
+.sticky:not(.sticky--on){visibility:hidden}
+.wpp:not(.wpp--on){visibility:hidden}
+/* PROOF BAR — integrate better with hero */
+.proof{padding:20px 0;background:var(--ink);border-bottom:1px solid var(--t4);color:var(--t1)}
+.proof_item{color:var(--t3)}
+.proof_num{color:var(--brand-pale)}
+/* CANVAS → CANVAS2 transition */
+.t-cc2{height:20px;background:linear-gradient(var(--canvas),var(--canvas2))}
+/* DUAL CLOSER — trust statement replaces callout box */
+.dual_closer{margin-top:44px;text-align:center}
+.dual_closer_sep{width:48px;height:3px;background:var(--brand-soft);margin:0 auto 16px}
+.dual_closer_t{font-size:16px;color:var(--d2);font-weight:600;max-width:420px;margin:0 auto;line-height:1.65;text-wrap:balance}
+/* JOURNEY TIMELINE — vertical flow replaces grid */
+.jrn_timeline{display:flex;flex-direction:column;position:relative;padding-left:16px}
+.jrn_timeline::before{content:'';position:absolute;left:15px;top:16px;bottom:16px;width:2px;background:linear-gradient(var(--d4),var(--brand-soft) 30%,var(--brand-soft) 70%,var(--d4));border-radius:1px}
+@media(min-width:768px){.jrn_timeline{padding-left:0;max-width:700px;margin:0 auto}.jrn_timeline::before{left:19px}}
+.jt{display:flex;gap:20px;padding:20px 0;position:relative}
+.jt_marker{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--brand-pale);position:relative;z-index:1}
+@media(min-width:768px){.jt_marker{width:40px;height:40px;font-size:14px}.jt{gap:24px;padding:24px 0}}
+.jt_body{flex:1}
+.jt_trigger{font-size:clamp(15px,1.5vw,17px);font-weight:700;line-height:1.35;margin-bottom:6px;color:var(--d1);text-wrap:balance}
+.jt_desc{font-size:13px;color:var(--d3);line-height:1.55}
+.jrn_cta{margin-top:36px;text-align:center}
+/* SPACING REFINEMENTS */
+.audit_h2{margin-bottom:18px}
+@media(min-width:768px){.svc_g{gap:20px}.mech_flow{gap:20px}}
+/* BRAND COMMITTEE FIXES */
+.jrn_h2,.jrn_sub{text-align:center}
+.mirror.s{padding-bottom:calc(var(--sy) * .6)}
+/* RHYTHM SECTION — full-width below audit grid */
+.rhythm_section{margin-top:40px}
+.rhythm_h3{font-size:16px;font-weight:700;color:var(--d1);margin-bottom:16px}
+/* AUDIT CLOSER — positioning statement */
+.audit_closer{margin-top:32px;text-align:center}
+.audit_closer_t{font-size:15px;color:var(--d2);font-weight:600;line-height:1.65;max-width:500px;margin:0 auto;text-wrap:balance}
+</style>
+<noscript><style>.fi{opacity:1!important;transform:none!important}.sticky{transform:translateY(0)!important;visibility:visible!important}.wpp{transform:translateY(0)!important;opacity:1!important;visibility:visible!important}</style></noscript>
+</head>
+<body>
+<a href="#main" class="skip">Pular para o conteúdo</a>
+<nav><div class="nav_i">
+  <a href="#" class="nav_logo">SmileFlow</a>
+  <div class="nav_r">
+    <a href="#auditoria" class="nav_link">Auditoria</a>
+    <a href="#metodo" class="nav_link">Método</a>
+    <a href="#pra-quem" class="nav_link">Pra quem</a>
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="nav_cta">Diagnóstico →</a>
+    <button class="nav_toggle" aria-label="Abrir menu" aria-expanded="false" id="navToggle">
+      <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+  </div>
+</div></nav>
+<div class="nav_drawer" id="navDrawer" aria-hidden="true">
+  <div class="nav_panel" role="dialog" aria-label="Menu de navegação">
+    <button class="nav_close" aria-label="Fechar menu" id="navClose">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <a href="#auditoria" class="nav_link">Auditoria</a>
+    <a href="#metodo" class="nav_link">Método</a>
+    <a href="#pra-quem" class="nav_link">Pra quem</a>
+    <a href="#servicos" class="nav_link">Serviços</a>
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="nav_cta">Diagnóstico →</a>
+  </div>
+</div>
+<main id="main">
+<!-- HERO (dark) -->
+<section class="hero s" id="hero"><div class="c"><div class="hero_g">
+  <div>
+    <div class="tag tag--dark fi">Implementação Comercial · RevOps</div>
+    <h1 class="hero_h1 fi fi--d1">Seu comercial está <em>vazando dinheiro.</em> A&nbsp;gente mostra onde e&nbsp;instala a&nbsp;correção.</h1>
+    <p class="hero_sub fi fi--d2">Auditamos conversas, analisamos gravações de avaliações e negociações, acompanhamos as métricas comerciais.</p>
+    <p class="hero_sub fi fi--d2">Seu resultado vem de critério, rotina e acompanhamento. Nossos dados e <em>Inteligência Artificial</em> estão aqui para te apoiar.</p>
+    <div class="hero_acts fi fi--d3">
+      <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="btn btn--canvas">Descubra seu gargalo em 2 min →</a>
+    </div>
+  </div>
+  <div class="fi fi--d2">
+    <div class="mk" aria-label="Painel de auditoria SmileFlow — exemplo ilustrativo">
+      <div class="mk_bar"><span class="mk_dot"></span><span class="mk_dot"></span><span class="mk_dot"></span><span class="mk_lbl">PLACAR SEMANAL · SEM 04</span></div>
+      <div class="mk_body">
+        <div class="mk_card mk_card--score">
+          <div class="mk_card_lbl">Negociações</div>
+          <div class="mk_card_val" id="score">6.8</div>
+          <div class="mk_pbar"><div class="mk_pbar_f" style="width:68%"></div></div>
+        </div>
+        <div class="mk_card mk_card--score">
+          <div class="mk_card_lbl">WhatsApp</div>
+          <div class="mk_card_val">5.2</div>
+          <div class="mk_pbar"><div class="mk_pbar_f" style="width:52%;background:var(--alert)"></div></div>
+        </div>
+        <div class="mk_card mk_card--wide">
+          <div class="mk_card_lbl">Últimas revisões</div>
+          <div class="mk_row"><span class="mk_pip mk_pip--alert"></span><span class="mk_row_t">Não respondeu lead em 24h no WhatsApp</span></div>
+          <div class="mk_row"><span class="mk_pip mk_pip--ok"></span><span class="mk_row_t">Defesa de valor com comparação correta</span></div>
+          <div class="mk_row"><span class="mk_pip mk_pip--alert"></span><span class="mk_row_t">Aceitou "vou pensar" sem próximo passo</span></div>
+        </div>
+      </div>
+      <div class="mk_foot">Exemplo ilustrativo · dados fictícios</div>
+    </div>
+  </div>
+</div></div></section>
+<!-- PROOF (canvas) -->
+<div class="proof"><div class="c"><div class="proof_i">
+  <div class="proof_item"><span class="proof_num">Entrada</span> transcrições + gravações</div>
+  <div class="proof_item"><span class="proof_num">Entrega</span> Pontuação + plano</div>
+  <div class="proof_item"><span class="proof_num">Execução</span> Rotina + acompanhamento</div>
+</div></div></div>
+<div class="t-dl"></div>
+<!-- IDENTIFICAÇÃO (canvas) -->
+<section class="mirror s" id="espelhamento"><div class="c">
+  <div class="tag fi">Se isso parece familiar</div>
+  <h2 class="mirror_h2 fi fi--d1">Três sinais de que o comercial está travando seu&nbsp;faturamento.</h2>
+  <div class="mirror_stacks">
+    <div class="mirror_item fi fi--d1">
+      <p class="mirror_trigger">Tem demanda, mas o faturamento não acompanha.</p>
+      <p class="mirror_detail">Agenda cheia, equipe ocupada — e no fim do mês o número decepciona.</p>
+    </div>
+    <div class="mirror_item fi fi--d2">
+      <p class="mirror_trigger">Cada um atende de um jeito. Ninguém sabe quem vende.</p>
+      <p class="mirror_detail">Sem padrão, sem placar, sem acompanhamento. O comercial depende de sorte.</p>
+    </div>
+    <div class="mirror_item fi fi--d3">
+      <p class="mirror_trigger">Sente que vaza dinheiro, mas não consegue provar onde.</p>
+      <p class="mirror_detail">Nenhum dado, nenhuma auditoria, nenhum responsável pelo resultado.</p>
+    </div>
+  </div>
+  <div class="mirror_answer fi fi--d3">
+    <div class="mirror_sep"></div>
+    <p class="mirror_final">A SmileFlow não é mentoria. <em>Não é motivação.</em> É protocolo, auditoria e&nbsp;acompanhamento.</p>
+  </div>
+</div></section>
+<!-- AUDITORIA (canvas + dark funnel) -->
+<section class="audit s" id="auditoria"><div class="c"><div class="audit_g">
+  <div>
+    <div class="tag fi">Auditoria</div>
+    <h2 class="audit_h2 fi fi--d1">Auditoria de gravações com <em>pontuação e plano.</em></h2>
+    <p class="audit_p fi fi--d2">Analisamos gravações de avaliações e negociações, identificamos os erros que mais derrubam fechamento e transformamos em ações objetivas.</p>
+    <ul class="audit_list fi fi--d3">
+      <li>Pontuação por execução e postura (0–10)</li>
+      <li>Erros com contexto ("onde foi", "por que travou")</li>
+      <li>Correção exata (o que dizer/fazer diferente)</li>
+      <li>Plano de ação semanal com responsável</li>
+    </ul>
+  </div>
+  <div>
+    <div class="funnel fi" aria-label="Funil comercial — exemplo ilustrativo">
+      <div class="funnel_lbl">Funil comercial — Exemplo</div>
+      <div class="funnel_step"><span class="funnel_name">Leads novos</span><span class="funnel_bar_wrap"><span class="funnel_bar_f" style="width:100%"></span></span><span class="funnel_val">120</span><span class="funnel_rate">base</span></div>
+      <div class="funnel_step"><span class="funnel_name">Agendaram</span><span class="funnel_bar_wrap"><span class="funnel_bar_f" style="width:73%"></span></span><span class="funnel_val">87</span><span class="funnel_rate">73%</span></div>
+      <div class="funnel_step"><span class="funnel_name">Avaliaram</span><span class="funnel_bar_wrap"><span class="funnel_bar_f" style="width:45%"></span></span><span class="funnel_val">54</span><span class="funnel_rate">62%</span></div>
+      <div class="funnel_step"><span class="funnel_name">Negociaram</span><span class="funnel_bar_wrap"><span class="funnel_bar_f" style="width:26%"></span></span><span class="funnel_val">31</span><span class="funnel_rate">57%</span></div>
+      <div class="funnel_step"><span class="funnel_name">Fecharam</span><span class="funnel_bar_wrap"><span class="funnel_bar_f" style="width:15%"></span></span><span class="funnel_val">18</span><span class="funnel_rate">58%</span></div>
+      <div class="funnel_foot">Dados ilustrativos · valores em unidades</div>
+    </div>
+  </div>
+</div>
+<div class="rhythm_section fi fi--d3">
+  <h3 class="rhythm_h3">Cadência de operação</h3>
+  <div class="rhythm">
+    <div class="rhythm_card"><div class="rhythm_lbl">Diário</div><div class="rhythm_t">Indicadores acompanhados</div><div class="rhythm_d">Sem número, não existe gestão.</div></div>
+    <div class="rhythm_card"><div class="rhythm_lbl">Semanal</div><div class="rhythm_t">Revisão + auditorias</div><div class="rhythm_d">Correção e ajuste antes de acumular.</div></div>
+    <div class="rhythm_card"><div class="rhythm_lbl">Mensal</div><div class="rhythm_t">Planejamento estratégico</div><div class="rhythm_d">Visão macro, metas e ajuste de rota.</div></div>
+  </div>
+</div>
+<div class="audit_closer fi fi--d3">
+  <p class="audit_closer_t">A clínica não compra "conteúdo". A clínica compra execução: padrão, controle e previsibilidade.</p>
+</div>
+</div></section>
+<!-- transition -->
+<div class="t-ld"></div>
+<!-- MECANISMO (dark) -->
+<section class="mech s" id="metodo"><div class="c">
+  <div class="mech_top">
+    <div class="tag tag--dark fi">Como funciona</div>
+    <h2 class="mech_h2 fi fi--d1">Capturar. Avaliar. Corrigir.</h2>
+    <p class="mech_sub fi fi--d2">Três movimentos: diagnóstico, implementação e acompanhamento.</p>
+  </div>
+  <div class="mech_flow">
+    <div class="mech_step fi">
+      <div class="mech_step_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Capturar"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></div>
+      <div class="mech_step_n">01 · Capturar</div>
+      <div class="mech_step_t">Linha de base</div>
+      <div class="mech_step_sub">Diagnóstico</div>
+      <div class="mech_step_d">O que seu time faz vira dado. WhatsApp, áudios, negociações, números do funil — tudo registrado e organizado com apoio de IA.</div>
+    </div>
+    <div class="mech_step fi fi--d1">
+      <div class="mech_step_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Avaliar"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div>
+      <div class="mech_step_n">02 · Avaliar</div>
+      <div class="mech_step_t">Padrão e rotina</div>
+      <div class="mech_step_sub">Implementação</div>
+      <div class="mech_step_d">Cada conversa, cada oportunidade perdida é avaliada com critérios objetivos. Sem achismo. Dado e evidência.</div>
+    </div>
+    <div class="mech_step fi fi--d2">
+      <div class="mech_step_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Corrigir"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <div class="mech_step_n">03 · Corrigir</div>
+      <div class="mech_step_t">Acompanhamento e ajuste</div>
+      <div class="mech_step_sub">Acompanhamento</div>
+      <div class="mech_step_d">Onde tem vazamento, tem plano de correção com responsável e prazo. A gente não sugere — instala a correção e acompanha.</div>
+    </div>
+  </div>
+</div></section>
+<div class="t-dl"></div>
+<!-- SERVIÇOS (canvas) -->
+<section class="svc s" id="servicos"><div class="c">
+  <div class="svc_header fi">
+    <div class="tag">O que fazemos</div>
+    <h2 class="svc_h2">Instalamos o sistema comercial. Você comanda.</h2>
+    <p class="svc_sub">A equipe da clínica executa. A SmileFlow define o padrão, audita e responsabiliza.</p>
+  </div>
+  <div class="svc_g">
+    <div class="sc fi"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Implementação"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="sc_body"><h3 class="sc_t">Implementação de funil</h3><p class="sc_d">Tempo de resposta, fila de oportunidades, modelos de mensagem, reuniões de rotina. Tudo instalado.</p></div></div>
+    <div class="sc fi fi--d1"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Auditoria"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div><div class="sc_body"><h3 class="sc_t">Auditoria de conversas</h3><p class="sc_d">WhatsApp, áudios e negociações analisados com IA e critérios objetivos. Mostramos onde vaza.</p></div></div>
+    <div class="sc fi fi--d2"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Indicadores"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div class="sc_body"><h3 class="sc_t">Placar e indicadores</h3><p class="sc_d">Placar diário, métricas de conversão, motivos de perda padronizados. Sensação vira número.</p></div></div>
+    <div class="sc fi fi--d3"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Correção"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div class="sc_body"><h3 class="sc_t">Plano de correção semanal</h3><p class="sc_d">O que está fora do padrão, quem é responsável, qual o prazo. Acompanhamento de execução.</p></div></div>
+    <div class="sc fi"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="Treinamento"><path d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5 7.4V20h6v-2.6c2.9-1.1 5-4 5-7.4a8 8 0 0 0-8-8z"/><path d="M10 22h4"/></svg></div><div class="sc_body"><h3 class="sc_t">Treinamento aplicado</h3><p class="sc_d">Negociação, postura, defesa de valor. Avaliação, acompanhamento e antes/depois. Não é palestra — é treino.</p></div></div>
+    <div class="sc fi fi--d1"><div class="sc_icon"><svg viewBox="0 0 24 24" role="img" aria-label="IA"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg></div><div class="sc_body"><h3 class="sc_t">Inteligência artificial aplicada</h3><p class="sc_d">IA faz transcrição, categorização e pré-análise. Humano faz diagnóstico. Ferramenta que acelera o método.</p></div></div>
+  </div>
+</div></section>
+<div class="t-cc2"></div>
+<!-- DUAL (canvas2) -->
+<section class="dual s" id="pra-quem"><div class="c"><div class="dual_g">
+  <div>
+    <h2 class="dual_h2 fi">Para quem é.</h2>
+    <ul class="dual_list fi fi--d1">
+      <li class="dual_li"><span class="dual_icon dual_icon--ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Quer gerir comercial por número, não por sensação</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Perde paciente no WhatsApp, na avaliação ou no "vou pensar"</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Precisa de padrão no time, sem depender de uma pessoa</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Sabe que vaza dinheiro, mas não consegue provar onde</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Quer rotina comercial que funcione sem o dono presente</li>
+    </ul>
+  </div>
+  <div>
+    <h2 class="dual_h2 fi">O que a SmileFlow <em>não</em> é.</h2>
+    <ul class="dual_list fi fi--d1">
+      <li class="dual_li"><span class="dual_icon dual_icon--no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>Não é mentoria — é método, critério e sistema</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>Não é consultoria PDF — a gente instala e acompanha</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>Não é agência — nosso escopo é o comercial</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>Não é coach — são dados e acompanhamento real</li>
+      <li class="dual_li"><span class="dual_icon dual_icon--no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>Não é software — o diferencial é gente com sistema</li>
+    </ul>
+  </div>
+</div>
+<div class="dual_closer fi fi--d3">
+  <div class="dual_closer_sep"></div>
+  <p class="dual_closer_t">Se fizer sentido, seguimos. Se não, informamos e encerramos por aqui.</p>
+</div>
+</div></section>
+<div class="t-c2c"></div>
+<!-- JORNADA (canvas) -->
+<section class="jrn s"><div class="c">
+  <h2 class="jrn_h2 fi">Onde você está hoje?</h2>
+  <p class="jrn_sub fi fi--d1">Não importa o estágio — o diagnóstico mostra qual é o primeiro passo.</p>
+  <div class="jrn_timeline">
+    <div class="jt fi">
+      <div class="jt_marker">1</div>
+      <div class="jt_body"><div class="jt_trigger">"Atendo bem, mas não sobra nada no fim do mês."</div><div class="jt_desc">Você ainda vende hora e sessão, sem serviço de alto valor. Precisa reformular a oferta antes de mexer no comercial.</div></div>
+    </div>
+    <div class="jt fi fi--d1">
+      <div class="jt_marker">2</div>
+      <div class="jt_body"><div class="jt_trigger">"Sei que vale mais, mas travo na hora do preço."</div><div class="jt_desc">Tem tratamentos caros mas na hora de falar o valor, trava. Precisa de método de negociação — sem virar "vendedor".</div></div>
+    </div>
+    <div class="jt fi fi--d2">
+      <div class="jt_marker">3</div>
+      <div class="jt_body"><div class="jt_trigger">"Cada um faz de um jeito. Não sei quem vende."</div><div class="jt_desc">Comercial artesanal: sem rotina, sem placar, sem padrão. Precisa de sistema pra rodar sem depender de você.</div></div>
+    </div>
+    <div class="jt fi fi--d3">
+      <div class="jt_marker">4</div>
+      <div class="jt_body"><div class="jt_trigger">"Sei que tá vazando, mas não sei onde."</div><div class="jt_desc">Ninguém audita, ninguém mede, ninguém acompanha. Precisa de auditoria contínua com dados, IA e acompanhamento.</div></div>
+    </div>
+  </div>
+  <div class="jrn_cta fi">
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="btn btn--brand">Descubra seu estágio — diagnóstico em 2 min →</a>
+  </div>
+</div></section>
+<div class="t-ld"></div>
+<!-- RAIO-X (dark) -->
+<section class="raiox s" id="raiox"><div class="c"><div class="raiox_c">
+  <div class="tag tag--dark fi">Diagnóstico gratuito</div>
+  <h2 class="raiox_h2 fi fi--d1">Descubra onde sua clínica está vazando dinheiro.</h2>
+  <p class="raiox_sub fi fi--d2">Responda 5 perguntas e a gente mostra qual é o gargalo do seu comercial — e o que fazer primeiro.</p>
+  <div class="raiox_box fi fi--d3">
+    <div class="raiox_steps">
+      <div class="raiox_s"><span class="raiox_s_n">1</span> 5 perguntas</div>
+      <div class="raiox_s"><span class="raiox_s_n">2</span> 2 minutos</div>
+      <div class="raiox_s"><span class="raiox_s_n">3</span> Resultado na hora</div>
+    </div>
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="btn btn--canvas" style="width:100%">Fazer o Raio-X gratuito →</a>
+    <p class="raiox_note">Sem compromisso. Sem cartão. Sem spam.</p>
+  </div>
+</div></div></section>
+<div class="t-dl"></div>
+<!-- CTA FINAL (canvas) -->
+<section class="final s"><div class="c"><div class="final_c fi">
+  <p class="final_phrase"><em>Processo</em>, não motivação.<br><em>Dados</em>, não achismo.<br><em>Acompanhamento</em>, não sugestão.</p>
+  <div class="final_acts">
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="btn btn--brand">Fazer o diagnóstico gratuito →</a>
+    <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="la">Responda 5 perguntas e descubra seu gargalo ↑</a>
+  </div>
+  <p class="final_note">Curadoria por perfil. Não prometemos milagre — instalamos sistema.</p>
+</div></div></section>
+</main>
+<!-- FOOTER (dark) -->
+<footer><div class="c">
+  <div class="ft_i">
+    <div>
+      <span class="ft_logo">SmileFlow</span>
+      <div class="ft_links">
+        <a href="#auditoria">Auditoria</a>
+        <a href="#metodo">Método</a>
+        <a href="#pra-quem">Pra quem</a>
+        <a href="#servicos">Serviços</a>
+        <a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener">Diagnóstico</a>
+      </div>
+    </div>
+    <span class="ft_meta">Consultoria de Implementação Comercial<br>RevOps + Revenue Intelligence para clínicas premium</span>
+  </div>
+  <div class="ft_copy">© 2026 SmileFlow. Todos os direitos reservados.</div>
+</div></footer>
+<!-- STICKY -->
+<div class="sticky" id="stk"><a href="https://forms.smileflow.me/diagnostico-postura" target="_blank" rel="noopener" class="sticky_btn">Diagnóstico gratuito →</a></div>
+<!-- WHATSAPP -->
+<a href="https://wa.me/5511999999999" target="_blank" rel="noopener" class="wpp" id="wpp" aria-label="Fale conosco pelo WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+</a>
+<script>
+(function(){
+  'use strict';
+  var stk=document.getElementById('stk'),wpp=document.getElementById('wpp'),hero=document.getElementById('hero');
+
+  /* ── Sticky + WhatsApp via IntersectionObserver (replaces scroll listener) ── */
+  if('IntersectionObserver' in window){
+    var stkObs=new IntersectionObserver(function(entries){
+      var offscreen=!entries[0].isIntersecting;
+      stk.classList.toggle('sticky--on',offscreen);
+      wpp.classList.toggle('wpp--on',offscreen);
+    },{threshold:0});
+    stkObs.observe(hero);
+  }else{
+    stk.classList.add('sticky--on');
+    wpp.classList.add('wpp--on');
+  }
+
+  /* ── Fade-in animations ── */
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(e){
+      e.forEach(function(i){
+        if(i.isIntersecting){i.target.classList.add('fi--on');obs.unobserve(i.target)}
+      });
+    },{threshold:.08});
+    document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
+  }else{
+    document.querySelectorAll('.fi').forEach(function(el){el.classList.add('fi--on')});
+  }
+
+  /* ── Score counter with requestAnimationFrame ── */
+  var scored=false,scoreEl=document.getElementById('score');
+  var sObs=new IntersectionObserver(function(e){
+    if(e[0].isIntersecting&&!scored){
+      scored=true;
+      sObs.disconnect();
+      var target=6.8,duration=1200,start=null;
+      function animate(ts){
+        if(!start)start=ts;
+        var progress=Math.min((ts-start)/duration,1);
+        var eased=1-Math.pow(1-progress,3);
+        scoreEl.textContent=(eased*target).toFixed(1);
+        if(progress<1)requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
+  },{threshold:.3});
+  sObs.observe(scoreEl);
+
+  /* ── Mobile navigation drawer ── */
+  var toggle=document.getElementById('navToggle');
+  var drawer=document.getElementById('navDrawer');
+  var closeBtn=document.getElementById('navClose');
+  if(toggle&&drawer&&closeBtn){
+    function openNav(){
+      drawer.classList.add('nav_drawer--open');
+      drawer.setAttribute('aria-hidden','false');
+      toggle.setAttribute('aria-expanded','true');
+      document.body.style.overflow='hidden';
+      closeBtn.focus();
+    }
+    function closeNav(){
+      drawer.classList.remove('nav_drawer--open');
+      drawer.setAttribute('aria-hidden','true');
+      toggle.setAttribute('aria-expanded','false');
+      document.body.style.overflow='';
+      toggle.focus();
+    }
+    toggle.addEventListener('click',openNav);
+    closeBtn.addEventListener('click',closeNav);
+    drawer.addEventListener('click',function(e){if(e.target===drawer)closeNav()});
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&drawer.classList.contains('nav_drawer--open'))closeNav();
+    });
+    /* Close drawer when nav links clicked */
+    drawer.querySelectorAll('.nav_link,.nav_cta').forEach(function(link){
+      link.addEventListener('click',closeNav);
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport configurado para impedir zoom acidental e garantir escala 1:1 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nathálya Mello | Redirecionando...</title>
+    
+    <!-- BLINDAGEM DE SEO: Não indexar, não seguir links -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Tailwind CSS (Framework Mobile-First nativo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fontes: Montserrat (Autoridade) e Inter (Leitura) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#1a1a1a',    // Fundo escuro/Texto
+                            wine: '#581c87',    // Tom de destaque (Roxo/Vinho profundo)
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- PIXEL DA META (FACEBOOK ADS) -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        
+        // ID do Pixel Configurado
+        fbq('init', '888486630406077'); 
+        fbq('track', 'Lead'); // Dispara conversão de Lead
+    </script>
+    <!-- Fallback para navegadores sem JS -->
+    <noscript>
+        <img height="1" width="1" style="display:none" 
+             src="https://www.facebook.com/tr?id=888486630406077&ev=Lead&noscript=1"/>
+    </noscript>
+</head>
+<!-- min-h-screen garante que nada seja cortado em celulares pequenos ou em modo paisagem -->
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-6 text-center safe-paddings">
+
+    <div class="max-w-md w-full animate-fade-in">
+        
+        <!-- 1. LOGO / IDENTIDADE -->
+        <div class="mb-8">
+            <h1 class="font-heading text-xl font-bold text-brand-dark tracking-wide uppercase border-b-2 border-brand-wine inline-block pb-1">
+                Nathálya Mello
+            </h1>
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-widest">Vendas em Saúde e Beleza</p>
+        </div>
+
+        <!-- 2. MENSAGEM DE TRANSIÇÃO -->
+        <!-- Texto ajustado para leitura confortável em telas pequenas -->
+        <h2 class="text-lg text-gray-800 font-medium mb-4 leading-relaxed">
+            Te redirecionando pro WhatsApp pra conversarmos sobre a próxima turma do <span class="font-bold text-brand-wine">Venda Clínica</span>.
+        </h2>
+
+        <div class="flex justify-center my-6">
+            <svg class="animate-spin h-8 w-8 text-brand-wine" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+
+        <!-- 3. BOTÃO DE AÇÃO (FALLBACK) -->
+        <!-- w-full: Ocupa largura total no mobile (fácil de clicar com polegar) -->
+        <!-- md:w-auto: Volta ao tamanho natural no desktop -->
+        <a id="wa-link" href="#" class="inline-flex items-center justify-center w-full md:w-auto px-8 py-4 border border-transparent text-base font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 active:scale-95 transition-all shadow-lg hover:shadow-green-500/30">
+            <i class="fa-brands fa-whatsapp text-xl mr-2"></i>
+            Abrir conversa no WhatsApp
+        </a>
+
+        <p class="mt-4 text-xs text-gray-400 px-4">
+            Se não abrir automaticamente em alguns segundos, clique no botão acima.
+        </p>
+
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO DO DESTINO ---
+        const phoneNumber = "5527999442815";
+        const message = "Olá Nathálya! Li o diagnóstico do Ebook e quero saber sobre a próxima turma do Venda Clínica.";
+        
+        const finalUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+        document.getElementById('wa-link').href = finalUrl;
+
+        window.onload = function() {
+            setTimeout(function() {
+                window.location.href = finalUrl;
+            }, 800);
+        };
+    </script>
+</body>
+</html>

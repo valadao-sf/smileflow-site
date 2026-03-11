@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmileFlow | Gestão de Receita para Clínicas Premium</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SmileFlow é Gestão de Receita e Previsibilidade (RevOps + Revenue Intelligence) para clínicas premium. Auditoria de WhatsApp e gravações com pontuação, plano de ação e cobrança de rotina." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0B0B12',
+            surface: '#11121A',
+            surface2: '#141626',
+            border: 'rgba(255,255,255,0.08)',
+            text: 'rgba(255,255,255,0.92)',
+            muted: 'rgba(255,255,255,0.72)',
+            subtle: 'rgba(255,255,255,0.56)',
+            faint: 'rgba(255,255,255,0.40)',
+            brand: '#6d4f8f',
+            brandHover: '#5f467c',
+          },
+          fontFamily: {
+            sans: ['Manrope', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial'],
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body { font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; }
+  </style>
+</head>
+
+<body class="bg-bg text-text overflow-x-hidden">
+
+  <!-- Navbar: logo + CTA -->
+  <header class="fixed top-0 inset-x-0 z-50 bg-bg/80 backdrop-blur border-b border-border">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/favicon.png" alt="SmileFlow" class="h-8 w-8 rounded" />
+        <div class="text-white font-extrabold tracking-tight text-lg">SmileFlow</div>
+      </div>
+
+      <a href="https://tally.so/r/44QEM5?origem=header" target="_blank" rel="noopener noreferrer"
+         class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-brand hover:bg-brandHover text-white text-sm font-bold transition">
+        Diagnóstico 3 minutos →
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="pt-28 pb-14">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-12 gap-10 items-start">
+
+        <!-- Left -->
+        <div class="md:col-span-7">
+          <div class="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-border bg-white/5">
+            <span class="text-xs tracking-wider uppercase text-white/70">Gestão de Receita e Previsibilidade</span>
+            <span class="text-xs text-white/35">•</span>
+            <span class="text-xs tracking-wider uppercase text-white/70">RevOps + Revenue Intelligence</span>
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
+            Gestão de Receita para clínicas premium.
+          </h1>
+
+          <p class="mt-5 text-lg md:text-xl text-muted leading-relaxed max-w-xl">
+            Nós auditamos <span class="text-white">conversas de WhatsApp</span> e analisamos
+            <span class="text-white">gravações de avaliações e negociações</span>.
+            A partir disso, entregamos <span class="text-white">pontuação</span>, erros claros e um
+            <span class="text-white">plano de ação</span> — e instalamos rotina para o time executar.
+          </p>
+
+          <p class="mt-4 text-sm text-faint max-w-xl">
+            Tecnologia entra como instrumento. O que sustenta resultado é critério explícito, rotina e cobrança.
+          </p>
+
+          <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center">
+            <a href="https://tally.so/r/44QEM5?origem=hero" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-brand hover:bg-brandHover text-white font-bold transition">
+              Diagnóstico 3 minutos →
+            </a>
+            <a href="#auditoria-gravacoes"
+               class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-border text-white/85 hover:bg-white/5 transition">
+              Ver como funciona a auditoria
+            </a>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="rounded-xl border border-border bg-white/5 p-4">
+              <div class="text-xs text-faint uppercase tracking-wider">Entrada</div>
+              <div class="mt-1 text-sm text-white/90 font-semibold">WhatsApp + gravações</div>
+            </div>
+            <div class="rounded-xl border border-border bg-white/5 p-4">
+              <div class="text-xs text-faint uppercase tracking-wider">Entrega</div>
+              <div class="mt-1 text-sm text-white/90 font-semibold">Pontuação + plano</div>
+            </div>
+            <div class="rounded-xl border border-border bg-white/5 p-4">
+              <div class="text-xs text-faint uppercase tracking-wider">Execução</div>
+              <div class="mt-1 text-sm text-white/90 font-semibold">Rotina + cobrança</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Audit card -->
+        <div class="md:col-span-5">
+          <div class="rounded-2xl border border-border bg-surface shadow-soft overflow-hidden">
+            <div class="p-6 border-b border-border">
+              <div class="text-xs tracking-widest uppercase text-faint">Auditoria de gravação</div>
+              <div class="text-sm text-white font-bold mt-1">Pontuação + próximos passos (exemplo)</div>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <div class="rounded-xl border border-border bg-surface2 p-5">
+                <div class="flex items-end justify-between">
+                  <div>
+                    <div class="text-xs uppercase tracking-widest text-faint">Pontuação (0–10)</div>
+                    <div class="text-4xl font-extrabold tracking-tight text-white mt-1">6.8</div>
+                  </div>
+                  <div class="text-xs text-faint text-right">
+                    Erros objetivos<br/>sem achismo
+                  </div>
+                </div>
+
+                <div class="mt-4 text-sm text-muted space-y-2">
+                  <div class="flex items-start gap-2">
+                    <span class="mt-2 w-2 h-2 rounded-full bg-white/45"></span>
+                    <span><span class="text-white/85 font-semibold">Erro crítico:</span> aceitou “vou pensar” sem próximo passo definido</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="mt-2 w-2 h-2 rounded-full bg-white/45"></span>
+                    <span><span class="text-white/85 font-semibold">Correção:</span> pergunta de decisão + data e canal combinados</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="mt-2 w-2 h-2 rounded-full bg-white/45"></span>
+                    <span><span class="text-white/85 font-semibold">Plano:</span> treino direcionado + nova gravação para reavaliar</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-xs text-faint leading-relaxed">
+                Exemplo ilustrativo. O diagnóstico real é feito com gravações e conversas reais da clínica.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Carro-chefe -->
+  <section id="auditoria-gravacoes" class="py-16 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-12 gap-8 items-start">
+        <div class="md:col-span-6">
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">
+            O carro-chefe: auditoria de gravações com pontuação e plano.
+          </h2>
+          <p class="mt-3 text-muted leading-relaxed">
+            Nós analisamos gravações de avaliações e negociações, identificamos os erros que mais derrubam fechamento e
+            transformamos isso em ações objetivas para corrigir rápido.
+          </p>
+
+          <div class="mt-6 rounded-2xl border border-border bg-white/5 p-6">
+            <div class="text-sm font-bold">Você recebe:</div>
+            <ul class="mt-4 space-y-3 text-sm text-muted">
+              <li class="flex gap-3"><span class="text-white/70">•</span> Pontuação por execução e postura (0–10)</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Erros com contexto (“onde foi”, “por que matou”)</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Correção exata (o que dizer/fazer diferente)</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Plano de ação (treino direcionado + reavaliação)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="md:col-span-6">
+          <div class="rounded-2xl border border-border bg-surface p-6">
+            <div class="text-sm font-bold">E não para na gravação.</div>
+            <p class="mt-3 text-sm text-muted leading-relaxed">
+              O objetivo é fazer o time performar melhor por rotina:
+              indicadores diários, revisão semanal e treinamento direcionado por pessoa.
+            </p>
+
+            <div class="mt-6 grid sm:grid-cols-2 gap-4">
+              <div class="rounded-xl border border-border bg-white/5 p-4">
+                <div class="text-xs text-faint uppercase tracking-widest">Diário</div>
+                <div class="mt-2 text-sm font-semibold text-white/90">Indicadores enviados e cobrados</div>
+                <div class="mt-2 text-sm text-subtle">Sem número, não existe gestão.</div>
+              </div>
+              <div class="rounded-xl border border-border bg-white/5 p-4">
+                <div class="text-xs text-faint uppercase tracking-widest">Semanal</div>
+                <div class="mt-2 text-sm font-semibold text-white/90">Revisão + auditorias</div>
+                <div class="mt-2 text-sm text-subtle">Correção rápida, sem acumular problema.</div>
+              </div>
+            </div>
+
+            <div class="mt-6 rounded-xl border border-border bg-surface2 p-4">
+              <div class="text-xs text-faint uppercase tracking-widest">Ponto chave</div>
+              <p class="mt-2 text-sm text-muted leading-relaxed">
+                A clínica não compra “conteúdo”. A clínica compra execução: padrão, controle e previsibilidade.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Como funciona -->
+  <section id="como-funciona" class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-2xl">
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Como funciona</h2>
+        <p class="mt-3 text-muted leading-relaxed">
+          Em três movimentos: diagnóstico, implementação e acompanhamento. Simples. Exigente. Operável.
+        </p>
+      </div>
+
+      <div class="mt-10 grid md:grid-cols-3 gap-4">
+        <div class="rounded-2xl border border-border bg-white/5 p-6">
+          <div class="text-xs text-faint uppercase tracking-widest">1) Diagnóstico</div>
+          <div class="mt-2 text-lg font-bold">Linha de base</div>
+          <p class="mt-2 text-sm text-subtle leading-relaxed">
+            Funil + conversas de WhatsApp + gravações reais para localizar perdas e definir prioridade.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-white/5 p-6">
+          <div class="text-xs text-faint uppercase tracking-widest">2) Implementação</div>
+          <div class="mt-2 text-lg font-bold">Padrão e rotina</div>
+          <p class="mt-2 text-sm text-subtle leading-relaxed">
+            Instalação de rotinas, treinamento direcionado e processos que o time consegue seguir.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-white/5 p-6">
+          <div class="text-xs text-faint uppercase tracking-widest">3) Acompanhamento</div>
+          <div class="mt-2 text-lg font-bold">Cobrança e ajuste</div>
+          <p class="mt-2 text-sm text-subtle leading-relaxed">
+            Indicadores diários, revisão semanal e auditorias recorrentes para sustentar performance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Para quem -->
+  <section id="para-quem" class="py-16 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-12 gap-8 items-start">
+        <div class="md:col-span-6">
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Para quem é</h2>
+          <p class="mt-3 text-muted leading-relaxed">
+            Para clínicas com operação real que querem previsibilidade e gestão de receita.
+          </p>
+
+          <div class="mt-6 rounded-2xl border border-border bg-white/5 p-6">
+            <div class="text-sm font-bold">Serve bem se:</div>
+            <ul class="mt-4 space-y-3 text-sm text-muted">
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você quer parar de “achar” e começar a gerir por números</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você perde gente no WhatsApp, na avaliação ou no “vou pensar”</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você quer padrão no time — não depender de uma pessoa</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="md:col-span-6">
+          <div class="rounded-2xl border border-border bg-surface p-6">
+            <div class="text-sm font-bold">Não é para você se:</div>
+            <ul class="mt-4 space-y-3 text-sm text-muted">
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você procura atalhos ou “fórmulas” sem execução</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você quer promessa sem rotina e cobrança</li>
+              <li class="flex gap-3"><span class="text-white/70">•</span> Você não quer gravar/registrar e revisar performance</li>
+            </ul>
+
+            <div class="mt-6 rounded-xl border border-border bg-white/5 p-4">
+              <div class="text-xs text-faint uppercase tracking-widest">Clareza</div>
+              <p class="mt-2 text-sm text-subtle leading-relaxed">
+                Se fizer sentido, nós seguimos. Se não fizer, nós informamos e encerramos por aqui.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagnóstico -->
+  <section id="diagnostico" class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div class="max-w-2xl">
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Diagnóstico (3 minutos)</h2>
+          <p class="mt-3 text-muted leading-relaxed">
+            Para mapear rapidamente onde a receita está escapando e qual deve ser a prioridade de correção.
+          </p>
+        </div>
+
+        <a href="https://tally.so/r/44QEM5?origem=diagnostico_top" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-brand hover:bg-brandHover text-white font-bold transition">
+          Iniciar diagnóstico →
+        </a>
+      </div>
+
+      <div class="mt-10 grid md:grid-cols-2 gap-4">
+        <a href="https://tally.so/r/44QEM5?perfil=dependencia-central&origem=diagnostico" target="_blank" rel="noopener noreferrer"
+           class="group block rounded-2xl border border-border bg-white/5 p-6 hover:bg-white/7 transition">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="text-xs text-faint uppercase tracking-widest">Perfil</div>
+              <div class="mt-2 text-xl font-extrabold tracking-tight">“Tudo depende de mim.”</div>
+            </div>
+            <div class="text-white/50 group-hover:text-white/80 transition text-lg">→</div>
+          </div>
+          <p class="mt-3 text-sm text-muted leading-relaxed">
+            Você tem movimento, mas a operação depende do seu esforço. O objetivo é padronizar e delegar execução.
+          </p>
+        </a>
+
+        <a href="https://tally.so/r/44QEM5?perfil=falta-previsibilidade&origem=diagnostico" target="_blank" rel="noopener noreferrer"
+           class="group block rounded-2xl border border-border bg-white/5 p-6 hover:bg-white/7 transition">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="text-xs text-faint uppercase tracking-widest">Perfil</div>
+              <div class="mt-2 text-xl font-extrabold tracking-tight">“Falta previsibilidade.”</div>
+            </div>
+            <div class="text-white/50 group-hover:text-white/80 transition text-lg">→</div>
+          </div>
+          <p class="mt-3 text-sm text-muted leading-relaxed">
+            Você já tem equipe, mas o resultado oscila. O objetivo é reduzir perdas e operar por indicadores.
+          </p>
+        </a>
+      </div>
+
+      <div class="mt-6 text-xs text-faint">
+        Curadoria por perfil e aderência. Nós não prometemos “milagre” — nós instalamos sistema.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-14">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div>
+          <div class="text-white font-extrabold tracking-tight text-lg">SmileFlow</div>
+          <div class="mt-2 text-sm text-muted max-w-md">
+            Gestão de Receita e Previsibilidade (RevOps + Revenue Intelligence) para clínicas premium.
+          </div>
+        </div>
+
+        <a href="https://tally.so/r/44QEM5?origem=footer" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-brand hover:bg-brandHover text-white font-bold transition">
+          Diagnóstico 3 minutos →
+        </a>
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-border text-xs text-faint flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div>© 2026 SmileFlow. Todos os direitos reservados.</div>
+        <div class="uppercase tracking-widest">Gestão de receita • Padrão • Previsibilidade</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

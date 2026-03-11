@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmileFlow | Engenharia de Lucro para Clínicas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Transformamos clínicas dependentes em negócios previsíveis. Raio-X de vazamentos de lucro com dados e inteligência artificial." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0F0518',
+            'midnight-light': '#1A0B2E',
+            electric: '#7C3AED',
+            'electric-hover': '#6D28D9',
+            sand: '#F6F2EA',
+            obsidian: '#111111',
+            surgical: '#E2E8F0',
+            mint: '#00FF94',
+            amber: '#F59E0B',
+            gold: '#DFC695'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Manrope', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: 'Fraunces', serif; }
+    .num-data { font-family: 'Space Grotesk', monospace; }
+    .bg-gradient-hero { background: radial-gradient(circle at 50% 0%, #1A0B2E 0%, #0F0518 70%); }
+
+    /* Wordmark SmileFlow (usa Neue Montreal se estiver carregada no seu CSS global) */
+    .logo-wordmark {
+      font-family: 'Neue Montreal', system-ui, -apple-system, BlinkMacSystemFont, 'Manrope', sans-serif;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body class="bg-sand text-obsidian overflow-x-hidden">
+
+  <header class="fixed w-full top-0 z-50 bg-midnight/90 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <img src="/favicon.png" alt="SmileFlow" class="h-8 w-auto">
+        <span class="logo-wordmark text-white text-lg tracking-wide">SmileFlow</span>
+      </div>
+      
+      <a href="https://tally.so/r/44QEM5?origem=header" target="_blank" rel="noopener noreferrer" class="inline-flex bg-electric hover:bg-electric-hover text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all transform hover:scale-105 shadow-lg shadow-electric/20">
+        Começar Raio-X
+      </a>
+    </div>
+  </header>
+
+  <section class="relative pt-32 pb-20 bg-gradient-hero text-white overflow-hidden">
+    <div class="absolute top-20 right-0 opacity-10 pointer-events-none">
+      <svg width="600" height="600" viewBox="0 0 600 600" fill="none">
+        <circle cx="300" cy="300" r="300" fill="url(#paint0_radial)"/>
+        <defs>
+          <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 300) rotate(90) scale(300)">
+            <stop stop-color="#7C3AED" />
+            <stop offset="1" stop-color="#0F0518" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <div class="inline-block border border-gold/30 rounded-full px-4 py-1 mb-6 bg-white/5 backdrop-blur-sm">
+        <span class="text-gold text-xs font-mono tracking-widest uppercase">Engenharia de Lucro para Clínicas</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-6xl font-light mb-6 leading-tight">
+        Sua clínica fatura bem,<br>
+        mas o <span class="italic text-electric">dinheiro some?</span>
+      </h1>
+      
+      <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+        A maioria dos donos tenta resolver falta de lucro com "mais pacientes". 
+        Nós resolvemos fechando os <strong>Vazamentos de Lucro</strong> que drenam 30% da sua receita, usando dados e processos.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="https://tally.so/r/44QEM5?origem=hero" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-electric hover:bg-electric-hover text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+          Começar Raio-X da Clínica
+        </a>
+        <span class="text-gray-500 text-sm mt-2 sm:mt-0">Para clínicas faturando R$ 50 mil+</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- REMOVIDO: bloco "MÉTODO VALIDADO EM" -->
+
+  <section class="py-24 bg-sand">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl text-midnight mb-4">Você não precisa de "mais seguidores".<br>Você precisa de um balde sem furos.</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Enquanto você busca a próxima moda de marketing, seu lucro está escorrendo por três lugares invisíveis na sua operação hoje.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+          <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-6 text-amber group-hover:scale-110 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <h3 class="text-xl text-midnight mb-3">Cadeiras Vazias Escondidas</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Sua agenda parece "ok", mas horários nobres estão ociosos. Cada hora parada é um custo fixo que corrói sua margem.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+          <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-6 text-amber group-hover:scale-110 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <h3 class="text-xl text-midnight mb-3">Orçamentos no Limbo</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Pacientes que dizem "vou pensar" e nunca mais voltam. Seu time não tem um processo de recuperação e aceita o "não" muito fácil.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+          <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-6 text-amber group-hover:scale-110 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+          </div>
+          <h3 class="text-xl text-midnight mb-3">Caos de Crescimento</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Você fatura mais, mas gasta mais e se cansa o dobro. A clínica depende 100% da sua energia para funcionar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-white relative overflow-hidden" id="sf01">
+    <div class="absolute top-0 right-0 w-1/3 h-full bg-sand/50 -skew-x-12 transform origin-top translate-x-20"></div>
+    
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="flex flex-col md:flex-row items-center gap-16">
+        
+        <div class="md:w-1/2">
+          <span class="text-electric font-mono text-sm tracking-wider font-bold mb-2 block">Mentoria SmileFlow para Donos de Clínica</span>
+          <h2 class="text-4xl text-midnight mb-6">Saia do operacional.<br>Assuma o controle.</h2>
+          
+          <div class="space-y-6">
+            <p class="text-gray-600 text-lg">
+              Um programa de 90 dias desenhado para <strong>Donos de Clínica</strong> que querem organizar a casa. Saímos da "agenda lotada às custas do seu esforço pessoal" para um negócio previsível.
+            </p>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-electric mt-1">✓</span>
+                <span class="text-gray-700"><strong>Funil Completo:</strong> Captação > Agendamento > Avaliação > Fechamento.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-electric mt-1">✓</span>
+                <span class="text-gray-700"><strong>CRM & Rotina:</strong> Instalação de processos que seu time consegue seguir sem você cobrar todo dia.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-electric mt-1">✓</span>
+                <span class="text-gray-700"><strong>Metas & Dados:</strong> Quais os 3 números que você precisa olhar na sexta-feira para ter paz no fim de semana.</span>
+              </li>
+            </ul>
+
+            <div class="pt-6">
+              <a href="https://tally.so/r/44QEM5?origem=secao_sf01" target="_blank" rel="noopener noreferrer" class="inline-block bg-midnight hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-bold transition-all">
+                Quero organizar minha clínica
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:w-1/2">
+          <div class="bg-midnight p-8 rounded-2xl text-white relative shadow-2xl">
+            <div class="absolute -top-4 -right-4 w-20 h-20 bg-electric/20 rounded-full blur-xl"></div>
+            <h3 class="text-xl mb-6 font-light border-b border-white/10 pb-4">A Metodologia Tríade</h3>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center shrink-0">
+                  <span class="font-mono font-bold text-mint">01</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">Engenharia de Lucro</h4>
+                  <p class="text-sm text-gray-400">Mapeamento de vazamentos financeiros e precificação.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center shrink-0">
+                  <span class="font-mono font-bold text-electric">02</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">Arquitetura de Vendas</h4>
+                  <p class="text-sm text-gray-400">Transformamos "doutoras boazinhas" em negociadoras seguras.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center shrink-0">
+                  <span class="font-mono font-bold text-gold">03</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">Excelência Operacional</h4>
+                  <p class="text-sm text-gray-400">Processos de recepção e agenda que funcionam na vida real.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-midnight text-white border-y border-white/5">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 mb-6 px-3 py-1 bg-mint/10 rounded-full border border-mint/20">
+        <span class="w-2 h-2 rounded-full bg-mint animate-pulse"></span>
+        <span class="text-mint text-xs font-mono uppercase tracking-widest">Inteligência Aplicada ao Lucro</span>
+      </div>
+      
+      <h2 class="text-3xl md:text-5xl mb-6">O fim do "eu acho".<br>O começo do "eu sei".</h2>
+      
+      <p class="text-gray-400 text-lg mb-10 leading-relaxed">
+        Nossa inteligência — combinando dados da clínica e <strong>modelos de inteligência artificial</strong> — calcula quanto você está deixando na mesa em: cadeiras ociosas, leads que somem e orçamentos que ninguém volta a ligar.
+        <br><br>
+        Você não precisa entender de tecnologia. Só precisa olhar o laudo e decidir onde quer recuperar margem primeiro.
+      </p>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-10">
+        <div>
+          <div class="text-3xl md:text-4xl font-mono text-white mb-1 num-data">+35%</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Aumento no valor por tratamento</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-mono text-white mb-1 num-data">60%</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Redução de Ociosidade</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-mono text-white mb-1 num-data">2.4M</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Recuperados em Orçamentos</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-mono text-white mb-1 num-data">140+</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Clínicas Mapeadas</div>
+        </div>
+        
+        <div class="col-span-2 md:col-span-4 mt-6">
+          <p class="text-[10px] text-gray-500 italic">Resultados médios observados em clínicas acompanhadas pela SmileFlow por pelo menos 6 meses. Resultados individuais podem variar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-sand" id="diagnostico">
+    <div class="max-w-5xl mx-auto px-6">
+      
+      <div class="text-center mb-16 max-w-2xl mx-auto">
+        <h2 class="text-3xl md:text-4xl text-midnight mb-6">Qual o maior gargalo da sua clínica hoje?</h2>
+        
+        <div class="bg-white p-6 rounded-xl border border-gray-100 text-left shadow-sm">
+          <h4 class="font-bold text-electric text-sm uppercase mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Como funciona o Raio-X:
+          </h4>
+          <ol class="space-y-3 text-sm text-gray-600">
+            <li class="flex gap-2">
+              <span class="font-mono text-electric font-bold">1.</span>
+              Você responde um diagnóstico rápido (3 minutos).
+            </li>
+            <li class="flex gap-2">
+              <span class="font-mono text-electric font-bold">2.</span>
+              Nossa inteligência calcula onde está seu maior vazamento de lucro.
+            </li>
+            <li class="flex gap-2">
+              <span class="font-mono text-electric font-bold">3.</span>
+              Se fizer sentido, marcamos uma conversa para desenhar o plano de ação.
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        
+        <a href="https://tally.so/r/44QEM5?perfil=dependencia-central&origem=diagnostico" target="_blank" rel="noopener noreferrer" class="block bg-white p-8 rounded-xl border border-transparent hover:border-electric transition-all shadow-sm hover:shadow-lg group text-left">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-bold text-midnight">"Tudo depende de mim"</h3>
+            <span class="text-electric group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+          <p class="text-gray-600 text-sm mb-6">
+            Tenho movimento, mas sou o dono e o principal dentista. Se eu paro, a clínica para. Quero processos para poder respirar.
+          </p>
+          <span class="text-sm font-bold text-electric uppercase tracking-wide border-b border-electric/20 pb-1">Quero organizar a casa</span>
+        </a>
+
+        <a href="https://tally.so/r/44QEM5?perfil=falta-previsibilidade&origem=diagnostico" target="_blank" rel="noopener noreferrer" class="block bg-white p-8 rounded-xl border border-transparent hover:border-electric transition-all shadow-sm hover:shadow-lg group text-left">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-bold text-midnight">"Falta previsibilidade"</h3>
+            <span class="text-electric group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+          <p class="text-gray-600 text-sm mb-6">
+            Já tenho equipe, mas o faturamento oscila e ninguém sabe explicar porquê. Faltam números, CRM e metas claras.
+          </p>
+          <span class="text-sm font-bold text-electric uppercase tracking-wide border-b border-electric/20 pb-1">Quero crescer com dados</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REMOVIDO: seção "Quem está nos bastidores" -->
+
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-6 border-l-4 border-amber pl-6">
+      <h3 class="text-xl font-bold text-midnight mb-4">Importante: O Método SmileFlow NÃO é para você se...</h3>
+      <ul class="space-y-2 text-sm text-gray-600 mb-6">
+        <li>• Sua clínica fatura menos de <strong>R$ 50 mil/mês</strong> (ainda não tem volume de pacientes suficiente para aproveitar tudo do método).</li>
+        <li>• Você não tem ao menos <strong>2 cadeiras ativas</strong> e 1 pessoa no administrativo/recepção.</li>
+        <li>• Você procura "marketing de dancinha" ou milagres sem ajustar processos internos.</li>
+      </ul>
+      
+      <div class="bg-amber-50 p-4 rounded text-xs text-amber-800">
+        <p><strong>Ainda não chegou nos R$ 50 mil?</strong> Não se preocupe. Comece organizando sua base de precificação e vendas. Estamos estruturando materiais específicos para esse momento. Enquanto isso, acompanhe nossos conteúdos gratuitos.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-midnight py-20 text-center border-t border-white/10">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl md:text-5xl text-white mb-6 font-serif">Pare de dirigir no escuro.</h2>
+      <p class="text-gray-400 mb-10 max-w-xl mx-auto">
+        Cada dia sem um processo comercial é um paciente que fecha com o concorrente. Vamos estancar o sangramento?
+      </p>
+      <a href="https://tally.so/r/44QEM5?origem=footer" target="_blank" rel="noopener noreferrer" class="inline-block bg-electric hover:bg-electric-hover text-white px-10 py-4 rounded-lg font-bold text-lg transition-all shadow-[0_0_30px_rgba(124,58,237,0.4)]">
+        Começar Raio-X de Vazamentos
+      </a>
+      
+      <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
+        <p>© 2026 SmileFlow Consultoria. Todos os direitos reservados.</p>
+        <div class="flex gap-4 mt-4 md:mt-0 opacity-50">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

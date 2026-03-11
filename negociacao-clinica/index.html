@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diagnóstico de Fechamento · Nathálya Mello</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Para doutoras que querem parar de ser 'boazinhas' e assumir uma Postura de Valor na hora de cobrar." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '888486630406077');
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=888486630406077&ev=PageView&noscript=1" />
+  </noscript>
+
+  <style>
+    :root {
+      --merlot: #560319;       
+      --merlot-hover: #3a000e; 
+      --gold: #C5A059;         
+      --charcoal: #222222;     
+      --slate: #555555;        
+      --alabaster: #F9F8F6;    
+      --white: #FFFFFF;        
+      --shadow: 0 4px 20px rgba(86, 3, 25, 0.08); 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      background-color: var(--alabaster);
+      color: var(--charcoal);
+      line-height: 1.5;
+    }
+
+    /* TIPOGRAFIA */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h2, h3 {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      color: var(--charcoal);
+      margin-top: 0;
+      letter-spacing: -0.01em;
+    }
+
+    em { color: var(--merlot); font-style: italic; }
+    strong { color: var(--merlot); font-weight: 700; }
+    a { text-decoration: none; }
+
+    /* HEADER */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 12px 20px;
+    }
+
+    .brand {
+      max-width: 1000px;
+      margin: 0 auto;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--slate);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo { height: 20px; width: auto; }
+
+    /* LAYOUT */
+    main { padding: 30px 20px 100px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .section { margin: 60px 0; }
+
+    /* HERO */
+    .hero { text-align: center; margin-bottom: 50px; }
+
+    .hero-label {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+    }
+
+    h1 {
+      font-size: 32px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--slate);
+      margin-bottom: 28px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 10px;
+    }
+
+    /* VÍDEO */
+    .video-frame {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      background: #000;
+      margin-bottom: 32px;
+    }
+    .video-frame::before { content: ""; display: block; padding-top: 56.25%; }
+    .video-frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+    /* BOTÃO PRINCIPAL */
+    .btn-primary {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: 8px;
+      background-color: var(--merlot);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 25px rgba(86, 3, 25, 0.25);
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+    .btn-primary span.subtext {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.9;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .btn-primary:hover {
+      background-color: var(--merlot-hover);
+      transform: translateY(-2px);
+    }
+
+    /* CARDS */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 3px solid var(--gold);
+      box-shadow: var(--shadow);
+    }
+    .card h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--merlot);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .card p { font-size: 13.5px; color: var(--slate); margin: 0; line-height: 1.5; }
+
+    /* PROVA SOCIAL */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .print-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: var(--shadow);
+    }
+    .print-card img { width: 100%; height: auto; display: block; }
+    .print-caption {
+      padding: 14px;
+      font-size: 13px;
+      color: var(--slate);
+      background: #fff;
+      border-top: 1px solid #f0f0f0;
+      line-height: 1.4;
+    }
+    .print-caption strong {
+      color: var(--merlot);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* LISTA NEGATIVA */
+    .not-for-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px auto 0;
+      max-width: 600px;
+      display: grid;
+      gap: 8px;
+    }
+    .not-for-list li {
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.05);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--slate);
+      text-align: left;
+    }
+
+    /* BIO */
+    .author-block {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      margin: 50px 0;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .author-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+      flex-shrink: 0;
+    }
+    .author-text h4 { margin: 0 0 4px; font-size: 16px; color: var(--charcoal); font-weight: 800; }
+    .author-text p { margin: 0; font-size: 13px; color: var(--slate); line-height: 1.5; }
+
+    /* STICKY CTA (ESCONDIDO POR PADRÃO) */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--white);
+      padding: 10px 16px;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+      
+      /* Começa escondido */
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      display: block; 
+      z-index: 999;
+      border-top: 1px solid var(--gold);
+    }
+
+    /* Só aparece quando esta classe é adicionada pelo JS */
+    .sticky-cta.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .sticky-cta .btn-primary { 
+        width: 100%; 
+        padding: 12px; 
+        flex-direction: row; 
+        gap: 8px; 
+        font-size: 15px;
+        margin: 0;
+    }
+    .sticky-cta .btn-primary span.subtext { display: none; }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 768px) {
+      h1 { font-size: 26px; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .testimonial-grid { grid-template-columns: 1fr; gap: 24px; }
+      .author-block { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="/favicon.png" alt="Logo" class="brand-logo" /> 
+      <span><strong>Nathálya Mello</strong> | Negociação Clínica</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <section class="hero">
+        <span class="hero-label">O Próximo Passo do Diagnóstico</span>
+        
+        <h1>Você é excelente tecnicamente, mas vira a <em>"Doutora Boazinha"</em> na hora de cobrar?</h1>
+        
+        <p class="hero-subtitle">
+          Em 5 minutos, você vai ver o ajuste que faz a doutora parar de se encolher no preço
+          e assumir uma <strong>Postura de Valor</strong> sem virar uma “vendedora agressiva”.
+        </p>
+
+        <div class="video-frame">
+          <iframe id="panda-754d121e-67ae-4542-b3c5-6aca5ad01298" src="https://player-vz-d1cffb40-f54.tv.pandavideo.com.br/embed/?v=754d121e-67ae-4542-b3c5-6aca5ad01298" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen="true"></iframe>
+        </div>
+
+        <a href="https://wa.me/5527999442815?text=Oi%20Nath,%20vi%20o%20video%20do%20M%C3%A9todo%20e%20quero%20saber%20se%20%C3%A9%20pra%20mim." 
+           class="btn-primary" 
+           target="_blank"
+           onclick="if(window.fbq){fbq('trackCustom','ClickWhatsApp');}">
+          Destravar Meu Fechamento
+          <span class="subtext">Falar com a equipe da Nath</span>
+        </a>
+        <p style="font-size: 11px; color: #999; margin-top: 10px;">Análise de perfil para o Método Negociação Clínica.</p>
+      </section>
+
+      <section class="section">
+        <h2 style="text-align: center; margin-bottom: 8px;">Como é o Método por dentro</h2>
+        <p style="text-align: center; color: var(--slate); margin-bottom: 24px; font-size: 15px; line-height: 1.4;">
+          Treinamento de negociação com rotina, métrica e repetição. Não é aula solta.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>Laboratório 2x/semana</h3>
+            <p>Treinos guiados com casos reais para você ajustar postura, linguagem e convite de decisão com segurança.</p>
+          </div>
+          <div class="card">
+            <h3>Acompanhamento de Evolução</h3>
+            <p>Você começa com uma <strong>nota inicial</strong> clara e acompanha sua evolução real, não só a sensação de “acho que melhorei”.</p>
+          </div>
+          <div class="card">
+            <h3>Rota dos 30 dias</h3>
+            <p>Plano simples de aplicação prática para tirar o ajuste do treino e colocar na cadeira com velocidade.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 style="text-align: center; margin-bottom: 8px;">O efeito de ajustar o fechamento</h2>
+        <p style="text-align: center; color: var(--slate); margin-bottom: 30px; font-size: 15px; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Quando a doutora para de ter medo de cobrar, o paciente sente segurança.
+        </p>
+
+        <div class="testimonial-grid">
+          <div class="print-card">
+            <img src="/assets/testimonial-whatsapp-1.png" alt="Print de Resultado" loading="lazy" />
+            <div class="print-caption">
+              <strong>De Culpa para Segurança</strong><br>
+              "Parei de pedir desculpa pelo preço."
+            </div>
+          </div>
+          <div class="print-card">
+            <img src="/assets/testimonial-whatsapp-2.png" alt="Print de Resultado" loading="lazy" />
+            <div class="print-caption">
+              <strong>Fechamento Real</strong><br>
+              "Fechei 2 planos completos hoje sem desconto."
+            </div>
+          </div>
+          <div class="print-card">
+            <img src="/assets/testimonial-instagram-1.png" alt="Print de Resultado" loading="lazy" />
+            <div class="print-caption">
+              <strong>Mudança de Postura</strong><br>
+              "O paciente percebeu que eu não estava brincando."
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 style="text-align: center; margin-bottom: 8px;">Isso não é um "curso de vendas"</h2>
+        <p style="text-align: center; color: var(--slate); margin-bottom: 24px; font-size: 15px; line-height: 1.4;">
+          Você não precisa de mais teoria. Precisa de treino no momento tenso da conversa de valor.
+        </p>
+        
+        <div class="grid-3">
+          <div class="card">
+            <h3>Postura de Valor na prática</h3>
+            <p>Aprenda a cobrar com firmeza e elegância, sem pedir desculpas e sem parecer agressiva.</p>
+          </div>
+          <div class="card">
+            <h3>Treino semanal estruturado</h3>
+            <p>Simulações semanais para você treinar com método antes de treinar com o dinheiro do paciente na mesa.</p>
+          </div>
+          <div class="card">
+            <h3>Métrica, não achismo</h3>
+            <p>Critérios claros de avaliação + acompanhamento para transformar “eu travo no preço” em evolução concreta de fechamento.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+          <h2 style="text-align: center; margin-bottom: 8px; font-size: 18px;">Para quem <strong>NÃO</strong> é</h2>
+          <ul class="not-for-list">
+            <li><strong>Não é</strong> para quem quer script pronto e mágico.</li>
+            <li><strong>Não é</strong> para quem não pretende treinar com consistência.</li>
+            <li><strong>Não é</strong> uma consultoria de marketing ou tráfego.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="author-block">
+        <img src="/assets/foto-nathalya.png" alt="Nathálya Mello" class="author-img" />
+        <div class="author-text">
+          <h4>Nathálya Mello</h4>
+          <p>Especialista em Negociação Clínica e co-fundadora da SmileFlow. Meu foco não é marketing, é o momento tenso da conversa de valor. Eu treino doutoras para falarem de dinheiro com a mesma segurança com que falam de diagnóstico.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="sticky-cta">
+     <a href="https://wa.me/5527999442815?text=Oi%20Nath,%20quero%20destravar%20meu%20fechamento." 
+        class="btn-primary" 
+        target="_blank">
+        Destravar Meu Fechamento
+     </a>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const heroButton = document.querySelector('.hero .btn-primary');
+      const stickyBar = document.querySelector('.sticky-cta');
+
+      if (heroButton && stickyBar) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            // Se o botão da Hero saiu da tela, MOSTRA a barra
+            if (!entry.isIntersecting) {
+              stickyBar.classList.add('visible');
+            } else {
+              // Se o botão da Hero está na tela, ESCONDE a barra
+              stickyBar.classList.remove('visible');
+            }
+          });
+        }, {
+          threshold: 0,
+          rootMargin: "-20px" // Margem de segurança
+        });
+
+        observer.observe(heroButton);
+      }
+    });
+  </script>
+
+</body>
+</html>
