@@ -15,7 +15,7 @@ export const universalMncBridge: VideoMoment = {
     "No Método Negociação Clínica, eu quero ensinar você a entender o que está acontecendo e saber conduzir o próximo passo. É isso que a gente treina no MNC.",
   ],
   actionLabel: "Ver o método completo",
-  asset: { poster: "/images/nathalya-poster.jpg" },
+  asset: { poster: "https://smileflow-marketing.vercel.app/images/nathalya-poster.jpg" },
 };
 
 export const taCaroMoment: NegotiationMomentConfig = {
@@ -44,7 +44,7 @@ export const taCaroMoment: NegotiationMomentConfig = {
       "Escolhe uma das respostas aqui e depois eu te mostro o que eu faria.",
     ],
     actionLabel: "Responder",
-    asset: { poster: "/images/nathalya-poster.jpg" },
+    asset: { poster: "https://smileflow-marketing.vercel.app/images/nathalya-poster.jpg" },
   },
   question1: {
     id: "question1",
@@ -94,7 +94,7 @@ export const taCaroMoment: NegotiationMomentConfig = {
       "Antes de responder uma objeção, eu preciso descobrir qual é a objeção de verdade.",
     ],
     actionLabel: "Ver a frase para usar",
-    asset: { poster: "/images/nathalya-poster.jpg" },
+    asset: { poster: "https://smileflow-marketing.vercel.app/images/nathalya-poster.jpg" },
   },
   insight1: {
     id: "insight1",
