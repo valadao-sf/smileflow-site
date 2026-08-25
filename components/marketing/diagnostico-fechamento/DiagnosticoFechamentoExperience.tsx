@@ -252,7 +252,7 @@ export function DiagnosticoFechamentoExperience() {
                 <strong>{diagnosis.correction}</strong>
               </div>
               <p className={styles.rule}>{diagnosis.rule}</p>
-              <small>diagnostico.smileflow.com.br</small>
+              <small>smileflow.com.br</small>
             </div>
             <div className={styles.resultActions}>
               <button onClick={saveResult} type="button"><Download aria-hidden="true" /> Salvar</button>
