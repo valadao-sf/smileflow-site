@@ -8,7 +8,7 @@ import { buildDiagnosis, questions, VIP_GROUP_URL } from "@/lib/marketing/diagno
 
 import styles from "./diagnostico-fechamento.module.css";
 
-type Screen = "opening" | "question" | "gift" | "result" | "video";
+type Screen = "opening" | "question" | "result" | "video";
 
 function emit(eventName: string, detail: Record<string, string> = {}) {
   const analyticsWindow = window as Window & { fbq?: (...args: unknown[]) => void };
@@ -38,10 +38,10 @@ export function DiagnosticoFechamentoExperience() {
     if (screen === "question") {
       if (questionIndex === 0) setScreen("opening");
       else setQuestionIndex((current) => current - 1);
-    } else if (screen === "gift") {
+    } else if (screen === "result") {
       setScreen("question");
       setQuestionIndex(questions.length - 1);
-    } else if (screen === "result") setScreen("gift");
+    }
     else if (screen === "video") setScreen("result");
   }, [questionIndex, screen]);
 
@@ -51,7 +51,7 @@ export function DiagnosticoFechamentoExperience() {
     window.clearTimeout(transitionTimer.current);
     transitionTimer.current = window.setTimeout(() => {
       if (questionIndex < questions.length - 1) setQuestionIndex((current) => current + 1);
-      else setScreen("gift");
+      else setScreen("result");
     }, 150);
   }, [questionIndex]);
 
@@ -114,50 +114,27 @@ export function DiagnosticoFechamentoExperience() {
           </div>
         )}
 
-        {screen === "gift" && (
-          <div className={`${styles.panel} ${styles.gift}`}>
-            <div className={styles.giftBody}>
-              <img className={styles.pdfCover} src="/images/diagnostico-fechamento/pdf-cover.webp" alt="Capa do PDF Diagnóstico de Fechamento" />
-              <div className={styles.giftCopy}>
-                <p className={styles.eyebrow}>Seu presente está pronto</p>
-                <h2>Baixe agora o Diagnóstico de Fechamento da Nathálya.</h2>
-                <p>São 17 páginas para reconhecer seu jeito de falar preço, os erros que fazem você recuar e uma mudança simples para testar.</p>
-              </div>
+        {screen === "result" && (
+          <div className={`${styles.panel} ${styles.result}`}>
+            <div className={styles.resultBody}>
+              <p className={styles.eyebrow}>Seu diagnóstico</p>
+              <h2>{diagnosis.title}</h2>
+              <p className={styles.reaction}>{diagnosis.reaction}</p>
+              <p className={styles.explanation}>{diagnosis.explanation}</p>
             </div>
-            <div className={styles.giftActions}>
+            <div className={styles.resultActions}>
+              <button className={styles.primary} onClick={() => { emit("diagnostic_result_continue"); setScreen("video"); }} type="button">
+                Continuar para o vídeo
+              </button>
               <a
-                className={styles.primary}
+                className={styles.downloadAction}
                 download="diagnostico-de-fechamento-nathalya.pdf"
                 href="/downloads/diagnostico-de-fechamento-nathalya.pdf"
                 onClick={() => emit("diagnostic_pdf_download")}
               >
-                <Download aria-hidden="true" /> Baixar meu PDF
+                <Download aria-hidden="true" /> Baixar o diagnóstico em PDF
               </a>
-              <button className={styles.secondary} onClick={() => { emit("diagnostic_gift_continue"); setScreen("result"); }} type="button">
-                Continuar e entender minhas respostas
-              </button>
             </div>
-          </div>
-        )}
-
-        {screen === "result" && (
-          <div className={`${styles.panel} ${styles.result}`}>
-            <div className={styles.resultCard}>
-              <p className={styles.resultBrand}>SmileFlow · Nathálya</p>
-              <p className={styles.eyebrow}>O que suas respostas mostram</p>
-              <p className={styles.resultIntro}>O PDF mostra os três comportamentos mais comuns. Nas suas respostas, este foi o medo que mais apareceu:</p>
-              <h2>{diagnosis.title}</h2>
-              <p>{diagnosis.reaction}</p>
-              <div className={styles.correction}>
-                <span>O primeiro passo</span>
-                <strong>{diagnosis.correction}</strong>
-              </div>
-              <p className={styles.rule}>{diagnosis.rule}</p>
-              <small>smileflow.com.br</small>
-            </div>
-            <button className={styles.primary} onClick={() => { emit("diagnostic_result_continue"); setScreen("video"); }} type="button">
-              Ver Nathálya explicar
-            </button>
           </div>
         )}
 
