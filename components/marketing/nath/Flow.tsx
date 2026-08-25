@@ -9,7 +9,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import { persistAttribution } from "./attribution";
-import { Composer } from "./Composer";
+import { SfComposer } from "./composer/SfComposer";
+import type { Attachment } from "./composer/composer-state";
 import { IDENTITY_PROMPTS, QUESTIONS, SUCCESS_CTA, SUCCESS_HREF } from "./copy";
 import { submitNathConversation, transcribeNathAudio } from "./submit";
 import type { ContactInfo, ConversationMessage } from "./types";
@@ -38,12 +39,10 @@ function sanitizeInstagram(value: string): string {
 
 export function Flow() {
   const [step, setStep] = useState(0);
-  const [draft, setDraft] = useState("");
   const [answers, setAnswers] = useState<string[]>([]);
   const [contact, setContact] = useState<ContactInfo>(EMPTY_CONTACT);
   const [messages, setMessages] = useState<ConversationMessage[]>([assistantMessage(0)]);
-  const [phase, setPhase] = useState<"talking" | "submitting" | "error" | "done">("talking");
-  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const messageIdRef = useRef(0);
 
@@ -51,7 +50,7 @@ export function Flow() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, phase]);
+  }, [messages, done]);
 
   function addUserMessage(text: string): void {
     messageIdRef.current += 1;
@@ -61,35 +60,14 @@ export function Flow() {
     ]);
   }
 
-  async function finish(nextContact: ContactInfo, nextAnswers: string[]): Promise<void> {
-    setPhase("submitting");
-    setError(null);
-    try {
-      await submitNathConversation(nextContact, nextAnswers);
-      setMessages((current) => [
-        ...current,
-        {
-          id: "assistant-done",
-          role: "assistant",
-          text: `Recebi sua pergunta, ${nextContact.name}.`,
-        },
-      ]);
-      setPhase("done");
-    } catch (submitError) {
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Não consegui enviar agora. Tente novamente.",
-      );
-      setPhase("error");
-    }
+  function answerText(text: string, attachments: Attachment[]): string {
+    const attachmentLines = attachments.map((attachment) => `📎 ${attachment.name}`);
+    return [text.trim(), ...attachmentLines].filter(Boolean).join("\n");
   }
 
-  async function send(): Promise<void> {
-    if (phase !== "talking") return;
-    const text = draft.trim();
-    if (!text) return;
-    setDraft("");
+  async function send(payload: { text: string; attachments: Attachment[] }): Promise<void> {
+    if (done) return;
+    const text = answerText(payload.text, payload.attachments);
 
     if (step < QUESTIONS.length) {
       const nextAnswers = [...answers, text];
@@ -102,29 +80,40 @@ export function Flow() {
     }
 
     if (step === QUESTIONS.length) {
-      const nextContact = { ...contact, name: text };
+      const name = payload.text.trim();
+      if (!name) throw new Error("Digite seu nome.");
+      const nextContact = { ...contact, name };
       setContact(nextContact);
-      addUserMessage(text);
+      addUserMessage(name);
       const nextStep = step + 1;
       setStep(nextStep);
       setMessages((current) => [...current, assistantMessage(nextStep)]);
       return;
     }
 
-    const instagram = sanitizeInstagram(text);
-    if (!instagram) return;
+    const instagram = sanitizeInstagram(payload.text);
+    if (!instagram) throw new Error("Digite seu Instagram.");
     const nextContact = { ...contact, instagram };
+    await submitNathConversation(nextContact, answers);
     setContact(nextContact);
     addUserMessage(`@${instagram}`);
-    await finish(nextContact, answers);
+    setMessages((current) => [
+      ...current,
+      {
+        id: "assistant-done",
+        role: "assistant",
+        text: `Recebi sua pergunta, ${nextContact.name}.`,
+      },
+    ]);
+    setDone(true);
   }
 
   const identityStep = step >= QUESTIONS.length;
   const instagramStep = step === QUESTIONS.length + 1;
 
   return (
-    <main className="nath-chat">
-      <div className="nath-chat__content">
+    <main className="nath-screen">
+      <section className="nath-conversation-box">
         <header className="nath-chat__header">
           <p className="nath-chat__brand">Nathálya</p>
           <h1>Fala comigo 🎙️</h1>
@@ -145,38 +134,27 @@ export function Flow() {
               ) : null}
             </article>
           ))}
-
-          {phase === "submitting" ? (
-            <p className="nath-status" role="status">Enviando…</p>
-          ) : null}
-          {phase === "error" ? (
-            <div className="nath-retry" role="alert">
-              <p>{error}</p>
-              <button type="button" onClick={() => void finish(contact, answers)}>
-                Tentar novamente
-              </button>
-            </div>
-          ) : null}
           <div ref={endRef} />
         </section>
-      </div>
 
-      {phase === "talking" ? (
-        <div className="nath-composer-dock">
+        {!done ? (
           <div className="nath-composer-wrap">
-            <Composer
-              value={draft}
-              onChange={setDraft}
-              onSend={() => void send()}
+            <SfComposer
+              variant="slim"
+              skin="cockpit"
+              placeholder="Fale ou escreva…"
+              onSubmit={send}
               onTranscribe={transcribeNathAudio}
-              name={instagramStep ? "username" : identityStep ? "name" : `answer-${step + 1}`}
-              autoComplete={instagramStep ? "username" : identityStep ? "name" : "off"}
-              autoCapitalize={instagramStep ? "none" : "sentences"}
-              spellCheck={!instagramStep}
+              fieldName={
+                instagramStep ? "username" : identityStep ? "name" : `answer-${step + 1}`
+              }
+              fieldAutoComplete={instagramStep ? "username" : identityStep ? "name" : "off"}
+              fieldAutoCapitalize={instagramStep ? "none" : identityStep ? "words" : "sentences"}
+              fieldSpellCheck={!instagramStep}
             />
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </section>
     </main>
   );
 }
