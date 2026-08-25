@@ -22,34 +22,26 @@ export function Landing({ onAsk }: LandingProps) {
   }, []);
 
   return (
-    <section className="stack">
-      <p className="brand">Nathálya</p>
-      <h1>{LANDING_TITLE}</h1>
-      <p className="lede">{LANDING_BODY}</p>
+    <section className="nath-stack">
+      <header className="nath-top">
+        <p className="nath-brand">Nathálya</p>
+        <span className="nath-alpha">alpha</span>
+      </header>
+      <h1 className="sf-page-title">{LANDING_TITLE}</h1>
+      <p className="nath-lede">{LANDING_BODY}</p>
       {showBrowserHint ? (
-        <p className="alert" role="note">
-          {INSTAGRAM_BROWSER_HINT}
-        </p>
+        <div className="sf-notice sf-notice--warning" role="note">
+          <div className="sf-notice__body">{INSTAGRAM_BROWSER_HINT}</div>
+        </div>
       ) : null}
-      <hr className="rule" />
-      <div className="thread">
-        {LANDING_OPTIONS.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            className={option.enabled ? "note note--current" : "note"}
-            onClick={option.enabled && !showBrowserHint ? onAsk : undefined}
-            disabled={!option.enabled || showBrowserHint}
-          >
-            <div className="note__kicker">
-              <span className="note__index">{option.id.toUpperCase()}</span>
-              {option.enabled ? null : <span className="badge">Em breve</span>}
-            </div>
-            <span className="note__title">{option.title}</span>
-            <span className="note__body">{option.body}</span>
-          </button>
-        ))}
-      </div>
+      <button
+        type="button"
+        className="sf-btn sf-btn--primary sf-btn--lg nath-btn-block"
+        onClick={showBrowserHint ? undefined : onAsk}
+        disabled={showBrowserHint}
+      >
+        <span className="sf-btn__label">{LANDING_OPTIONS[0].title}</span>
+      </button>
     </section>
   );
 }

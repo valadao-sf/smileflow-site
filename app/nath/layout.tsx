@@ -1,25 +1,26 @@
 import type { ReactNode } from "react";
 import type { Viewport } from "next";
-import { Figtree, Fraunces } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 
 import "./nath.css";
 
-const display = Fraunces({
+const display = Newsreader({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--nath-font-display",
   display: "swap",
 });
 
-const body = Figtree({
+const ui = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--nath-font-ui",
   display: "swap",
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#560319",
+  viewportFit: "cover",
+  themeColor: "#3B214F",
 };
 
 export default function NathLayout({
@@ -28,7 +29,7 @@ export default function NathLayout({
   children: ReactNode;
 }>) {
   return (
-    <div className={`${display.variable} ${body.variable} nath-root`}>
+    <div className={`${display.variable} ${ui.variable} nath-root`}>
       {children}
     </div>
   );

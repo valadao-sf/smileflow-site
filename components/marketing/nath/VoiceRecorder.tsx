@@ -156,12 +156,14 @@ export function VoiceRecorder({ onRecorded }: VoiceRecorderProps) {
   const recording = state === "recording";
   const longTake = recording && elapsedS >= 120;
   const blocked = state === "unsupported";
+  const actionLabel = recording ? "Parar" : "Gravar";
+  const noticeTone = errorMessage?.includes("Instagram") ? "warning" : "danger";
 
   return (
-    <div className="recorder">
+    <div className="nath-recorder">
       <button
         type="button"
-        className={`record${recording ? " record--recording" : ""}`}
+        className={`sf-practice-primary-action${recording ? " sf-practice-primary-action--recording" : ""}`}
         onClick={() => {
           if (blocked) return;
           if (recording) stopRecording();
@@ -169,17 +171,20 @@ export function VoiceRecorder({ onRecorded }: VoiceRecorderProps) {
         }}
         disabled={state === "requesting" || blocked}
         aria-pressed={recording}
-        aria-label={recording ? "Parar" : "Gravar"}
+        aria-labelledby="nath-record-label"
       >
-        <span className="record__glyph" aria-hidden="true" />
+        <span className="nath-record__glyph" aria-hidden="true" />
       </button>
-      <p className={`timer${longTake ? " timer--long" : ""}`} aria-live="polite">
+      <p className="nath-recorder__label" id="nath-record-label">
+        {actionLabel}
+      </p>
+      <p className={`nath-timer${longTake ? " nath-timer--long" : ""}`} aria-live="polite">
         {state === "requesting" ? "Pedindo o microfone…" : formatElapsed(elapsedS)}
       </p>
       {errorMessage ? (
-        <p className="alert" role="alert">
-          {errorMessage}
-        </p>
+        <div className={`sf-notice sf-notice--${noticeTone}`} role="alert">
+          <div className="sf-notice__body">{errorMessage}</div>
+        </div>
       ) : null}
     </div>
   );
