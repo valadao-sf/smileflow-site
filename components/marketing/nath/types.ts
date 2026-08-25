@@ -4,7 +4,6 @@ export type Step =
   | "q1"
   | "q2"
   | "q3"
-  | "consent"
   | "success";
 
 export interface ContactInfo {

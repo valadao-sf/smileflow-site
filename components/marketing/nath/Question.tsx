@@ -12,7 +12,10 @@ interface QuestionProps {
   answers: Array<RecordedAnswer | null>;
   onRecorded: (index: number, answer: RecordedAnswer) => void;
   onBack: () => void;
-  onContinue: () => void;
+  onContinue: () => void | Promise<void>;
+  continueLabel?: string;
+  submitting?: boolean;
+  submitError?: string | null;
 }
 
 export function Question({
@@ -21,6 +24,9 @@ export function Question({
   onRecorded,
   onBack,
   onContinue,
+  continueLabel = "Continuar",
+  submitting = false,
+  submitError = null,
 }: QuestionProps) {
   const question = QUESTIONS[index];
   const answer = answers[index];
@@ -34,42 +40,58 @@ export function Question({
         </button>
         <p className="sf-meta">Pergunta {index + 1} de 3</p>
       </header>
-      <div className="nath-question__copy">
-        <h1 className="sf-page-title">{question.title}</h1>
-        <p className="nath-help">{question.help}</p>
-      </div>
-      <div className="nath-question__dock">
-        {mode === "record" ? (
-          <VoiceRecorder
-            onRecorded={(next) => {
-              onRecorded(index, next);
-              setMode("playback");
-            }}
-          />
-        ) : (
-          <>
-            {answer ? (
-              <audio
-                key={answer.url}
-                className="nath-audio"
-                controls
-                preload="metadata"
-                src={answer.url}
+      <div className="nath-question__body">
+        <div className="nath-question__content">
+          <div className="nath-question__copy">
+            <h1 className="sf-page-title">{question.title}</h1>
+            <p className="nath-help">{question.help}</p>
+          </div>
+          <div className="nath-question__dock">
+            {mode === "record" ? (
+              <VoiceRecorder
+                onRecorded={(next) => {
+                  onRecorded(index, next);
+                  setMode("playback");
+                }}
               />
-            ) : null}
-            <button
-              type="button"
-              className="sf-btn sf-btn--primary sf-btn--lg nath-btn-block"
-              onClick={onContinue}
-              disabled={!answer}
-            >
-              <span className="sf-btn__label">Continuar</span>
-            </button>
-            <button type="button" className="sf-btn sf-btn--text" onClick={() => setMode("record")}>
-              Gravar de novo
-            </button>
-          </>
-        )}
+            ) : (
+              <>
+                {answer ? (
+                  <audio
+                    key={answer.url}
+                    className="nath-audio"
+                    controls
+                    preload="metadata"
+                    src={answer.url}
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  className="sf-btn sf-btn--primary sf-btn--lg nath-btn-block"
+                  onClick={() => void onContinue()}
+                  disabled={!answer || submitting}
+                >
+                  <span className="sf-btn__label">
+                    {submitting ? "Enviando…" : continueLabel}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="sf-btn sf-btn--text"
+                  onClick={() => setMode("record")}
+                  disabled={submitting}
+                >
+                  Gravar de novo
+                </button>
+                {submitError ? (
+                  <div className="sf-notice sf-notice--danger" role="alert">
+                    <div className="sf-notice__body">{submitError}</div>
+                  </div>
+                ) : null}
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

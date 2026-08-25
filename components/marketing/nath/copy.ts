@@ -65,9 +65,8 @@ export const CONSENT_LABEL =
 
 export const SUCCESS_CTA = "Assistir ao vídeo da Nath";
 
-export const SUCCESS_TITLE = "Seus áudios estão prontos.";
+export const SUCCESS_TITLE = "Áudios enviados.";
 
-export const SUCCESS_BODY =
-  "Este protótipo ainda não envia nada para a Nath. Você já pode seguir para o vídeo.";
+export const SUCCESS_BODY = "A Nath recebeu sua pergunta.";
 
 export const SUCCESS_HREF = "https://smileflow.me/negociacao-clinica";
