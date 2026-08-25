@@ -134,7 +134,8 @@ Treatment already applied:
 - 720×1280 H.264 with fast start;
 - original duration preserved;
 - large PT-BR captions burned into the video;
-- separate WebVTT track for accessibility;
+- 16:9 1280×720 H.264 desktop source with fast start;
+- WebVTT captions shown only with the desktop source, avoiding duplicate captions on mobile;
 - VIP action inside the mobile safe area.
 
 ## VIP action
