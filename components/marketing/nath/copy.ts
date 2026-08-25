@@ -36,7 +36,6 @@ export const LANDING_OPTIONS: readonly LandingOption[] = [
 
 export const CONTACT_LABELS = {
   name: "Como eu te chamo?",
-  whatsapp: "Seu WhatsApp",
   instagram: "Seu Instagram",
 } as const;
 
@@ -61,13 +60,12 @@ export const QUESTIONS: readonly QuestionCopy[] = [
 ];
 
 export const CONSENT_LABEL =
-  "Autorizo a Nath e a equipe SmileFlow a ouvir estes áudios e usar meus dados para responder esta pergunta.";
+  "Autorizo a Nath a reproduzir meus áudios e minha pergunta em seus conteúdos.";
 
 export const SUCCESS_CTA = "Assistir ao vídeo da Nath";
 
-export const SUCCESS_TITLE = "Seus áudios estão prontos.";
+export const SUCCESS_TITLE = "Áudios enviados.";
 
-export const SUCCESS_BODY =
-  "Este protótipo ainda não envia nada para a Nath. Você já pode seguir para o vídeo.";
+export const SUCCESS_BODY = "A Nath recebeu sua pergunta.";
 
 export const SUCCESS_HREF = "https://smileflow.me/negociacao-clinica";

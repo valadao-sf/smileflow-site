@@ -171,6 +171,15 @@
   padding: 0;
 }
 
+.nath-root .nath-shell--centered > .nath-stack {
+  flex: 1;
+  justify-content: center;
+}
+
+.nath-root .nath-shell--contact > .nath-stack {
+  flex: 1;
+}
+
 .nath-root .nath-stack {
   display: flex;
   flex-direction: column;
@@ -180,6 +189,14 @@
 
 .nath-root .nath-stack > .sf-btn--ghost {
   align-self: flex-start;
+}
+
+.nath-root .nath-contact__body {
+  width: 100%;
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-stack-lg);
 }
 
 .nath-root .nath-top {
@@ -514,6 +531,60 @@
   transform: rotate(-45deg) translateY(-1px);
 }
 
+.nath-root .nath-optout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: var(--sf-muted);
+  font-family: var(--sf-font-ui);
+  font-size: 12px;
+  line-height: 1.35;
+  cursor: pointer;
+  position: relative;
+}
+
+.nath-root .nath-optout input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.nath-root .nath-optout__control {
+  width: 38px;
+  height: 22px;
+  padding: 2px;
+  border-radius: var(--sf-radius-full);
+  background: var(--sf-line-strong);
+  flex: 0 0 auto;
+  transition: background-color var(--sf-duration-base) var(--sf-ease-out);
+}
+
+.nath-root .nath-optout__control::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--sf-radius-full);
+  background: var(--sf-surface);
+  box-shadow: var(--sf-shadow-1);
+  transition: transform var(--sf-duration-base) var(--sf-ease-out);
+}
+
+.nath-root .nath-optout input:checked + .nath-optout__control {
+  background: var(--sf-purple-core);
+}
+
+.nath-root .nath-optout input:checked + .nath-optout__control::after {
+  transform: translateX(16px);
+}
+
+.nath-root .nath-optout input:focus-visible + .nath-optout__control {
+  outline: 2px solid var(--sf-purple-core);
+  outline-offset: 3px;
+}
+
 /* overlays.css subset: notice warning/danger */
 .nath-root .sf-notice {
   display: flex;
@@ -564,24 +635,33 @@
   min-height: 44px;
 }
 
-.nath-root .nath-question__copy {
+.nath-root .nath-question__body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   display: flex;
+  padding-block: var(--sf-stack-md);
+}
+
+.nath-root .nath-question__content {
+  width: 100%;
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-stack-lg);
+}
+
+.nath-root .nath-question__copy {
+  display: flex;
   flex-direction: column;
   gap: var(--sf-stack-sm);
-  padding-top: var(--sf-stack-md);
 }
 
 .nath-root .nath-question__dock {
-  flex: 0 0 auto;
-  margin-top: auto;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--sf-stack-md);
-  padding-top: var(--sf-space-4);
 }
 
 .nath-root .nath-audio {

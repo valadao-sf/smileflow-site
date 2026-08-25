@@ -4,12 +4,10 @@ export type Step =
   | "q1"
   | "q2"
   | "q3"
-  | "consent"
   | "success";
 
 export interface ContactInfo {
   name: string;
-  whatsapp: string;
   instagram: string;
 }
 
