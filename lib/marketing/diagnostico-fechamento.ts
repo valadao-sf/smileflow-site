@@ -12,7 +12,7 @@ export type DiagnosticQuestion = {
 };
 
 export const DIAGNOSTIC_ASSET_ORIGIN = "https://smileflow-marketing.vercel.app";
-export const VIP_GROUP_URL = "";
+export const VIP_GROUP_URL = "https://chat.whatsapp.com/Cohdt0uEhbAEQA63jp1RUL?mode=gi_t";
 
 export const questions: DiagnosticQuestion[] = [
   {
