@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://smileflow.com.br"),
   title: "SmileFlow",
   description: "Conteúdo e ferramentas para conduzir conversas de negociação clínica.",
+  icons: { icon: "https://smileflow-marketing.vercel.app/favicon.ico" },
 };
 
 export const viewport: Viewport = {
