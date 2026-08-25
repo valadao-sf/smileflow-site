@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowLeft, Download, Pause, Play, Share2, Volume2 } from "lucide-react";
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Download, Pause, Play, Volume2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
-import { buildDiagnosis, contactFields, questions, VIP_GROUP_URL } from "@/lib/marketing/diagnostico-fechamento";
+import { buildDiagnosis, questions, VIP_GROUP_URL } from "@/lib/marketing/diagnostico-fechamento";
 
 import styles from "./diagnostico-fechamento.module.css";
 
-type Screen = "opening" | "question" | "contact" | "result" | "video";
+type Screen = "opening" | "question" | "gift" | "result" | "video";
 
 function emit(eventName: string, detail: Record<string, string> = {}) {
   const analyticsWindow = window as Window & { fbq?: (...args: unknown[]) => void };
@@ -21,32 +21,11 @@ function emit(eventName: string, detail: Record<string, string> = {}) {
   }
 }
 
-function normalizePhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-  if (digits.length === 10 || digits.length === 11) return `55${digits}`;
-  return digits;
-}
-
-async function submitToTally(responses: Record<string, string>) {
-  const response = await fetch("/api/diagnostico-de-fechamento", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ responses }),
-  });
-  if (!response.ok) throw new Error("Diagnostic submission failed");
-}
-
 export function DiagnosticoFechamentoExperience() {
   const [screen, setScreen] = useState<Screen>("opening");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
-  const [sending, setSending] = useState(false);
-  const [saveStatus, setSaveStatus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  const resultCardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const transitionTimer = useRef<number | undefined>(undefined);
 
@@ -56,14 +35,13 @@ export function DiagnosticoFechamentoExperience() {
   useEffect(() => () => window.clearTimeout(transitionTimer.current), []);
 
   const goBack = useCallback(() => {
-    setError("");
     if (screen === "question") {
       if (questionIndex === 0) setScreen("opening");
       else setQuestionIndex((current) => current - 1);
-    } else if (screen === "contact") {
+    } else if (screen === "gift") {
       setScreen("question");
       setQuestionIndex(questions.length - 1);
-    } else if (screen === "result") setScreen("contact");
+    } else if (screen === "result") setScreen("gift");
     else if (screen === "video") setScreen("result");
   }, [questionIndex, screen]);
 
@@ -73,92 +51,9 @@ export function DiagnosticoFechamentoExperience() {
     window.clearTimeout(transitionTimer.current);
     transitionTimer.current = window.setTimeout(() => {
       if (questionIndex < questions.length - 1) setQuestionIndex((current) => current + 1);
-      else setScreen("contact");
+      else setScreen("gift");
     }, 150);
   }, [questionIndex]);
-
-  const submit = useCallback(async (event: FormEvent) => {
-    event.preventDefault();
-    setError("");
-    const normalizedPhone = normalizePhone(phone);
-    if (name.trim().length < 2) {
-      setError("Escreva seu nome para continuar.");
-      return;
-    }
-    if (normalizedPhone.length < 12 || normalizedPhone.length > 13) {
-      setError("Confira o WhatsApp e inclua o DDD.");
-      return;
-    }
-    setSending(true);
-    try {
-      await submitToTally({
-        ...answers,
-        [contactFields.name]: name.trim(),
-        [contactFields.phone]: `+${normalizedPhone}`,
-      });
-      emit("diagnostic_submit");
-      setScreen("result");
-    } catch {
-      setError("Não consegui enviar agora. Tente mais uma vez.");
-    } finally {
-      setSending(false);
-    }
-  }, [answers, name, phone]);
-
-  const buildResultFile = useCallback(async () => {
-    if (!resultCardRef.current) throw new Error("Result card unavailable");
-    const { toBlob } = await import("html-to-image");
-    const blob = await toBlob(resultCardRef.current, {
-      width: 360,
-      height: 450,
-      pixelRatio: 3,
-      backgroundColor: "#211d1b",
-      skipFonts: true,
-    });
-    if (!blob) throw new Error("Image unavailable");
-    return new File([blob], "meu-diagnostico-de-fechamento.png", { type: "image/png" });
-  }, []);
-
-  const saveResult = useCallback(async () => {
-    try {
-      setSaveStatus("Preparando sua imagem…");
-      const file = await buildResultFile();
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        setSaveStatus("Escolha Salvar Imagem no menu do celular.");
-        await navigator.share({ files: [file], title: "Meu Diagnóstico de Fechamento" });
-      } else {
-        const url = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = file.name;
-        document.body.append(link);
-        link.click();
-        link.remove();
-        window.setTimeout(() => URL.revokeObjectURL(url), 1_000);
-        setSaveStatus("Imagem salva na pasta Downloads.");
-      }
-      emit("diagnostic_save");
-    } catch (caught) {
-      if ((caught as DOMException).name !== "AbortError") setSaveStatus("Não deu para salvar. Tente de novo.");
-    }
-  }, [buildResultFile]);
-
-  const shareResult = useCallback(async () => {
-    try {
-      const file = await buildResultFile();
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "Meu Diagnóstico de Fechamento" });
-      } else if (navigator.share) {
-        await navigator.share({ title: "Diagnóstico de Fechamento", url: window.location.href });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        setSaveStatus("Link copiado.");
-      }
-      emit("diagnostic_share");
-    } catch (caught) {
-      if ((caught as DOMException).name !== "AbortError") setSaveStatus("Não deu para compartilhar agora.");
-    }
-  }, [buildResultFile]);
 
   const toggleVideo = useCallback(async () => {
     const video = videoRef.current;
@@ -184,12 +79,13 @@ export function DiagnosticoFechamentoExperience() {
         <span className={styles.brand}>SmileFlow</span>
 
         {screen === "opening" && (
-          <div className={`${styles.panel} ${styles.opening}`} style={{ "--background": "url('/images/diagnostico-fechamento/opening.webp')" } as CSSProperties}>
+          <div className={`${styles.panel} ${styles.opening}`}>
             <div className={styles.openingBody}>
+              <img className={styles.openingPortrait} src="/images/diagnostico-fechamento/nathalya.webp" alt="Nathálya Mello" />
               <p className={styles.eyebrow}>Diagnóstico de Fechamento</p>
               <h1>O que acontece com você na hora de falar o preço?</h1>
-              <p>Em cerca de 2 minutos, descubra o que faz você recuar nessa conversa e o primeiro comportamento para treinar.</p>
-              <p className={styles.support}>Resultado na hora. Gratuito.</p>
+              <p>Responda três perguntas rápidas. Você vai entender o que faz você recuar e recebe na hora o PDF da Nathálya.</p>
+              <p className={styles.support}>Sem cadastro. Gratuito.</p>
             </div>
             <button className={styles.primary} onClick={() => { emit("diagnostic_start"); setScreen("question"); }} type="button">
               Começar meu diagnóstico
@@ -202,7 +98,7 @@ export function DiagnosticoFechamentoExperience() {
             <div className={styles.questionBody}>
               <p className={styles.counter}>Pergunta {questionIndex + 1} de {questions.length}</p>
               <h2>{question.title}</h2>
-              <div className={`${styles.answers} ${question.compact ? styles.compactAnswers : ""}`}>
+              <div className={styles.answers}>
                 {question.options.map((option) => (
                   <button
                     className={answers[question.fieldId] === option.id ? styles.selected : ""}
@@ -218,33 +114,38 @@ export function DiagnosticoFechamentoExperience() {
           </div>
         )}
 
-        {screen === "contact" && (
-          <div className={`${styles.panel} ${styles.contact}`} style={{ "--background": "url('/images/diagnostico-fechamento/contact.webp')" } as CSSProperties}>
-            <form onSubmit={submit}>
-              <p className={styles.eyebrow}>Falta pouco</p>
-              <h2>Seu diagnóstico está quase pronto.</h2>
-              <p>Diga seu nome e informe seu WhatsApp. A Nathálya recebe tudo junto com as suas respostas.</p>
-              <label>
-                Como você se chama?
-                <input autoComplete="name" name="name" onChange={(event) => setName(event.target.value)} required value={name} />
-              </label>
-              <label>
-                Qual é o seu WhatsApp com DDD?
-                <input autoComplete="tel" inputMode="tel" name="phone" onChange={(event) => setPhone(event.target.value)} placeholder="(11) 99999-9999" required value={phone} />
-              </label>
-              <p className={styles.privacy}>Seus dados ficam com a SmileFlow.</p>
-              {error && <p className={styles.error} role="alert">{error}</p>}
-              <button className={styles.primary} disabled={sending} type="submit">{sending ? "Preparando…" : "Ver meu diagnóstico"}</button>
-            </form>
+        {screen === "gift" && (
+          <div className={`${styles.panel} ${styles.gift}`}>
+            <div className={styles.giftBody}>
+              <img className={styles.pdfCover} src="/images/diagnostico-fechamento/pdf-cover.webp" alt="Capa do PDF Diagnóstico de Fechamento" />
+              <div className={styles.giftCopy}>
+                <p className={styles.eyebrow}>Seu presente está pronto</p>
+                <h2>Baixe agora o Diagnóstico de Fechamento da Nathálya.</h2>
+                <p>São 17 páginas para reconhecer seu jeito de falar preço, os erros que fazem você recuar e uma mudança simples para testar.</p>
+              </div>
+            </div>
+            <div className={styles.giftActions}>
+              <a
+                className={styles.primary}
+                download="diagnostico-de-fechamento-nathalya.pdf"
+                href="/downloads/diagnostico-de-fechamento-nathalya.pdf"
+                onClick={() => emit("diagnostic_pdf_download")}
+              >
+                <Download aria-hidden="true" /> Baixar meu PDF
+              </a>
+              <button className={styles.secondary} onClick={() => { emit("diagnostic_gift_continue"); setScreen("result"); }} type="button">
+                Continuar e entender minhas respostas
+              </button>
+            </div>
           </div>
         )}
 
         {screen === "result" && (
           <div className={`${styles.panel} ${styles.result}`}>
-            <div className={styles.resultCard} ref={resultCardRef}>
+            <div className={styles.resultCard}>
               <p className={styles.resultBrand}>SmileFlow · Nathálya</p>
-              <p className={styles.eyebrow}>Seu diagnóstico rápido</p>
-              <p className={styles.resultLabel}>Seu principal ponto de atenção é:</p>
+              <p className={styles.eyebrow}>O que suas respostas mostram</p>
+              <p className={styles.resultIntro}>O PDF mostra os três comportamentos mais comuns. Nas suas respostas, este foi o medo que mais apareceu:</p>
               <h2>{diagnosis.title}</h2>
               <p>{diagnosis.reaction}</p>
               <div className={styles.correction}>
@@ -254,12 +155,9 @@ export function DiagnosticoFechamentoExperience() {
               <p className={styles.rule}>{diagnosis.rule}</p>
               <small>smileflow.com.br</small>
             </div>
-            <div className={styles.resultActions}>
-              <button onClick={saveResult} type="button"><Download aria-hidden="true" /> Salvar</button>
-              <button onClick={shareResult} type="button"><Share2 aria-hidden="true" /> Compartilhar</button>
-              <button className={styles.primary} onClick={() => { emit("diagnostic_result_continue"); setScreen("video"); }} type="button">Ver Nathálya explicar</button>
-              {saveStatus && <p className={styles.status}>{saveStatus}</p>}
-            </div>
+            <button className={styles.primary} onClick={() => { emit("diagnostic_result_continue"); setScreen("video"); }} type="button">
+              Ver Nathálya explicar
+            </button>
           </div>
         )}
 
