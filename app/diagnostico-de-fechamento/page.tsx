@@ -4,7 +4,7 @@ import { DiagnosticoFechamentoExperience } from "@/components/marketing/diagnost
 
 const canonical = "https://smileflow-marketing.vercel.app/diagnostico-de-fechamento";
 const title = "Diagnóstico de Fechamento | Nathálya";
-const description = "Descubra o que faz você recuar na hora de falar o preço e qual comportamento treinar primeiro. Resultado gratuito em cerca de 2 minutos.";
+const description = "Responda três perguntas sobre a hora de falar o preço, entenda o que faz você recuar e baixe na hora o Diagnóstico de Fechamento da Nathálya.";
 
 export const metadata: Metadata = {
   title,
