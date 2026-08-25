@@ -1,15 +1,12 @@
 import { type NextRequest } from "next/server";
 
 import { nathJson, nathOptions } from "@/lib/marketing/nath-cors";
+import { transcribeNathAudio } from "@/lib/marketing/nath-transcription";
 
 export const runtime = "nodejs";
 
 const MIN_AUDIO_BYTES = 1_000;
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024;
-
-interface ScribeResponse {
-  text?: unknown;
-}
 
 export async function POST(request: NextRequest) {
   const form = await request.formData().catch(() => null);
@@ -21,28 +18,15 @@ export async function POST(request: NextRequest) {
     return nathJson(request, { error: "audio_too_large" }, 413);
   }
 
-  const apiKey = process.env.ELEVENLABS_API_KEY?.trim();
-  if (!apiKey) return nathJson(request, { error: "transcription_unavailable" }, 503);
-
-  const scribeForm = new FormData();
-  scribeForm.append("file", audio, audio.name || "resposta.webm");
-  scribeForm.append("model_id", "scribe_v1");
-  scribeForm.append("language_code", "pt");
-  scribeForm.append("diarize", "false");
-  scribeForm.append("tag_audio_events", "false");
-
   try {
-    const response = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
-      method: "POST",
-      headers: { "xi-api-key": apiKey },
-      body: scribeForm,
-    });
-    if (!response.ok) return nathJson(request, { error: "transcription_failed" }, 502);
-    const payload = (await response.json()) as ScribeResponse;
-    const text = typeof payload.text === "string" ? payload.text.trim() : "";
-    if (!text) return nathJson(request, { error: "empty_transcript" }, 422);
+    const buffer = Buffer.from(await audio.arrayBuffer());
+    const text = await transcribeNathAudio(buffer, audio, audio.name || "resposta.webm");
     return nathJson(request, { text });
-  } catch {
+  } catch (error) {
+    console.error(JSON.stringify({
+      event: "nath_transcribe_failed",
+      message: error instanceof Error ? error.message : String(error),
+    }));
     return nathJson(request, { error: "transcription_failed" }, 502);
   }
 }
