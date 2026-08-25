@@ -36,7 +36,6 @@ export const LANDING_OPTIONS: readonly LandingOption[] = [
 
 export const CONTACT_LABELS = {
   name: "Como eu te chamo?",
-  whatsapp: "Seu WhatsApp",
   instagram: "Seu Instagram",
 } as const;
 
@@ -61,7 +60,7 @@ export const QUESTIONS: readonly QuestionCopy[] = [
 ];
 
 export const CONSENT_LABEL =
-  "Autorizo a Nath e a equipe SmileFlow a ouvir estes áudios e usar meus dados para responder esta pergunta.";
+  "Autorizo a Nath a reproduzir meus áudios e minha pergunta em seus conteúdos.";
 
 export const SUCCESS_CTA = "Assistir ao vídeo da Nath";
 

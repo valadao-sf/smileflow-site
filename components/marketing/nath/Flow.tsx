@@ -17,7 +17,6 @@ import { submitNathQuestion } from "./submit";
 
 const EMPTY_CONTACT: ContactInfo = {
   name: "",
-  whatsapp: "",
   instagram: "",
 };
 
@@ -70,15 +69,20 @@ export function Flow() {
   const centeredStep = step === "landing" || step === "success";
   const shellClassName = questionStep
     ? "nath-shell nath-shell--question"
-    : centeredStep
-      ? "nath-shell nath-shell--centered"
-      : "nath-shell";
+    : step === "contact"
+      ? "nath-shell nath-shell--contact"
+      : centeredStep
+        ? "nath-shell nath-shell--centered"
+        : "nath-shell";
 
   return (
     <main className={shellClassName}>
-      {step === "landing" ? (
-        <Landing
+      {step === "landing" ? <Landing onAsk={() => setStep("contact")} /> : null}
+      {step === "contact" ? (
+        <Contact
+          contact={contact}
           consentGranted={consentGranted}
+          onChange={setContact}
           onConsentChange={(next) => {
             setConsentGranted(next);
             try {
@@ -87,13 +91,6 @@ export function Flow() {
               /* ignore quota / private mode */
             }
           }}
-          onAsk={() => setStep("contact")}
-        />
-      ) : null}
-      {step === "contact" ? (
-        <Contact
-          contact={contact}
-          onChange={setContact}
           onBack={() => setStep("landing")}
           onSubmit={(next) => {
             setContact(next);

@@ -24,16 +24,15 @@ interface SubmitBody {
   token?: unknown;
 }
 
-function isContact(value: unknown): value is { name: string; whatsapp: string; instagram: string } {
+function isContact(value: unknown): value is { name: string; instagram: string } {
   if (!value || typeof value !== "object") return false;
   const contact = value as Record<string, unknown>;
   return (
     typeof contact.name === "string" &&
     contact.name.trim().length > 0 &&
     contact.name.length <= 120 &&
-    typeof contact.whatsapp === "string" &&
-    /^\d{10,11}$/.test(contact.whatsapp) &&
     typeof contact.instagram === "string" &&
+    contact.instagram.trim().length > 0 &&
     contact.instagram.length <= 100
   );
 }
@@ -102,8 +101,7 @@ export async function POST(request: NextRequest) {
     submittedAt: new Date().toISOString(),
     contact: {
       name: body.contact.name.trim(),
-      whatsapp: body.contact.whatsapp,
-      instagram: body.contact.instagram,
+      instagram: body.contact.instagram.trim(),
     },
     consentGranted: body.consentGranted,
     attribution: cleanAttribution(body.attribution),

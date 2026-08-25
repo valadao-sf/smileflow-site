@@ -8,7 +8,6 @@ export type Step =
 
 export interface ContactInfo {
   name: string;
-  whatsapp: string;
   instagram: string;
 }
 
