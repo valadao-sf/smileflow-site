@@ -4,7 +4,12 @@ import { ArrowLeft, Check, Download, Play, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
-import { buildDiagnosis, questions, VIP_GROUP_URL } from "@/lib/marketing/diagnostico-fechamento";
+import {
+  buildDiagnosis,
+  DIAGNOSTIC_ASSET_ORIGIN,
+  questions,
+  VIP_GROUP_URL,
+} from "@/lib/marketing/diagnostico-fechamento";
 
 import styles from "./diagnostico-fechamento.module.css";
 
@@ -127,7 +132,7 @@ export function DiagnosticoFechamentoExperience() {
             <div className={styles.openingBody}>
               <img
                 className={styles.openingPortrait}
-                src="/images/diagnostico-fechamento/nathalya.webp"
+                src={`${DIAGNOSTIC_ASSET_ORIGIN}/images/diagnostico-fechamento/nathalya.webp`}
                 alt="Nathálya Mello"
                 width={1080}
                 height={1080}
@@ -201,7 +206,7 @@ export function DiagnosticoFechamentoExperience() {
               <a
                 className={styles.downloadAction}
                 download="diagnostico-de-fechamento-nathalya.pdf"
-                href="/downloads/diagnostico-de-fechamento-nathalya.pdf"
+                href={`${DIAGNOSTIC_ASSET_ORIGIN}/downloads/diagnostico-de-fechamento-nathalya.pdf`}
                 onClick={() => {
                   emit("diagnostic_pdf_download");
                   setPdfOpened(true);
@@ -240,12 +245,12 @@ export function DiagnosticoFechamentoExperience() {
                 setPlayError(null);
               }}
               playsInline
-              poster="/media/diagnostico-fechamento/poster.webp"
+              poster={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/poster.webp`}
               preload="metadata"
               ref={videoRef}
             >
-              <source src="/media/diagnostico-fechamento/diagnostico-fechamento-mobile.mp4" type="video/mp4" />
-              <track default kind="captions" label="Português" src="/media/diagnostico-fechamento/diagnostico-fechamento.vtt" srcLang="pt-BR" />
+              <source src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento-mobile.mp4`} type="video/mp4" />
+              <track default kind="captions" label="Português" src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento.vtt`} srcLang="pt-BR" />
             </video>
             {videoEnded ? <div className={styles.videoShade} /> : null}
             {!videoEnded && (
