@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { DiagnosticoFechamentoExperience } from "@/components/marketing/diagnostico-fechamento/DiagnosticoFechamentoExperience";
 
-const canonical = "https://smileflow.com.br/diagnostico-de-fechamento";
+const canonical = "https://smileflow-marketing.vercel.app/diagnostico-de-fechamento";
 const title = "Diagnóstico de Fechamento | Nathálya";
 const description = "Descubra o que faz você recuar na hora de falar o preço e qual comportamento treinar primeiro. Resultado gratuito em cerca de 2 minutos.";
 
