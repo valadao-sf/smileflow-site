@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 
 import { persistAttribution } from "./attribution";
-import type { RecordedAnswer, Step } from "./types";
+import type { ContactInfo, RecordedAnswer, Step } from "./types";
 
 import { Consent } from "./Consent";
 import { Contact } from "./Contact";
@@ -15,14 +15,25 @@ import { Landing } from "./Landing";
 import { Question } from "./Question";
 import { Success } from "./Success";
 
+const EMPTY_CONTACT: ContactInfo = {
+  name: "",
+  whatsapp: "",
+  instagram: "",
+};
+
 export function Flow() {
   // Public alpha review-by: 2026-09-07. Remove this mark when Ship 1 persists submissions.
   const [step, setStep] = useState<Step>("landing");
+  const [contact, setContact] = useState<ContactInfo>(EMPTY_CONTACT);
   const [answers, setAnswers] = useState<Array<RecordedAnswer | null>>([null, null, null]);
 
   useEffect(() => {
     persistAttribution();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
 
   function saveAnswer(index: number, answer: RecordedAnswer): void {
     setAnswers((current) => {
@@ -34,13 +45,18 @@ export function Flow() {
     });
   }
 
+  const questionStep = step === "q1" || step === "q2" || step === "q3";
+
   return (
-    <main className="shell">
-      <span className="alpha-mark">alpha</span>
+    <main className={questionStep ? "nath-shell nath-shell--question" : "nath-shell"}>
       {step === "landing" ? <Landing onAsk={() => setStep("contact")} /> : null}
       {step === "contact" ? (
         <Contact
+          contact={contact}
+          onChange={setContact}
+          onBack={() => setStep("landing")}
           onSubmit={(next) => {
+            setContact(next);
             try {
               sessionStorage.setItem("nath-p0:contact", JSON.stringify(next));
             } catch {
@@ -55,6 +71,7 @@ export function Flow() {
           index={0}
           answers={answers}
           onRecorded={saveAnswer}
+          onBack={() => setStep("contact")}
           onContinue={() => setStep("q2")}
         />
       ) : null}
@@ -63,6 +80,7 @@ export function Flow() {
           index={1}
           answers={answers}
           onRecorded={saveAnswer}
+          onBack={() => setStep("q1")}
           onContinue={() => setStep("q3")}
         />
       ) : null}
@@ -71,10 +89,13 @@ export function Flow() {
           index={2}
           answers={answers}
           onRecorded={saveAnswer}
+          onBack={() => setStep("q2")}
           onContinue={() => setStep("consent")}
         />
       ) : null}
-      {step === "consent" ? <Consent onConfirm={() => setStep("success")} /> : null}
+      {step === "consent" ? (
+        <Consent onBack={() => setStep("q3")} onConfirm={() => setStep("success")} />
+      ) : null}
       {step === "success" ? <Success /> : null}
     </main>
   );
