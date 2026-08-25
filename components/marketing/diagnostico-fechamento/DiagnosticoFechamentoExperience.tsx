@@ -35,6 +35,7 @@ export function DiagnosticoFechamentoExperience() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
+  const [useDesktopVideo, setUseDesktopVideo] = useState(false);
   const [playError, setPlayError] = useState<string | null>(null);
   const [pdfOpened, setPdfOpened] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -60,6 +61,18 @@ export function DiagnosticoFechamentoExperience() {
   }, []);
 
   useEffect(() => () => window.clearTimeout(transitionTimer.current), []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 760px)");
+    const syncVideoFormat = () => setUseDesktopVideo(media.matches);
+    syncVideoFormat();
+    media.addEventListener("change", syncVideoFormat);
+    return () => media.removeEventListener("change", syncVideoFormat);
+  }, []);
+
+  useEffect(() => {
+    resetVideoUi();
+  }, [resetVideoUi, useDesktopVideo]);
 
   useLayoutEffect(() => {
     if (skipInitialFocus.current) {
@@ -119,7 +132,7 @@ export function DiagnosticoFechamentoExperience() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.stage}>
+      <section className={`${styles.stage}${screen === "video" ? ` ${styles.videoStage}` : ""}`}>
         {screen !== "opening" && (
           <button className={styles.back} onClick={goBack} type="button" aria-label="Voltar">
             <ArrowLeft aria-hidden="true" />
@@ -244,13 +257,19 @@ export function DiagnosticoFechamentoExperience() {
                 setVideoEnded(false);
                 setPlayError(null);
               }}
+              key={useDesktopVideo ? "desktop" : "mobile"}
               playsInline
-              poster={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/poster.webp`}
+              poster={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/${useDesktopVideo ? "poster-desktop.jpg" : "poster.webp"}`}
               preload="metadata"
               ref={videoRef}
             >
-              <source src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento-mobile.mp4`} type="video/mp4" />
-              <track default kind="captions" label="Português" src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento.vtt`} srcLang="pt-BR" />
+              <source
+                src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento-${useDesktopVideo ? "desktop" : "mobile"}.mp4`}
+                type="video/mp4"
+              />
+              {useDesktopVideo ? (
+                <track default kind="captions" label="Português" src={`${DIAGNOSTIC_ASSET_ORIGIN}/media/diagnostico-fechamento/diagnostico-fechamento.vtt`} srcLang="pt-BR" />
+              ) : null}
             </video>
             {videoEnded ? <div className={styles.videoShade} /> : null}
             {!videoEnded && (
