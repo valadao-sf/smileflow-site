@@ -1,47 +1,6 @@
-export const LANDING_TITLE = "Fala comigo 🎙️";
-
-export const LANDING_BODY =
-  "Tem uma pergunta, uma conversa que você quer que eu veja ou um caso em que queria minha opinião? Me manda.";
-
-export const INSTAGRAM_BROWSER_HINT =
-  "Para gravar seus áudios, toque em ··· e abra esta página no Safari ou no Chrome.";
-
-export interface LandingOption {
-  id: "a" | "b" | "c";
-  title: string;
-  body: string;
-  enabled: boolean;
-}
-
-export const LANDING_OPTIONS: readonly LandingOption[] = [
-  {
-    id: "a",
-    title: "🎙️ Quero te fazer uma pergunta",
-    body: "Pergunta qualquer coisa.",
-    enabled: true,
-  },
-  {
-    id: "b",
-    title: "📲 Analisa essa conversa pra mim",
-    body: "Manda os prints e me conta o que aconteceu.",
-    enabled: false,
-  },
-  {
-    id: "c",
-    title: "🧠 Quero te contar meu caso",
-    body: "Me dá mais contexto para eu conseguir olhar mais fundo.",
-    enabled: false,
-  },
-];
-
-export const CONTACT_LABELS = {
-  name: "Como eu te chamo?",
-  instagram: "Seu Instagram",
-} as const;
-
 export interface QuestionCopy {
-  title: string;
   help: string;
+  title: string;
 }
 
 export const QUESTIONS: readonly QuestionCopy[] = [
@@ -59,13 +18,7 @@ export const QUESTIONS: readonly QuestionCopy[] = [
   },
 ];
 
-export const CONSENT_LABEL =
-  "Autorizo a Nath a reproduzir meus áudios e minha pergunta em seus conteúdos.";
+export const IDENTITY_PROMPTS = ["Como eu te chamo?", "Qual é o seu Instagram?"] as const;
 
 export const SUCCESS_CTA = "Assistir ao vídeo da Nath";
-
-export const SUCCESS_TITLE = "Áudios enviados.";
-
-export const SUCCESS_BODY = "A Nath recebeu sua pergunta.";
-
 export const SUCCESS_HREF = "https://smileflow.me/negociacao-clinica";
