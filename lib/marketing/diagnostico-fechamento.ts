@@ -52,36 +52,35 @@ export const questions: DiagnosticQuestion[] = [
   },
 ];
 
-const diagnosisByThought: Record<string, { title: string; correction: string }> = {
+const diagnosisByThought: Record<string, { title: string; explanation: string }> = {
   "bf306b36-8467-401b-b279-b974eb4b36f2": {
-    title: "Medo de ser malvista",
-    correction: "Fale o valor e espere. A reação da paciente não define quem você é.",
+    title: "Você tem medo de ser malvista",
+    explanation: "Na hora de falar o preço, você pensa primeiro no que a paciente vai achar de você. Esse medo aparece antes mesmo de ela responder. O silêncio pesa. Então você pode falar rápido, se explicar demais ou tentar aliviar a conversa.",
   },
   "df8c39ae-fad1-4c9d-8a09-05fdfe6a0bb6": {
-    title: "Culpa de cobrar",
-    correction: "Não decida pela paciente o que cabe ou não no bolso dela.",
+    title: "Você sente culpa de cobrar",
+    explanation: "Você sente o peso do preço como se ele também fosse seu. Antes de a paciente dizer o que cabe no bolso dela, você já fica com pena. É nessa hora que o desconto ou o parcelamento podem aparecer cedo demais.",
   },
   "910b8505-b57f-489b-9964-8c6391a8969f": {
-    title: "Dúvida do próprio valor",
-    correction: "Não use uma reação ao preço como nota para a qualidade do seu trabalho.",
+    title: "Você duvida do seu valor",
+    explanation: "Quando a paciente questiona o preço, você começa a questionar o seu trabalho. A reação dela parece uma prova de que você está cobrando demais. A conversa deixa de ser sobre o tratamento e vira uma dúvida sobre você.",
   },
   "589e6e76-b0df-4752-a39f-333eeb8d3327": {
-    title: "Medo de perder a paciente",
-    correction: "Antes de oferecer algo mais barato, descubra o que realmente está impedindo a decisão.",
+    title: "Você tem medo de perder a paciente",
+    explanation: "Você ouve uma dúvida e já imagina a paciente indo embora. O medo de perder a venda toma conta da conversa. A pressa aparece antes de você entender o que incomodou a paciente.",
   },
 };
 
 const reactionByAnswer: Record<string, string> = {
-  "d55bb268-5440-4c28-8839-3f76a5bfe502": "Seu corpo trava antes de você conseguir conduzir a conversa.",
-  "3a419419-ddc0-4007-8a94-e3e51301b99c": "Você tenta terminar a parte do preço o mais rápido possível.",
-  "638b08d4-029f-4e9c-af87-d9a4d65d6408": "Você fala o valor já sentindo que precisa se justificar.",
-  "6f648a73-e3b6-4d3d-bbb1-3330ba88a607": "Você sustenta o preço com calma. Seu risco pode aparecer na etapa seguinte.",
+  "d55bb268-5440-4c28-8839-3f76a5bfe502": "Seu corpo trava quando chega a hora de falar o preço.",
+  "3a419419-ddc0-4007-8a94-e3e51301b99c": "Você tenta passar pela parte do preço o mais rápido possível.",
+  "638b08d4-029f-4e9c-af87-d9a4d65d6408": "Você fala o preço já sentindo que precisa se justificar.",
+  "6f648a73-e3b6-4d3d-bbb1-3330ba88a607": "Você consegue falar o preço com calma. A insegurança pode aparecer logo depois.",
 };
 
 export function buildDiagnosis(answers: Record<string, string>) {
   return {
     ...(diagnosisByThought[answers[questions[2].fieldId]] ?? diagnosisByThought[questions[2].options[0].id]),
     reaction: reactionByAnswer[answers[questions[0].fieldId]] ?? reactionByAnswer[questions[0].options[0].id],
-    rule: "Fale. Pare. Escute. Só depois negocie.",
   };
 }

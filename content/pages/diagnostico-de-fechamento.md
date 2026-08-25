@@ -16,10 +16,9 @@ Status: approved from the founder's direct simplification on 2026-08-25.
 2. Price-body question
 3. Premature-concession question
 4. Automatic-thought question
-5. Immediate PDF gift
-6. Personalized explanation
-7. Nathálya's post-diagnostic video
-8. VIP group action
+5. Personalized diagnosis with immediate PDF download
+6. Nathálya's post-diagnostic video
+7. VIP group action
 
 ## Opening
 
@@ -82,71 +81,46 @@ Options:
 - Será que eu sou boa o bastante para cobrar isso?
 - Ela vai procurar alguém mais barato e eu vou perder a venda.
 
-## Immediate PDF gift
+## Personalized diagnosis and PDF
 
 Eyebrow:
 
-> Seu presente está pronto
+> Seu diagnóstico
 
-Title:
+The diagnosis comes from question 3. Use one title and its matching explanation:
 
-> Baixe agora o Diagnóstico de Fechamento da Nathálya.
+- Approval
+  - Title: `Você tem medo de ser malvista`
+  - Explanation: `Na hora de falar o preço, você pensa primeiro no que a paciente vai achar de você. Esse medo aparece antes mesmo de ela responder. O silêncio pesa. Então você pode falar rápido, se explicar demais ou tentar aliviar a conversa.`
+- Pity
+  - Title: `Você sente culpa de cobrar`
+  - Explanation: `Você sente o peso do preço como se ele também fosse seu. Antes de a paciente dizer o que cabe no bolso dela, você já fica com pena. É nessa hora que o desconto ou o parcelamento podem aparecer cedo demais.`
+- Self-worth
+  - Title: `Você duvida do seu valor`
+  - Explanation: `Quando a paciente questiona o preço, você começa a questionar o seu trabalho. A reação dela parece uma prova de que você está cobrando demais. A conversa deixa de ser sobre o tratamento e vira uma dúvida sobre você.`
+- Scarcity
+  - Title: `Você tem medo de perder a paciente`
+  - Explanation: `Você ouve uma dúvida e já imagina a paciente indo embora. O medo de perder a venda toma conta da conversa. A pressa aparece antes de você entender o que incomodou a paciente.`
 
-Body:
+The visible reaction comes from question 1 and appears before the explanation:
 
-> São 17 páginas para você reconhecer seu jeito de falar preço, os erros que fazem você recuar e uma mudança simples para testar na próxima conversa.
+- Freeze: `Seu corpo trava quando chega a hora de falar o preço.`
+- Rush: `Você tenta passar pela parte do preço o mais rápido possível.`
+- Guilt: `Você fala o preço já sentindo que precisa se justificar.`
+- Calm: `Você consegue falar o preço com calma. A insegurança pode aparecer logo depois.`
 
 Primary action:
 
-> Baixar meu PDF
+> Continuar para o vídeo
 
 Secondary action:
 
-> Continuar e entender minhas respostas
+> Baixar o diagnóstico em PDF
 
 Functional source:
 
 - `/downloads/diagnostico-de-fechamento-nathalya.pdf`
 - The file is the existing Nathálya asset, unchanged.
-
-## Personalized explanation
-
-Eyebrow:
-
-> O que suas respostas mostram
-
-Intro:
-
-> O PDF mostra os três comportamentos mais comuns. Nas suas respostas, este foi o medo que mais apareceu:
-
-The diagnosis root comes from question 3:
-
-- Approval: `Medo de ser malvista`
-- Pity: `Culpa de cobrar`
-- Self-worth: `Dúvida do próprio valor`
-- Scarcity: `Medo de perder a paciente`
-
-The visible reaction comes from question 1:
-
-- Freeze: `Seu corpo trava antes de você conseguir conduzir a conversa.`
-- Rush: `Você tenta terminar a parte do preço o mais rápido possível.`
-- Guilt: `Você fala o valor já sentindo que precisa se justificar.`
-- Calm: `Você sustenta o preço com calma. Seu risco pode aparecer na etapa seguinte.`
-
-The first correction comes from the diagnosis root:
-
-- Approval: `Fale o valor e espere. A reação da paciente não define quem você é.`
-- Pity: `Não decida pela paciente o que cabe ou não no bolso dela.`
-- Self-worth: `Não use uma reação ao preço como nota para a qualidade do seu trabalho.`
-- Scarcity: `Antes de oferecer algo mais barato, descubra o que realmente está impedindo a decisão.`
-
-Rule:
-
-> Fale. Pare. Escute. Só depois negocie.
-
-Action:
-
-> Ver Nathálya explicar
 
 ## Final video
 
