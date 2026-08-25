@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:nath": "node --experimental-strip-types --test lib/marketing/nath-token.test.ts"
+    "test:nath": "node --experimental-strip-types --test lib/marketing/nath-*.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.112.4",

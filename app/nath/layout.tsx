@@ -20,7 +20,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#3B214F",
+  themeColor: "#1E1A19",
 };
 
 export default function NathLayout({
