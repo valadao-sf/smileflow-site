@@ -11,6 +11,7 @@ export type DiagnosticQuestion = {
   background: string;
 };
 
+export const DIAGNOSTIC_ASSET_ORIGIN = "https://smileflow-marketing.vercel.app";
 export const VIP_GROUP_URL = "";
 
 export const questions: DiagnosticQuestion[] = [
@@ -18,7 +19,7 @@ export const questions: DiagnosticQuestion[] = [
     id: "price-reaction",
     fieldId: "0af600bc-4fd0-4bc9-83e6-f3e3c3eecef7",
     title: "Na hora de falar o valor total, o que costuma acontecer com você?",
-    background: "/images/diagnostico-fechamento/question-price-v2.webp",
+    background: `${DIAGNOSTIC_ASSET_ORIGIN}/images/diagnostico-fechamento/question-price-v2.webp`,
     options: [
       { id: "d55bb268-5440-4c28-8839-3f76a5bfe502", label: "Eu travo, gaguejo ou sinto frio na barriga." },
       { id: "3a419419-ddc0-4007-8a94-e3e51301b99c", label: "Eu acelero a fala para acabar logo." },
@@ -30,7 +31,7 @@ export const questions: DiagnosticQuestion[] = [
     id: "early-concession",
     fieldId: "86d3c78f-0c7a-45a5-9928-42876036fc36",
     title: "Antes de a paciente pedir, você já oferece desconto ou uma forma mais fácil de pagar?",
-    background: "/images/diagnostico-fechamento/question-discount-v2.webp",
+    background: `${DIAGNOSTIC_ASSET_ORIGIN}/images/diagnostico-fechamento/question-discount-v2.webp`,
     options: [
       { id: "db752d5e-9149-46b4-90f9-6d2c9a2f249d", label: "Quase sempre. Faço isso por medo de ouvir um não." },
       { id: "e4551ac4-ced9-4fec-bc63-1987d29cc8bf", label: "Às vezes. Depende da cara ou da reação dela." },
@@ -42,7 +43,7 @@ export const questions: DiagnosticQuestion[] = [
     id: "automatic-thought",
     fieldId: "bcf4326d-6f14-495a-9f9a-41dbb6518a77",
     title: "Quando a paciente fica em silêncio ou questiona o valor, qual pensamento aparece primeiro?",
-    background: "/images/diagnostico-fechamento/question-thought-v2.webp",
+    background: `${DIAGNOSTIC_ASSET_ORIGIN}/images/diagnostico-fechamento/question-thought-v2.webp`,
     options: [
       { id: "bf306b36-8467-401b-b279-b974eb4b36f2", label: "Ela vai me achar interesseira." },
       { id: "df8c39ae-fad1-4c9d-8a09-05fdfe6a0bb6", label: "Fico com pena. Acho que está pesado para ela." },
