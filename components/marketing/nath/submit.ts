@@ -17,9 +17,15 @@ async function responseJson(response: Response): Promise<Record<string, unknown>
   return response.json().catch(() => null) as Promise<Record<string, unknown> | null>;
 }
 
-export async function transcribeNathAudio(audio: Blob, fileName: string): Promise<string> {
+function audioFileName(audio: Blob): string {
+  if (audio.type.includes("mp4") || audio.type.includes("m4a")) return "resposta.m4a";
+  if (audio.type.includes("ogg")) return "resposta.ogg";
+  return "resposta.webm";
+}
+
+export async function transcribeNathAudio(audio: Blob): Promise<string> {
   const form = new FormData();
-  form.append("audio", audio, fileName);
+  form.append("audio", audio, audioFileName(audio));
   const response = await fetch(apiUrl("/api/nath/transcribe"), { method: "POST", body: form });
   const payload = await responseJson(response);
   if (!response.ok || typeof payload?.text !== "string") {
