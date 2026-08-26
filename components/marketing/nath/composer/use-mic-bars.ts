@@ -15,10 +15,20 @@ export interface MicMediaStreamLike {
 export interface MicMediaRecorderLike {
   start(): void;
   stop(): void;
+  readonly mimeType?: string;
   readonly state: string;
   ondataavailable: ((event: { data: Blob }) => void) | null;
   onstop: (() => void) | null;
   onerror: ((event: unknown) => void) | null;
+}
+
+export function recordedAudioMime(chunks: readonly Blob[], recorderMimeType?: string): string {
+  const chunkMimeType = chunks.find((chunk) => chunk.type.startsWith("audio/"))?.type;
+  if (chunkMimeType) return chunkMimeType.split(";", 1)[0]?.trim() || "audio/webm";
+  if (recorderMimeType?.startsWith("audio/")) {
+    return recorderMimeType.split(";", 1)[0]?.trim() || "audio/webm";
+  }
+  return "audio/webm";
 }
 
 export interface MicAudioLevelAnalyser {

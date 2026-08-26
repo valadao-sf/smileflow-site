@@ -5,6 +5,7 @@ import {
   composerReducer,
   initialComposer,
 } from "../../components/marketing/nath/composer/composer-state.ts";
+import { recordedAudioMime } from "../../components/marketing/nath/composer/use-mic-bars.ts";
 
 test("voice transcription appends to an existing typed answer", () => {
   let state = composerReducer(initialComposer, { type: "TYPE", text: "Texto antes" });
@@ -34,4 +35,13 @@ test("successful submission clears content and keeps attachment ids monotonic", 
   assert.deepEqual(state.attachments, []);
   state = composerReducer(state, { type: "ADD_FILES", names: ["segundo.png"] });
   assert.equal(state.attachments[0]?.id, "att-2");
+});
+
+test("preserves the browser recording MIME instead of forcing WebM", () => {
+  const mp4Chunk = new Blob(["audio"], { type: "audio/mp4" });
+  assert.equal(recordedAudioMime([mp4Chunk], "audio/webm"), "audio/mp4");
+  const chromeChunk = new Blob(["audio"], { type: "audio/webm;codecs=opus" });
+  assert.equal(recordedAudioMime([chromeChunk], "audio/webm"), "audio/webm");
+  assert.equal(recordedAudioMime([new Blob(["audio"])], "audio/ogg"), "audio/ogg");
+  assert.equal(recordedAudioMime([], undefined), "audio/webm");
 });

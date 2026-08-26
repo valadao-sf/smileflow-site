@@ -7,10 +7,11 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import type { ComposerEvent, ComposerPhase } from "./composer-state";
-import type {
-  MicMediaRecorderLike,
-  MicMediaStreamLike,
-  UseMicBars,
+import {
+  recordedAudioMime,
+  type MicMediaRecorderLike,
+  type MicMediaStreamLike,
+  type UseMicBars,
 } from "./use-mic-bars";
 
 export interface UseComposerRecordingOptions {
@@ -76,7 +77,9 @@ export function useComposerRecording({
       };
       recorder.onstop = () => {
         const shouldTranscribe = isCurrentRecording(recordingId);
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const blob = new Blob(chunksRef.current, {
+          type: recordedAudioMime(chunksRef.current, recorder.mimeType),
+        });
         chunksRef.current = [];
         if (recorderRef.current === recorder) recorderRef.current = null;
         startingRef.current = false;

@@ -4,8 +4,8 @@
  * and src/lib/arena/scribe.ts
  * commit: b02dfda6d85b8392e81b217c208503815c25c9a3
  *
- * Gemini handles browser WebM/Opus first. ElevenLabs Scribe is the redundant
- * path only when the configured value is an actual `sk_` API key.
+ * ElevenLabs Scribe is the canonical SmileFlow path. Gemini remains a fallback
+ * for deployments that have a usable Gemini key but temporarily lose Scribe.
  */
 
 const GEMINI_INLINE_MAX_BYTES = 14 * 1024 * 1024;
@@ -122,14 +122,6 @@ export async function transcribeNathAudio(
   fileName: string,
 ): Promise<string> {
   const elevenLabsKey = cleanEnvKey(process.env.ELEVENLABS_API_KEY);
-  let geminiError: unknown;
-
-  try {
-    return await transcribeWithGemini(buffer, audioMime(file, fileName));
-  } catch (error) {
-    geminiError = error;
-  }
-
   let scribeError: unknown = new Error("ELEVENLABS_API_KEY is incompatible or missing");
   try {
     if (elevenLabsKey.startsWith("sk_")) {
@@ -139,9 +131,16 @@ export async function transcribeNathAudio(
     scribeError = error;
   }
 
-  const geminiMessage = geminiError instanceof Error ? geminiError.message : String(geminiError);
+  let geminiError: unknown;
+  try {
+    return await transcribeWithGemini(buffer, audioMime(file, fileName));
+  } catch (error) {
+    geminiError = error;
+  }
+
   const scribeMessage = scribeError instanceof Error ? scribeError.message : String(scribeError);
-  throw new Error(`STT unavailable — Gemini: ${geminiMessage}; Scribe: ${scribeMessage}`);
+  const geminiMessage = geminiError instanceof Error ? geminiError.message : String(geminiError);
+  throw new Error(`STT unavailable — Scribe: ${scribeMessage}; Gemini: ${geminiMessage}`);
 }
 
 export const _testing = { audioMime, cleanEnvKey };
