@@ -18,36 +18,13 @@ test.afterEach(() => {
   process.env.ELEVENLABS_API_KEY = ORIGINAL_ELEVENLABS_KEY;
 });
 
-test("uses SmileFlow's Gemini transcription path first", async () => {
+test("uses SmileFlow's Scribe transcription path first", async () => {
   process.env.GEMINI_API_KEY = "gemini-test\\n";
-  process.env.ELEVENLABS_API_KEY = "legacy-key-id";
-  let calledUrl = "";
-  globalThis.fetch = async (input) => {
-    calledUrl = String(input);
-    return new Response(JSON.stringify({
-      candidates: [{ content: { parts: [{ text: "  pergunta transcrita  " }] } }],
-    }), { status: 200, headers: { "content-type": "application/json" } });
-  };
-
-  const input = audio();
-  const result = await transcribeNathAudio(input.buffer, input.file, "resposta.webm");
-  assert.equal(result, "pergunta transcrita");
-  assert.match(calledUrl, /gemini-2\.5-flash:generateContent/);
-});
-
-test("falls back to Scribe only with an actual sk_ key", async () => {
-  process.env.GEMINI_API_KEY = "gemini-test";
   process.env.ELEVENLABS_API_KEY = "sk_test";
   const calledUrls: string[] = [];
   globalThis.fetch = async (input) => {
     calledUrls.push(String(input));
-    if (calledUrls.length === 1) {
-      return new Response(JSON.stringify({ error: { message: "unavailable" } }), {
-        status: 503,
-        headers: { "content-type": "application/json" },
-      });
-    }
-    return new Response(JSON.stringify({ text: "fallback transcrito" }), {
+    return new Response(JSON.stringify({ text: "  pergunta transcrita  " }), {
       status: 200,
       headers: { "content-type": "application/json" },
     });
@@ -55,26 +32,48 @@ test("falls back to Scribe only with an actual sk_ key", async () => {
 
   const input = audio();
   const result = await transcribeNathAudio(input.buffer, input.file, "resposta.webm");
-  assert.equal(result, "fallback transcrito");
-  assert.match(calledUrls[1] ?? "", /elevenlabs\.io\/v1\/speech-to-text/);
+  assert.equal(result, "pergunta transcrita");
+  assert.equal(calledUrls.length, 1);
+  assert.match(calledUrls[0] ?? "", /elevenlabs\.io\/v1\/speech-to-text/);
 });
 
-test("does not call Scribe with SmileFlow's legacy key id", async () => {
+test("falls back to Gemini when Scribe is unavailable", async () => {
   process.env.GEMINI_API_KEY = "gemini-test";
-  process.env.ELEVENLABS_API_KEY = "legacy-key-id";
-  let callCount = 0;
-  globalThis.fetch = async () => {
-    callCount += 1;
-    return new Response(JSON.stringify({ error: { message: "unavailable" } }), {
-      status: 503,
-      headers: { "content-type": "application/json" },
-    });
+  process.env.ELEVENLABS_API_KEY = "sk_test";
+  const calledUrls: string[] = [];
+  globalThis.fetch = async (input) => {
+    calledUrls.push(String(input));
+    if (calledUrls.length === 1) {
+      return new Response(JSON.stringify({ detail: { message: "unavailable" } }), {
+        status: 503,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    return new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: "fallback transcrito" }] } }],
+    }), { status: 200, headers: { "content-type": "application/json" } });
   };
 
   const input = audio();
-  await assert.rejects(
-    () => transcribeNathAudio(input.buffer, input.file, "resposta.webm"),
-    /STT unavailable/,
-  );
-  assert.equal(callCount, 1);
+  const result = await transcribeNathAudio(input.buffer, input.file, "resposta.webm");
+  assert.equal(result, "fallback transcrito");
+  assert.match(calledUrls[0] ?? "", /elevenlabs\.io\/v1\/speech-to-text/);
+  assert.match(calledUrls[1] ?? "", /gemini-2\.5-flash:generateContent/);
+});
+
+test("uses Gemini directly when ElevenLabs contains only a key id", async () => {
+  process.env.GEMINI_API_KEY = "gemini-test";
+  process.env.ELEVENLABS_API_KEY = "legacy-key-id";
+  let calledUrl = "";
+  globalThis.fetch = async (input) => {
+    calledUrl = String(input);
+    return new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: "gemini transcrito" }] } }],
+    }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+
+  const input = audio();
+  const result = await transcribeNathAudio(input.buffer, input.file, "resposta.webm");
+  assert.equal(result, "gemini transcrito");
+  assert.match(calledUrl, /gemini-2\.5-flash:generateContent/);
 });
