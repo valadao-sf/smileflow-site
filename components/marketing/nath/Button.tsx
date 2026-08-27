@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
   variant?: "outline";
-  size?: "default";
+  size?: "sf-md";
 };
 
 /**
@@ -17,7 +17,7 @@ type ButtonProps = ComponentProps<"button"> & {
 export function Button({
   className,
   variant = "outline",
-  size = "default",
+  size = "sf-md",
   ...props
 }: ButtonProps) {
   return (
