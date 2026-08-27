@@ -31,6 +31,15 @@ export function kindForMime(mime: string, name: string): ChatAttachmentKind | nu
   return null;
 }
 
+/** Keep browser MIME values compatible with the existing private Storage bucket. */
+export function storageUploadMime(mime: string, name: string): string {
+  const normalized = mime.trim().toLowerCase();
+  if (normalized === "text/markdown" || (!normalized && /\.md$/iu.test(name))) {
+    return "text/plain";
+  }
+  return normalized || "application/octet-stream";
+}
+
 export interface AttachmentValidation<T> {
   accepted: Array<{ file: T; attachment: ChatAttachment }>;
   errors: string[];
