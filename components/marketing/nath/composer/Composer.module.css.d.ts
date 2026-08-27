@@ -13,7 +13,6 @@ declare const styles: {
   readonly recordingA11y: string;
   readonly processingSpinner: string;
   readonly recordCancel: string;
-  readonly voiceCommit: string;
   readonly recordingFooter: string;
   readonly recordingActions: string;
   readonly recordStop: string;
