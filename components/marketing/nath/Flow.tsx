@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 import { persistAttribution } from "./attribution";
 import { validateFiles } from "./composer/attachments";
@@ -26,7 +27,7 @@ function attachmentAnswerText(attachments: ChatAttachment[]): string {
 export function Flow({ form }: FlowProps) {
   const [submissionId] = useState(createSubmissionId);
   const [questionIndex, setQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<LocalAnswer[]>([]);
+  const [answers, setAnswers] = useState<Array<LocalAnswer | undefined>>([]);
   const [text, setText] = useState("");
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
   const [inputMode, setInputMode] = useState<NathInputMode>("text");
@@ -62,6 +63,34 @@ export function Flow({ form }: FlowProps) {
     });
     setAttachments([]);
     return ready;
+  }
+
+  function restoreStep(index: number, sourceAnswers: Array<LocalAnswer | undefined>): void {
+    const saved = sourceAnswers[index];
+    setQuestionIndex(index);
+    setText(saved?.draftText ?? saved?.text ?? "");
+    setAttachments(saved?.attachments ?? []);
+    setInputMode(saved?.inputMode ?? "text");
+    setError(null);
+  }
+
+  function currentAnswer(rawText: string, mode: NathInputMode): LocalAnswer {
+    const trimmed = rawText.trim();
+    return {
+      questionId: question?.questionId ?? "",
+      text: trimmed || attachmentAnswerText(attachments),
+      draftText: rawText,
+      inputMode: trimmed ? mode : attachments.length > 0 ? "attachment" : "text",
+      attachments: clearCurrentAttachments(),
+    };
+  }
+
+  function goBack(): void {
+    if (!question || questionIndex === 0 || pending || done) return;
+    const nextAnswers = [...answers];
+    nextAnswers[questionIndex] = currentAnswer(text, inputMode);
+    setAnswers(nextAnswers);
+    restoreStep(questionIndex - 1, nextAnswers);
   }
 
   function addFiles(files: File[]): void {
@@ -101,31 +130,35 @@ export function Flow({ form }: FlowProps) {
       return;
     }
 
-    const answer: LocalAnswer = {
-      questionId: question.questionId,
-      text: trimmed || attachmentAnswerText(attachments),
-      inputMode: trimmed ? mode : "attachment",
-      attachments: clearCurrentAttachments(),
-    };
-    const nextAnswers = [...answers, answer];
+    const answer = currentAnswer(rawText, mode);
+    const nextAnswers = [...answers];
+    nextAnswers[questionIndex] = answer;
     setError(null);
 
     if (!instagramStep) {
       setAnswers(nextAnswers);
-      setText("");
-      setInputMode("text");
-      setQuestionIndex((current) => current + 1);
+      restoreStep(questionIndex + 1, nextAnswers);
       return;
     }
 
+    const completeAnswers = form.questions
+      .map((_, index) => nextAnswers[index])
+      .filter((item): item is LocalAnswer => item !== undefined);
+    if (completeAnswers.length !== form.questions.length) {
+      setAttachments(answer.attachments);
+      setText(rawText);
+      setError("Volte e responda todas as perguntas.");
+      return;
+    }
+
+    setAnswers(nextAnswers);
     setPending(true);
     try {
       await submitNathConversation({
         submissionId,
         formVersion: form.version,
-        answers: nextAnswers,
+        answers: completeAnswers,
       });
-      setAnswers(nextAnswers);
       setText("");
       setDone(true);
     } catch (submitError) {
@@ -143,6 +176,13 @@ export function Flow({ form }: FlowProps) {
     setText((current) => `${current.trimEnd()}${current.trim() ? " " : ""}${transcript}`);
     setInputMode("voice");
     setError(null);
+  }
+
+  async function sendVoice(blob: Blob): Promise<void> {
+    const transcript = await transcribeNathAudio(blob);
+    setText(transcript);
+    setInputMode("voice");
+    await commitAnswer(transcript, "voice");
   }
 
   if (done) {
@@ -203,6 +243,7 @@ export function Flow({ form }: FlowProps) {
           onSend={() => { void commitAnswer(text, inputMode); }}
           onAddFiles={addFiles}
           onVoiceTranscribe={async (blob) => transcribeVoice(blob)}
+          onVoiceSend={async (blob) => sendVoice(blob)}
           onRemoveAttachment={removeAttachment}
           onMicError={setError}
           textareaRef={textareaRef}
@@ -212,6 +253,14 @@ export function Flow({ form }: FlowProps) {
           fieldSpellCheck={!instagramStep}
           textareaAriaLabel={question.title}
         />
+        {questionIndex > 0 ? (
+          <div className="nath-question-nav">
+            <button className="nath-back-button" type="button" onClick={goBack} disabled={pending}>
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span>Voltar</span>
+            </button>
+          </div>
+        ) : null}
       </section>
     </main>
   );
