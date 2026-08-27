@@ -145,13 +145,6 @@ export function Flow({ form }: FlowProps) {
     setError(null);
   }
 
-  async function sendVoice(blob: Blob): Promise<void> {
-    const transcript = await transcribeNathAudio(blob);
-    setText(transcript);
-    setInputMode("voice");
-    await commitAnswer(transcript, "voice");
-  }
-
   if (done) {
     return (
       <main className="nath-screen">
@@ -210,7 +203,6 @@ export function Flow({ form }: FlowProps) {
           onSend={() => { void commitAnswer(text, inputMode); }}
           onAddFiles={addFiles}
           onVoiceTranscribe={async (blob) => transcribeVoice(blob)}
-          onVoiceSend={async (blob) => sendVoice(blob)}
           onRemoveAttachment={removeAttachment}
           onMicError={setError}
           textareaRef={textareaRef}

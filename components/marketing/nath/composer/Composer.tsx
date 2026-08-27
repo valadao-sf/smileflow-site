@@ -29,8 +29,6 @@ const MAX_RECORD_MS = 5 * 60 * 1000; // safety cap so a forgotten recording cann
 const VOICE_MIME_CANDIDATES = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
 
 type RecorderPhase = "idle" | "requesting" | "recording" | "stopping" | "processing";
-type RecorderCompletion = "transcribe" | "send";
-
 function pickVoiceMime(): string {
   if (typeof MediaRecorder === "undefined") return "";
   return VOICE_MIME_CANDIDATES.find((candidate) => MediaRecorder.isTypeSupported(candidate)) ?? "";
@@ -46,7 +44,6 @@ export interface ComposerProps {
   onSend: () => void;
   onAddFiles: (files: File[]) => void;
   onVoiceTranscribe: (blob: Blob, durationMs: number) => Promise<void>;
-  onVoiceSend: (blob: Blob, durationMs: number) => Promise<void>;
   onRemoveAttachment: (id: string) => void;
   onMicError: (message: string) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
@@ -67,7 +64,6 @@ export function Composer({
   onSend,
   onAddFiles,
   onVoiceTranscribe,
-  onVoiceSend,
   onRemoveAttachment,
   onMicError,
   textareaRef,
@@ -85,7 +81,6 @@ export function Composer({
   const recordTimerRef = useRef<number | null>(null);
   const recordRequestIdRef = useRef(0);
   const discardRecordingRef = useRef(false);
-  const completionRef = useRef<RecorderCompletion | null>(null);
   const toolsWrapRef = useRef<HTMLDivElement>(null);
   const recordCancelRef = useRef<HTMLButtonElement>(null);
   const restoreComposerFocusRef = useRef(false);
@@ -164,7 +159,6 @@ export function Composer({
       recorderRef.current.onstop = null;
       if (recorderRef.current.state !== "inactive") recorderRef.current.stop();
     }
-    completionRef.current = null;
     releaseRecorder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -207,7 +201,6 @@ export function Composer({
     const requestId = recordRequestIdRef.current + 1;
     recordRequestIdRef.current = requestId;
     discardRecordingRef.current = false;
-    completionRef.current = null;
     restoreComposerFocusRef.current = true;
     setRecorderPhase("requesting");
     let stream: MediaStream;
@@ -235,38 +228,28 @@ export function Composer({
       const blob = new Blob(chunksRef.current, { type: recorder.mimeType || mimeType });
       chunksRef.current = [];
       const discarded = discardRecordingRef.current || requestId !== recordRequestIdRef.current;
-      const completion = completionRef.current ?? "transcribe";
       releaseRecorder();
       if (discarded) {
         setRecorderPhase("idle");
         return;
       }
       if (blob.size === 0 || durationMs <= 400) {
-        completionRef.current = null;
         setRecorderPhase("idle");
         onMicError("O áudio ficou curto demais. Tente gravar novamente.");
         return;
       }
       setRecorderPhase("processing");
       try {
-        if (completion === "transcribe") {
-          await onVoiceTranscribe(blob, durationMs);
-        } else {
-          await onVoiceSend(blob, durationMs);
-        }
+        await onVoiceTranscribe(blob, durationMs);
       } catch {
-        onMicError(completion === "send"
-          ? "Não consegui enviar o áudio. Tente novamente."
-          : "Não consegui transcrever o áudio. Tente novamente.");
+        onMicError("Não consegui transcrever o áudio. Tente novamente.");
       } finally {
-        completionRef.current = null;
         if (requestId === recordRequestIdRef.current) setRecorderPhase("idle");
       }
     };
     recorder.onerror = () => {
       if (requestId !== recordRequestIdRef.current) return;
       discardRecordingRef.current = true;
-      completionRef.current = null;
       recordRequestIdRef.current += 1;
       releaseRecorder();
       setRecorderPhase("idle");
@@ -287,22 +270,12 @@ export function Composer({
   function completeRecording() {
     const recorder = recorderRef.current;
     if (!recorder || recorder.state === "inactive") return;
-    completionRef.current = "transcribe";
     setRecorderPhase("stopping");
-    recorder.stop();
-  }
-
-  function sendRecording() {
-    const recorder = recorderRef.current;
-    if (!recorder || recorder.state === "inactive") return;
-    completionRef.current = "send";
-    setRecorderPhase("processing");
     recorder.stop();
   }
 
   function cancelRecording() {
     discardRecordingRef.current = true;
-    completionRef.current = null;
     recordRequestIdRef.current += 1;
     const recorder = recorderRef.current;
     setRecorderPhase("idle");
@@ -429,7 +402,7 @@ export function Composer({
                   <span role="status" aria-live="polite" aria-atomic="true">
                     {recorderPhase === "requesting"
                       ? "Liberando microfone…"
-                      : completionRef.current === "send" ? "Transcrevendo e enviando…" : "Transcrevendo…"}
+                      : "Transcrevendo…"}
                   </span>
                 </>
               )}
@@ -454,16 +427,7 @@ export function Composer({
                     aria-label="Parar e transcrever"
                   >
                     <Square size={10} fill="currentColor" />
-                  </button>
-                ) : null}
-                {recorderPhase === "recording" ? (
-                  <button
-                    type="button"
-                    className={styles.voiceCommit}
-                    onClick={sendRecording}
-                    aria-label="Enviar áudio agora"
-                  >
-                    <ArrowUp size={18} />
+                    <span>Transcrever</span>
                   </button>
                 ) : null}
               </span>

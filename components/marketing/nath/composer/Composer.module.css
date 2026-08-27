@@ -249,11 +249,6 @@
   background: color-mix(in srgb, var(--sf-cockpit-raised) 72%, transparent);
 }
 
-.composer .voiceCommit {
-  color: var(--sf-cockpit-accent-ink);
-  background: var(--sf-cockpit-accent);
-}
-
 .recordingFooter {
   position: relative;
   display: grid;
@@ -270,9 +265,17 @@
 }
 
 .composer .recordStop {
+  display: flex;
+  width: auto;
+  min-width: 44px;
+  padding: 0 14px;
+  gap: 8px;
   border: 1px solid var(--sf-cockpit-border);
-  color: var(--sf-cockpit-text);
-  background: var(--sf-cockpit-raised);
+  border-radius: var(--sf-radius-full);
+  color: var(--sf-cockpit-accent-ink);
+  background: var(--sf-cockpit-accent);
+  font-size: 13px;
+  font-weight: 650;
 }
 
 @keyframes recorderEnter {
