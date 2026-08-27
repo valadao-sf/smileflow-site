@@ -116,37 +116,48 @@
   justify-content: flex-start;
 }
 
-.nath-back-button {
+.nath-root .nath-button {
   display: inline-flex;
-  min-height: 44px;
+  flex-shrink: 0;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 0 14px;
-  border: 1px solid var(--sf-cockpit-border);
-  border-radius: var(--sf-radius-full);
-  color: var(--sf-cockpit-muted);
+  height: 38px;
+  padding: 0 18px;
+  border: 1.5px solid #b8a8d8;
+  border-radius: 6px;
+  color: #b8a8d8;
   background: transparent;
   font-size: 14px;
-  font-weight: 650;
-  cursor: pointer;
-  transition: color var(--sf-duration-fast), background var(--sf-duration-fast), border-color var(--sf-duration-fast);
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  transition: all 200ms cubic-bezier(.16, 1, .3, 1);
 }
 
-.nath-back-button:focus-visible {
-  outline: 2px solid var(--sf-cockpit-accent);
-  outline-offset: 3px;
+.nath-root .nath-button svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  pointer-events: none;
 }
 
-.nath-back-button:disabled {
-  cursor: default;
-  opacity: .55;
+.nath-root .nath-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--sf-cockpit-bg), 0 0 0 4px #9b8fb8;
+}
+
+.nath-root .nath-button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+  pointer-events: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .nath-back-button:hover:not(:disabled) {
-    border-color: color-mix(in srgb, var(--sf-cockpit-accent) 42%, var(--sf-cockpit-border));
-    color: var(--sf-cockpit-text);
-    background: color-mix(in srgb, var(--sf-cockpit-raised) 66%, transparent);
+  .nath-root .nath-button--outline:hover:not(:disabled) {
+    color: #fff;
+    background: #b8a8d8;
   }
 }
 
