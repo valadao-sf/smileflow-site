@@ -256,7 +256,7 @@ export function Flow({ form }: FlowProps) {
         />
         {questionIndex > 0 ? (
           <div className="nath-question-nav">
-            <Button variant="outline" type="button" onClick={goBack} disabled={pending}>
+            <Button variant="outline" size="sf-md" type="button" onClick={goBack} disabled={pending}>
               <ArrowLeft size={16} aria-hidden="true" />
               Voltar
             </Button>
