@@ -1,159 +1,225 @@
 "use client";
 
-/**
- * Conversation shell adapted from:
- * valadao-sf/smileflow src/app/dashboard/_home/HomeConversacional.tsx
- * commit: 8c8a9751f7b3bfc95e4edc0d30ed9595b7aa9df5
- */
-
 import { useEffect, useRef, useState } from "react";
 
 import { persistAttribution } from "./attribution";
-import { SfComposer } from "./composer/SfComposer";
-import type { Attachment } from "./composer/composer-state";
-import { IDENTITY_PROMPTS, QUESTIONS, SUCCESS_CTA, SUCCESS_HREF } from "./copy";
+import { validateFiles } from "./composer/attachments";
+import { Composer } from "./composer/Composer";
+import type { ChatAttachment } from "./composer/types";
+import { SUCCESS_COPY, SUCCESS_CTA, SUCCESS_HREF } from "./copy";
 import { submitNathConversation, transcribeNathAudio } from "./submit";
-import type { ContactInfo, ConversationMessage } from "./types";
+import type { LocalAnswer } from "./types";
+import type { NathInputMode, PublishedNathForm } from "@/lib/marketing/nath-form";
 
-const EMPTY_CONTACT: ContactInfo = { instagram: "", name: "" };
-
-function assistantMessage(step: number): ConversationMessage {
-  if (step < QUESTIONS.length) {
-    const question = QUESTIONS[step];
-    return { id: `assistant-${step}`, role: "assistant", text: question.help, title: question.title };
-  }
-  return {
-    id: `assistant-${step}`,
-    role: "assistant",
-    text: IDENTITY_PROMPTS[step - QUESTIONS.length],
-  };
+interface FlowProps {
+  form: PublishedNathForm;
 }
 
-function sanitizeInstagram(value: string): string {
-  return value
-    .trim()
-    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
-    .replace(/^@+/, "")
-    .replace(/\/$/, "");
+function createSubmissionId(): string {
+  return globalThis.crypto.randomUUID();
 }
 
-export function Flow() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [contact, setContact] = useState<ContactInfo>(EMPTY_CONTACT);
-  const [messages, setMessages] = useState<ConversationMessage[]>([assistantMessage(0)]);
+function attachmentAnswerText(attachments: ChatAttachment[]): string {
+  return attachments.map((attachment) => `[Anexo: ${attachment.name}]`).join("\n");
+}
+
+export function Flow({ form }: FlowProps) {
+  const [submissionId] = useState(createSubmissionId);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState<LocalAnswer[]>([]);
+  const [text, setText] = useState("");
+  const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
+  const [inputMode, setInputMode] = useState<NathInputMode>("text");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
   const [done, setDone] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
-  const messageIdRef = useRef(0);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const objectUrlsRef = useRef(new Set<string>());
+
+  const question = form.questions[questionIndex];
+  const instagramStep = questionIndex === form.questions.length - 1;
 
   useEffect(() => persistAttribution(), []);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, done]);
+    textareaRef.current?.focus();
+  }, [questionIndex]);
 
-  function addUserMessage(text: string): void {
-    messageIdRef.current += 1;
-    setMessages((current) => [
-      ...current,
-      { id: `user-${messageIdRef.current}`, role: "user", text },
-    ]);
+  useEffect(() => () => {
+    for (const url of objectUrlsRef.current) URL.revokeObjectURL(url);
+    objectUrlsRef.current.clear();
+  }, []);
+
+  function clearCurrentAttachments(): ChatAttachment[] {
+    const ready = attachments.map((attachment) => {
+      if (attachment.previewUrl) {
+        URL.revokeObjectURL(attachment.previewUrl);
+        objectUrlsRef.current.delete(attachment.previewUrl);
+      }
+      const { previewUrl: _previewUrl, dataUrl: _dataUrl, ...persistable } = attachment;
+      return persistable;
+    });
+    setAttachments([]);
+    return ready;
   }
 
-  function answerText(text: string, attachments: Attachment[]): string {
-    const attachmentLines = attachments.map((attachment) => `📎 ${attachment.name}`);
-    return [text.trim(), ...attachmentLines].filter(Boolean).join("\n");
+  function addFiles(files: File[]): void {
+    if (files.length === 0 || pending) return;
+    const validation = validateFiles(files);
+    const accepted = validation.accepted.map(({ file, attachment }) => {
+      const previewUrl = attachment.kind === "image" || attachment.kind === "audio"
+        ? URL.createObjectURL(file)
+        : undefined;
+      if (previewUrl) objectUrlsRef.current.add(previewUrl);
+      return { ...attachment, file, previewUrl };
+    });
+    if (accepted.length > 0) setAttachments((current) => [...current, ...accepted]);
+    setError(validation.errors.length > 0 ? validation.errors.join(" ") : null);
   }
 
-  async function send(payload: { text: string; attachments: Attachment[] }): Promise<void> {
-    if (done) return;
-    const text = answerText(payload.text, payload.attachments);
+  function removeAttachment(id: string): void {
+    setAttachments((current) => {
+      const target = current.find((attachment) => attachment.id === id);
+      if (target?.previewUrl) {
+        URL.revokeObjectURL(target.previewUrl);
+        objectUrlsRef.current.delete(target.previewUrl);
+      }
+      return current.filter((attachment) => attachment.id !== id);
+    });
+  }
 
-    if (step < QUESTIONS.length) {
-      const nextAnswers = [...answers, text];
+  async function commitAnswer(rawText: string, mode: NathInputMode): Promise<void> {
+    if (!question || pending || done) return;
+    const trimmed = rawText.trim();
+    if (!trimmed && attachments.length === 0) {
+      setError("Escreva, grave ou anexe sua resposta.");
+      return;
+    }
+    if (instagramStep && !trimmed) {
+      setError("Digite seu Instagram.");
+      return;
+    }
+
+    const answer: LocalAnswer = {
+      questionId: question.questionId,
+      text: trimmed || attachmentAnswerText(attachments),
+      inputMode: trimmed ? mode : "attachment",
+      attachments: clearCurrentAttachments(),
+    };
+    const nextAnswers = [...answers, answer];
+    setError(null);
+
+    if (!instagramStep) {
       setAnswers(nextAnswers);
-      addUserMessage(text);
-      const nextStep = step + 1;
-      setStep(nextStep);
-      setMessages((current) => [...current, assistantMessage(nextStep)]);
+      setText("");
+      setInputMode("text");
+      setQuestionIndex((current) => current + 1);
       return;
     }
 
-    if (step === QUESTIONS.length) {
-      const name = payload.text.trim();
-      if (!name) throw new Error("Digite seu nome.");
-      const nextContact = { ...contact, name };
-      setContact(nextContact);
-      addUserMessage(name);
-      const nextStep = step + 1;
-      setStep(nextStep);
-      setMessages((current) => [...current, assistantMessage(nextStep)]);
-      return;
+    setPending(true);
+    try {
+      await submitNathConversation({
+        submissionId,
+        formVersion: form.version,
+        answers: nextAnswers,
+      });
+      setAnswers(nextAnswers);
+      setText("");
+      setDone(true);
+    } catch (submitError) {
+      setAttachments(answer.attachments);
+      setText(rawText);
+      setError(submitError instanceof Error ? submitError.message : "Não consegui enviar agora.");
+      throw submitError;
+    } finally {
+      setPending(false);
     }
-
-    const instagram = sanitizeInstagram(payload.text);
-    if (!instagram) throw new Error("Digite seu Instagram.");
-    const nextContact = { ...contact, instagram };
-    await submitNathConversation(nextContact, answers);
-    setContact(nextContact);
-    addUserMessage(`@${instagram}`);
-    setMessages((current) => [
-      ...current,
-      {
-        id: "assistant-done",
-        role: "assistant",
-        text: `Recebi sua pergunta, ${nextContact.name}.`,
-      },
-    ]);
-    setDone(true);
   }
 
-  const identityStep = step >= QUESTIONS.length;
-  const instagramStep = step === QUESTIONS.length + 1;
+  async function transcribeVoice(blob: Blob): Promise<void> {
+    const transcript = await transcribeNathAudio(blob);
+    setText((current) => `${current.trimEnd()}${current.trim() ? " " : ""}${transcript}`);
+    setInputMode("voice");
+    setError(null);
+  }
+
+  async function sendVoice(blob: Blob): Promise<void> {
+    const transcript = await transcribeNathAudio(blob);
+    setText(transcript);
+    setInputMode("voice");
+    await commitAnswer(transcript, "voice");
+  }
+
+  if (done) {
+    return (
+      <main className="nath-screen">
+        <section className="nath-conversation-box nath-success" aria-live="polite">
+          <p className="nath-chat__brand">Nathálya</p>
+          <h1>{SUCCESS_COPY}</h1>
+          <a className="nath-success__link" href={SUCCESS_HREF}>{SUCCESS_CTA}</a>
+        </section>
+      </main>
+    );
+  }
+
+  if (!question) return null;
 
   return (
     <main className="nath-screen">
-      <section className="nath-conversation-box">
+      <section
+        className="nath-conversation-box"
+        data-drag-active={dragActive || undefined}
+        onDragEnter={(event) => {
+          event.preventDefault();
+          setDragActive(true);
+        }}
+        onDragOver={(event) => event.preventDefault()}
+        onDragLeave={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragActive(false);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          setDragActive(false);
+          addFiles(Array.from(event.dataTransfer.files));
+        }}
+      >
+        {dragActive ? <div className="nath-drop-overlay">Solte os arquivos aqui</div> : null}
         <header className="nath-chat__header">
           <p className="nath-chat__brand">Nathálya</p>
           <h1>Fala comigo 🎙️</h1>
+          <p className="nath-progress">Etapa {questionIndex + 1} de {form.questions.length}</p>
         </header>
 
-        <section className="nath-thread" aria-live="polite" aria-label="Conversa com a Nath">
-          {messages.map((message) => (
-            <article
-              className={`nath-message nath-message--${message.role}`}
-              key={message.id}
-            >
-              {message.title ? <h2>{message.title}</h2> : null}
-              <p>{message.text}</p>
-              {message.id === "assistant-done" ? (
-                <a className="nath-message__link" href={SUCCESS_HREF}>
-                  {SUCCESS_CTA}
-                </a>
-              ) : null}
-            </article>
-          ))}
-          <div ref={endRef} />
-        </section>
+        <div className="nath-question" aria-live="polite">
+          <h2>{question.title}</h2>
+          {question.help ? <p>{question.help}</p> : null}
+        </div>
 
-        {!done ? (
-          <div className="nath-composer-wrap">
-            <SfComposer
-              variant="slim"
-              skin="cockpit"
-              placeholder="Fale ou escreva…"
-              onSubmit={send}
-              onTranscribe={transcribeNathAudio}
-              fieldName={
-                instagramStep ? "username" : identityStep ? "name" : `answer-${step + 1}`
-              }
-              fieldAutoComplete={instagramStep ? "username" : identityStep ? "name" : "off"}
-              fieldAutoCapitalize={instagramStep ? "none" : identityStep ? "words" : "sentences"}
-              fieldSpellCheck={!instagramStep}
-            />
-          </div>
-        ) : null}
+        <Composer
+          text={text}
+          onTextChange={(value) => {
+            setText(value);
+            setError(null);
+          }}
+          attachments={attachments}
+          pending={pending}
+          placeholder="Fale ou escreva…"
+          attachError={error}
+          onSend={() => { void commitAnswer(text, inputMode); }}
+          onAddFiles={addFiles}
+          onVoiceTranscribe={async (blob) => transcribeVoice(blob)}
+          onVoiceSend={async (blob) => sendVoice(blob)}
+          onRemoveAttachment={removeAttachment}
+          onMicError={setError}
+          textareaRef={textareaRef}
+          fieldName={instagramStep ? "username" : `answer-${questionIndex + 1}`}
+          fieldAutoComplete={instagramStep ? "username" : "off"}
+          fieldAutoCapitalize={instagramStep ? "none" : "sentences"}
+          fieldSpellCheck={!instagramStep}
+          textareaAriaLabel={question.title}
+        />
       </section>
     </main>
   );

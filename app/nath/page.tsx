@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 import { Flow } from "@/components/marketing/nath/Flow";
+import { loadPublishedNathForm } from "@/lib/marketing/nath-form";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Fala comigo",
@@ -15,6 +18,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NathPage() {
-  return <Flow />;
+export default async function NathPage() {
+  const form = await loadPublishedNathForm();
+  if (!form) {
+    return (
+      <main className="nath-screen">
+        <section className="nath-conversation-box nath-unavailable">
+          <p className="nath-chat__brand">Nathálya</p>
+          <h1>Não consegui abrir este formulário agora.</h1>
+          <p>Tente novamente em alguns instantes.</p>
+        </section>
+      </main>
+    );
+  }
+  return <Flow form={form} />;
 }

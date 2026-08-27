@@ -1,11 +1,9 @@
-export interface ContactInfo {
-  instagram: string;
-  name: string;
-}
+import type { ChatAttachment } from "./composer/types";
+import type { NathInputMode } from "@/lib/marketing/nath-form";
 
-export interface ConversationMessage {
-  id: string;
-  role: "assistant" | "user";
+export interface LocalAnswer {
+  questionId: string;
   text: string;
-  title?: string;
+  inputMode: NathInputMode;
+  attachments: ChatAttachment[];
 }
