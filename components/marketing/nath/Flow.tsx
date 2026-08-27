@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import { persistAttribution } from "./attribution";
+import { Button } from "./Button";
 import { validateFiles } from "./composer/attachments";
 import { Composer } from "./composer/Composer";
 import type { ChatAttachment } from "./composer/types";
@@ -255,10 +256,10 @@ export function Flow({ form }: FlowProps) {
         />
         {questionIndex > 0 ? (
           <div className="nath-question-nav">
-            <button className="nath-back-button" type="button" onClick={goBack} disabled={pending}>
+            <Button variant="outline" type="button" onClick={goBack} disabled={pending}>
               <ArrowLeft size={16} aria-hidden="true" />
-              <span>Voltar</span>
-            </button>
+              Voltar
+            </Button>
           </div>
         ) : null}
       </section>
