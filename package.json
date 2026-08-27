@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:nath": "node --experimental-strip-types --test lib/marketing/nath-*.test.ts"
+    "test:nath": "tsx --test lib/marketing/nath-*.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.112.4",
@@ -20,6 +20,7 @@
     "@types/node": "^20.19.39",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tsx": "^4.23.12",
     "typescript": "5.9.3"
   }
 }

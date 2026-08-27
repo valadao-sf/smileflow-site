@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { transcribeNathAudio } from "./nath-transcription.ts";
+import { transcribeNathAudio } from "./nath-transcription";
 
 const ORIGINAL_FETCH = globalThis.fetch;
 const ORIGINAL_GEMINI_KEY = process.env.GEMINI_API_KEY;

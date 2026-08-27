@@ -1,36 +1,32 @@
 /**
  * Copied from:
  * valadao-sf/smileflow src/components/design-system/ai-native/use-mic-bars.ts
- * commit: 3d77dcb03b9c6e748acdd4a541b76da7b85ca696
+ * commit: 02b052e
+ *
+ * Recording bars for the current Olana composer: AudioContext + AnalyserNode +
+ * getByteFrequencyData. DI (jsdom-safe): createAnalyser is injectable.
  */
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 const BAR_COUNT = 5;
 
+/** Superfície mínima de MediaStream usada aqui (DI — jsdom não tem o nativo). */
 export interface MicMediaStreamLike {
   getTracks(): Array<{ stop(): void }>;
 }
 
+/** Superfície mínima de MediaRecorder usada aqui (DI). */
 export interface MicMediaRecorderLike {
   start(): void;
   stop(): void;
-  readonly mimeType?: string;
   readonly state: string;
   ondataavailable: ((event: { data: Blob }) => void) | null;
   onstop: (() => void) | null;
   onerror: ((event: unknown) => void) | null;
 }
 
-export function recordedAudioMime(chunks: readonly Blob[], recorderMimeType?: string): string {
-  const chunkMimeType = chunks.find((chunk) => chunk.type.startsWith("audio/"))?.type;
-  if (chunkMimeType) return chunkMimeType.split(";", 1)[0]?.trim() || "audio/webm";
-  if (recorderMimeType?.startsWith("audio/")) {
-    return recorderMimeType.split(";", 1)[0]?.trim() || "audio/webm";
-  }
-  return "audio/webm";
-}
-
+/** Analisador de nível de áudio real — AudioContext+AnalyserNode por trás. */
 export interface MicAudioLevelAnalyser {
   frequencyBinCount: number;
   getByteFrequencyData(data: Uint8Array): void;
@@ -48,11 +44,11 @@ export function defaultCreateMicRecorder(stream: MicMediaStreamLike): MicMediaRe
   return new MediaRecorder(stream as unknown as MediaStream) as unknown as MicMediaRecorderLike;
 }
 
+/** AudioContext+AnalyserNode reais — `null` fora do browser (SSR) ou sem suporte. */
 export function defaultCreateMicAnalyser(stream: MicMediaStreamLike): MicAudioLevelAnalyser | null {
   if (typeof window === "undefined") return null;
   const Ctor =
-    window.AudioContext ??
-    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!Ctor) return null;
   const ctx = new Ctor();
   const source = ctx.createMediaStreamSource(stream as unknown as MediaStream);
@@ -61,25 +57,24 @@ export function defaultCreateMicAnalyser(stream: MicMediaStreamLike): MicAudioLe
   source.connect(analyser);
   return {
     frequencyBinCount: analyser.frequencyBinCount,
-    getByteFrequencyData: (data) =>
-      analyser.getByteFrequencyData(data as Uint8Array<ArrayBuffer>),
+    getByteFrequencyData: (data) => analyser.getByteFrequencyData(data as Uint8Array<ArrayBuffer>),
     close: () => void ctx.close(),
   };
 }
 
+/** Média de energia por barra (0..1) a partir do buffer de frequência do analyser. */
 export function computeMicBarLevels(data: Uint8Array, barCount: number): number[] {
   const bucket = Math.max(1, Math.floor(data.length / barCount));
   const levels: number[] = [];
   for (let i = 0; i < barCount; i += 1) {
     let sum = 0;
-    for (let j = i * bucket; j < (i + 1) * bucket && j < data.length; j += 1) {
-      sum += data[j];
-    }
+    for (let j = i * bucket; j < (i + 1) * bucket && j < data.length; j += 1) sum += data[j];
     levels.push(Math.min(1, sum / bucket / 255));
   }
   return levels;
 }
 
+/** Energia RMS da faixa vocal, mais responsiva que a média do espectro inteiro. */
 export function computeMicHistoryLevel(data: Uint8Array): number {
   const bandLength = Math.max(1, Math.ceil(data.length * 0.6));
   let squareSum = 0;
@@ -93,17 +88,20 @@ export function computeMicHistoryLevel(data: Uint8Array): number {
 export interface UseMicBarsOptions {
   createAnalyser?: (stream: MicMediaStreamLike) => MicAudioLevelAnalyser | null;
   barCount?: number;
+  /** `history` draws a rolling waveform (new samples enter on the right). */
   mode?: "spectrum" | "history";
   historySampleMs?: number;
 }
 
 export interface UseMicBars {
+  /** Barras estáveis para render inicial; a altura viva é aplicada direto no DOM. */
   levels: number[];
   setBarElement(index: number, element: HTMLElement | null): void;
   start(stream: MicMediaStreamLike): void;
   stop(options?: { reset?: boolean }): void;
 }
 
+/** Barras de gravação alimentadas por áudio real. Injeção opcional pra teste. */
 export function useMicBars(options: UseMicBarsOptions = {}): UseMicBars {
   const {
     createAnalyser = defaultCreateMicAnalyser,
@@ -122,34 +120,26 @@ export function useMicBars(options: UseMicBarsOptions = {}): UseMicBars {
     barElementsRef.current[index] = element;
   }, []);
 
-  const setBarTransforms = useCallback(
-    (nextLevels: number[]) => {
-      const minimum = mode === "history" ? 0.075 : 0.15;
-      for (let index = 0; index < nextLevels.length; index += 1) {
-        const element = barElementsRef.current[index];
-        if (element) {
-          element.style.transform = `scaleY(${Math.max(minimum, nextLevels[index])})`;
-        }
-      }
-    },
-    [mode],
-  );
+  const setBarTransforms = useCallback((nextLevels: number[]) => {
+    const minimum = mode === "history" ? 0.075 : 0.15;
+    for (let index = 0; index < nextLevels.length; index += 1) {
+      const element = barElementsRef.current[index];
+      if (element) element.style.transform = `scaleY(${Math.max(minimum, nextLevels[index])})`;
+    }
+  }, [mode]);
 
-  const stop = useCallback(
-    (stopOptions: { reset?: boolean } = {}) => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      analyserRef.current?.close();
-      analyserRef.current = null;
-      if (stopOptions.reset !== false) {
-        historyRef.current = Array(barCount).fill(0);
-        setBarTransforms(historyRef.current);
-      }
-    },
-    [barCount, setBarTransforms],
-  );
+  const stop = useCallback((stopOptions: { reset?: boolean } = {}) => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    analyserRef.current?.close();
+    analyserRef.current = null;
+    if (stopOptions.reset !== false) {
+      historyRef.current = Array(barCount).fill(0);
+      setBarTransforms(historyRef.current);
+    }
+  }, [barCount, setBarTransforms]);
 
   const start = useCallback(
     (stream: MicMediaStreamLike) => {
@@ -163,10 +153,7 @@ export function useMicBars(options: UseMicBarsOptions = {}): UseMicBars {
       const tick = (timestamp: number) => {
         analyser.getByteFrequencyData(data);
         if (mode === "history") {
-          if (
-            lastHistorySampleRef.current === 0 ||
-            timestamp - lastHistorySampleRef.current >= historySampleMs
-          ) {
+          if (lastHistorySampleRef.current === 0 || timestamp - lastHistorySampleRef.current >= historySampleMs) {
             const nextLevel = computeMicHistoryLevel(data);
             historyRef.current = [...historyRef.current.slice(1), nextLevel];
             setBarTransforms(historyRef.current);

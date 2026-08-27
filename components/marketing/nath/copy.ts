@@ -18,7 +18,8 @@ export const QUESTIONS: readonly QuestionCopy[] = [
   },
 ];
 
-export const IDENTITY_PROMPTS = ["Como eu te chamo?", "Qual é o seu Instagram?"] as const;
+export const INSTAGRAM_QUESTION = "Qual é o seu Instagram?";
 
+export const SUCCESS_COPY = "Recebi sua pergunta.";
 export const SUCCESS_CTA = "Assistir ao vídeo da Nath";
 export const SUCCESS_HREF = "https://smileflow.me/negociacao-clinica";

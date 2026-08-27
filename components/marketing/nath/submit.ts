@@ -1,5 +1,6 @@
 import { readAttribution } from "./attribution";
-import type { ContactInfo } from "./types";
+import type { ChatAttachment } from "./composer/types";
+import type { LocalAnswer } from "./types";
 
 const MARKETING_ORIGIN = "https://smileflow-marketing.vercel.app";
 
@@ -34,24 +35,95 @@ export async function transcribeNathAudio(audio: Blob): Promise<string> {
   return payload.text;
 }
 
-export async function submitNathConversation(
-  contact: ContactInfo,
-  answers: string[],
-): Promise<string> {
-  const startResponse = await fetch(apiUrl("/api/nath/start"), { method: "POST" });
-  const start = await responseJson(startResponse);
-  if (!startResponse.ok || start?.ok !== true || typeof start.token !== "string") {
-    throw new Error("Não consegui iniciar o envio. Tente novamente.");
+interface UploadedMedia {
+  questionId: string;
+  bucket: string;
+  path: string;
+  filename: string;
+  mime: string;
+  size: number;
+}
+
+const uploadedFiles = new WeakMap<File, UploadedMedia>();
+
+async function uploadAttachment(
+  submissionId: string,
+  questionId: string,
+  attachment: ChatAttachment,
+): Promise<UploadedMedia> {
+  const file = attachment.file;
+  if (!(file instanceof File)) {
+    throw new Error("Anexo inválido. Anexe o arquivo de novo.");
+  }
+  const cached = uploadedFiles.get(file);
+  if (cached?.questionId === questionId) return cached;
+  const ticketResponse = await fetch(apiUrl("/api/nath/upload-ticket"), {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      submissionId,
+      filename: file.name,
+      mime: file.type || attachment.mime,
+      size: file.size,
+    }),
+  });
+  const ticket = await responseJson(ticketResponse);
+  if (
+    !ticketResponse.ok
+    || ticket?.ok !== true
+    || typeof ticket.bucket !== "string"
+    || typeof ticket.path !== "string"
+    || typeof ticket.uploadUrl !== "string"
+  ) {
+    throw new Error("Não consegui preparar o envio do anexo.");
+  }
+
+  const put = await fetch(ticket.uploadUrl, {
+    method: "PUT",
+    headers: { "content-type": file.type || attachment.mime || "application/octet-stream" },
+    body: file,
+  });
+  if (!put.ok) {
+    throw new Error("Não consegui enviar o anexo.");
+  }
+
+  const uploaded = {
+    questionId,
+    bucket: ticket.bucket,
+    path: ticket.path,
+    filename: file.name,
+    mime: file.type || attachment.mime,
+    size: file.size,
+  };
+  uploadedFiles.set(file, uploaded);
+  return uploaded;
+}
+
+export async function submitNathConversation(input: {
+  submissionId: string;
+  formVersion: string;
+  answers: LocalAnswer[];
+}): Promise<string> {
+  const media: UploadedMedia[] = [];
+  for (const answer of input.answers) {
+    for (const attachment of answer.attachments) {
+      media.push(await uploadAttachment(input.submissionId, answer.questionId, attachment));
+    }
   }
 
   const submitResponse = await fetch(apiUrl("/api/nath/submit"), {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      answers,
+      submissionId: input.submissionId,
+      formVersion: input.formVersion,
+      answers: input.answers.map((answer) => ({
+        questionId: answer.questionId,
+        text: answer.text,
+        inputMode: answer.inputMode,
+      })),
+      media,
       attribution: readAttribution(),
-      contact,
-      token: start.token,
     }),
   });
   const submission = await responseJson(submitResponse);
