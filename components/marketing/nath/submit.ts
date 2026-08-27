@@ -1,4 +1,5 @@
 import { readAttribution } from "./attribution";
+import { storageUploadMime } from "./composer/attachments";
 import type { ChatAttachment } from "./composer/types";
 import type { LocalAnswer } from "./types";
 
@@ -57,13 +58,14 @@ async function uploadAttachment(
   }
   const cached = uploadedFiles.get(file);
   if (cached?.questionId === questionId) return cached;
+  const contentType = storageUploadMime(file.type || attachment.mime, file.name);
   const ticketResponse = await fetch(apiUrl("/api/nath/upload-ticket"), {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       submissionId,
       filename: file.name,
-      mime: file.type || attachment.mime,
+      mime: contentType,
       size: file.size,
     }),
   });
@@ -80,7 +82,7 @@ async function uploadAttachment(
 
   const put = await fetch(ticket.uploadUrl, {
     method: "PUT",
-    headers: { "content-type": file.type || attachment.mime || "application/octet-stream" },
+    headers: { "content-type": contentType },
     body: file,
   });
   if (!put.ok) {
@@ -92,7 +94,7 @@ async function uploadAttachment(
     bucket: ticket.bucket,
     path: ticket.path,
     filename: file.name,
-    mime: file.type || attachment.mime,
+    mime: contentType,
     size: file.size,
   };
   uploadedFiles.set(file, uploaded);

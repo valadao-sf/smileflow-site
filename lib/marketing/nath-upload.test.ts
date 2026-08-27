@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { storageUploadMime } from "@/components/marketing/nath/composer/attachments";
 import {
   NATH_MEDIA_BUCKET,
   mediaPathBelongsToSubmission,
@@ -9,6 +10,12 @@ import {
 } from "./nath-upload";
 
 const SUBMISSION_ID = "00000000-0000-4000-8000-000000000001";
+
+test("stores Markdown with the private bucket's supported text MIME", () => {
+  assert.equal(storageUploadMime("text/markdown", "contexto.md"), "text/plain");
+  assert.equal(storageUploadMime("", "contexto.md"), "text/plain");
+  assert.equal(storageUploadMime("image/jpeg", "print.jpg"), "image/jpeg");
+});
 
 test("issues tickets only for bounded supported files", () => {
   assert.equal(validateUploadTicketInput({
