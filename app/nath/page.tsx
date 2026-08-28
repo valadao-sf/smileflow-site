@@ -24,7 +24,6 @@ export default async function NathPage() {
     return (
       <main className="nath-screen">
         <section className="nath-conversation-box nath-unavailable">
-          <p className="nath-chat__brand">Nathálya</p>
           <h1>Não consegui abrir este formulário agora.</h1>
           <p>Tente novamente em alguns instantes.</p>
         </section>

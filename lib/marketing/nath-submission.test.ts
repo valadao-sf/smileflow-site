@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { NathQuestion } from "./nath-form";
-import { cleanNathAnswers } from "./nath-submission";
+import { cleanNathAnswers, cleanNathContact } from "./nath-submission";
 
 const QUESTIONS: NathQuestion[] = [
   { id: "page-1", questionId: "q1", title: "Q1", help: "" },
@@ -33,4 +33,32 @@ test("rejects incomplete or reordered answers", () => {
     { questionId: "q3", text: "resposta", inputMode: "text" },
     { questionId: "instagram", text: "pessoa", inputMode: "text" },
   ], QUESTIONS), null);
+});
+
+test("normalizes the Nath contact and explicit social permissions", () => {
+  assert.deepEqual(cleanNathContact({
+    fullName: "  Maria   da Silva ",
+    instagram: "https://instagram.com/@maria.silva/",
+    canMentionName: true,
+    canTagInstagram: false,
+  }), {
+    fullName: "Maria da Silva",
+    instagram: "maria.silva",
+    canMentionName: true,
+    canTagInstagram: false,
+  });
+});
+
+test("rejects incomplete or implicit Nath contact permissions", () => {
+  assert.equal(cleanNathContact({
+    fullName: "Maria",
+    instagram: "maria",
+    canMentionName: true,
+  }), null);
+  assert.equal(cleanNathContact({
+    fullName: "",
+    instagram: "maria",
+    canMentionName: true,
+    canTagInstagram: true,
+  }), null);
 });
