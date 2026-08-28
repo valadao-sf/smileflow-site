@@ -29,6 +29,7 @@ interface FlowProps {
 type Screen = "profile" | "question" | "consent" | "success";
 
 const QUESTION_COUNT = 3;
+const QUESTION_ORDER = [0, 2, 1] as const;
 
 function createSubmissionId(): string {
   return globalThis.crypto.randomUUID();
@@ -50,7 +51,8 @@ export function Flow({ form }: FlowProps) {
   const nameRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const question = form.questions[questionIndex];
+  const formQuestionIndex = QUESTION_ORDER[questionIndex];
+  const question = formQuestionIndex === undefined ? undefined : form.questions[formQuestionIndex];
 
   useEffect(() => persistAttribution(), []);
 
@@ -138,7 +140,7 @@ export function Flow({ form }: FlowProps) {
     if (pending) return;
     const narrativeAnswers = form.questions
       .slice(0, QUESTION_COUNT)
-      .map((_, index) => answers[index])
+      .map((formQuestion) => answers.find((answer) => answer?.questionId === formQuestion.questionId))
       .filter((item): item is LocalAnswer => item !== undefined && item.text.trim().length > 0);
     const instagramQuestion = form.questions[QUESTION_COUNT];
     const normalizedInstagram = cleanInstagram(instagram);
