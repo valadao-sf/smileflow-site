@@ -105,6 +105,12 @@ export async function submitNathConversation(input: {
   submissionId: string;
   formVersion: string;
   answers: LocalAnswer[];
+  contact: {
+    fullName: string;
+    instagram: string;
+    canMentionName: boolean;
+    canTagInstagram: boolean;
+  };
 }): Promise<string> {
   const media: UploadedMedia[] = [];
   for (const answer of input.answers) {
@@ -124,6 +130,7 @@ export async function submitNathConversation(input: {
         text: answer.text,
         inputMode: answer.inputMode,
       })),
+      contact: input.contact,
       media,
       attribution: readAttribution(),
     }),

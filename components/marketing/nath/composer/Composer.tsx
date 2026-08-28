@@ -55,6 +55,8 @@ export interface ComposerProps {
   fieldAutoCapitalize?: "none" | "sentences" | "words";
   fieldSpellCheck?: boolean;
   textareaAriaLabel?: string;
+  allowAttachments?: boolean;
+  allowVoiceSend?: boolean;
 }
 
 export function Composer({
@@ -76,6 +78,8 @@ export function Composer({
   fieldAutoCapitalize,
   fieldSpellCheck,
   textareaAriaLabel = "Resposta",
+  allowAttachments = true,
+  allowVoiceSend = true,
 }: ComposerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -329,7 +333,7 @@ export function Composer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [micSupported, pending, recorderPhase]);
 
-  const hasContent = text.trim().length > 0 || attachments.length > 0;
+  const hasContent = text.trim().length > 0 || (allowAttachments && attachments.length > 0);
   const recorderBusy = recorderPhase !== "idle";
   const voiceControl = micSupported ? (
     <span className={styles.voiceTriggerWrap}>
@@ -351,7 +355,7 @@ export function Composer({
 
   return (
     <div className={styles.composerDock}>
-      {attachments.length > 0 && (
+      {allowAttachments && attachments.length > 0 && (
         <div className={styles.attachStrip} aria-live="polite">
           {attachments.map((attachment) => (
             <div key={attachment.id} className={styles.attachChip}>
@@ -389,21 +393,24 @@ export function Composer({
         data-expanded={(!recorderBusy && composerExpanded && text.length > 0) || undefined}
         data-recorder-phase={recorderBusy ? recorderPhase : undefined}
         data-pending={pending || undefined}
+        data-has-tools={allowAttachments || undefined}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept={ATTACH_ACCEPT}
-          className={styles.fileInput}
-          tabIndex={-1}
-          aria-hidden="true"
-          onChange={(event) => {
-            const files = Array.from(event.target.files ?? []);
-            if (files.length > 0) onAddFiles(files);
-            event.target.value = "";
-          }}
-        />
+        {allowAttachments ? (
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept={ATTACH_ACCEPT}
+            className={styles.fileInput}
+            tabIndex={-1}
+            aria-hidden="true"
+            onChange={(event) => {
+              const files = Array.from(event.target.files ?? []);
+              if (files.length > 0) onAddFiles(files);
+              event.target.value = "";
+            }}
+          />
+        ) : null}
         {recorderBusy ? (
           <div className={styles.recordingStage} role="group" aria-label="Gravação de áudio">
             <div className={styles.recordingStatus}>
@@ -446,7 +453,7 @@ export function Composer({
                 <X size={18} />
               </button>
               <span className={styles.recordingActions}>
-                {recorderPhase === "recording" ? (
+                {recorderPhase === "recording" && allowVoiceSend ? (
                   <button
                     type="button"
                     className={styles.recordStop}
@@ -471,8 +478,9 @@ export function Composer({
           </div>
         ) : (
           <>
-            <div className={styles.toolsWrap} ref={toolsWrapRef}>
-              {toolsOpen && (
+            {allowAttachments ? (
+              <div className={styles.toolsWrap} ref={toolsWrapRef}>
+                {toolsOpen && (
                 <div className={styles.toolsMenu} role="menu" aria-label={t("toolsMenu")}>
                   <button
                     type="button"
@@ -490,19 +498,20 @@ export function Composer({
                     </span>
                   </button>
                 </div>
-              )}
-              <button
-                type="button"
-                className={styles.composerGhost}
-                onClick={() => setToolsOpen((open) => !open)}
-                disabled={pending}
-                aria-label={t("toolsMenu")}
-                aria-haspopup="menu"
-                aria-expanded={toolsOpen}
-              >
-                <Plus size={18} />
-              </button>
-            </div>
+                )}
+                <button
+                  type="button"
+                  className={styles.composerGhost}
+                  onClick={() => setToolsOpen((open) => !open)}
+                  disabled={pending}
+                  aria-label={t("toolsMenu")}
+                  aria-haspopup="menu"
+                  aria-expanded={toolsOpen}
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+            ) : null}
             <textarea
               ref={textareaRef}
               value={text}
@@ -521,13 +530,13 @@ export function Composer({
                   onSend();
                 }
               }}
-              onPaste={(event) => {
+              onPaste={allowAttachments ? (event) => {
                 const files = Array.from(event.clipboardData?.files ?? []);
                 if (files.length > 0) {
                   event.preventDefault();
                   onAddFiles(files);
                 }
-              }}
+              } : undefined}
               placeholder={placeholder}
               aria-label={textareaAriaLabel}
               readOnly={pending}

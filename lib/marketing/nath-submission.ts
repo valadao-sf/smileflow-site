@@ -16,6 +16,32 @@ export function cleanNathInstagram(value: unknown): string | null {
   return instagram;
 }
 
+export interface NathContact {
+  fullName: string;
+  instagram: string;
+  canMentionName: boolean;
+  canTagInstagram: boolean;
+}
+
+export function cleanNathContact(value: unknown): NathContact | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  if (
+    typeof record.fullName !== "string"
+    || typeof record.canMentionName !== "boolean"
+    || typeof record.canTagInstagram !== "boolean"
+  ) return null;
+  const fullName = record.fullName.trim().replace(/\s+/g, " ");
+  const instagram = cleanNathInstagram(record.instagram);
+  if (!fullName || fullName.length > 160 || !instagram) return null;
+  return {
+    fullName,
+    instagram,
+    canMentionName: record.canMentionName,
+    canTagInstagram: record.canTagInstagram,
+  };
+}
+
 export interface NathAnswer {
   questionId: string;
   text: string;
