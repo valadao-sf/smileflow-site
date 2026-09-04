@@ -6,6 +6,14 @@
  *
  * ElevenLabs Scribe is the canonical SmileFlow path. Gemini remains a fallback
  * for deployments that have a usable Gemini key but temporarily lose Scribe.
+ *
+ * OpenRouter STT is intentionally not substituted here yet. Its official
+ * /api/v1/audio/transcriptions contract returns compatible plain text, but the
+ * current contract does not apply provider routing controls (including
+ * data_collection deny and ZDR) to this endpoint. Sending Nath audio through
+ * it would therefore violate this boundary's fail-closed privacy requirement.
+ * The chat-completions audio shape is not a demonstrated STT parity path and
+ * cannot silently replace this specialist fallback.
  */
 
 const GEMINI_INLINE_MAX_BYTES = 14 * 1024 * 1024;
