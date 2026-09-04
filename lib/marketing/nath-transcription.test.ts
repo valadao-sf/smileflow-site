@@ -37,7 +37,7 @@ test("uses SmileFlow's Scribe transcription path first", async () => {
   assert.match(calledUrls[0] ?? "", /elevenlabs\.io\/v1\/speech-to-text/);
 });
 
-test("falls back to Gemini when Scribe is unavailable", async () => {
+test("falls back to the documented direct Gemini exception when Scribe is unavailable", async () => {
   process.env.GEMINI_API_KEY = "gemini-test";
   process.env.ELEVENLABS_API_KEY = "sk_test";
   const calledUrls: string[] = [];
@@ -49,6 +49,7 @@ test("falls back to Gemini when Scribe is unavailable", async () => {
         headers: { "content-type": "application/json" },
       });
     }
+    assert.equal(String(input), "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent");
     return new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: "fallback transcrito" }] } }],
     }), { status: 200, headers: { "content-type": "application/json" } });
@@ -61,12 +62,21 @@ test("falls back to Gemini when Scribe is unavailable", async () => {
   assert.match(calledUrls[1] ?? "", /gemini-2\.5-flash:generateContent/);
 });
 
-test("uses Gemini directly when ElevenLabs contains only a key id", async () => {
+test("uses the documented direct Gemini exception when ElevenLabs contains only a key id", async () => {
   process.env.GEMINI_API_KEY = "gemini-test";
   process.env.ELEVENLABS_API_KEY = "legacy-key-id";
   let calledUrl = "";
-  globalThis.fetch = async (input) => {
+  globalThis.fetch = async (input, init) => {
     calledUrl = String(input);
+    assert.equal(calledUrl, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent");
+    assert.deepEqual(init?.headers, {
+      "content-type": "application/json",
+      "x-goog-api-key": "gemini-test",
+    });
+    const body = JSON.parse(String(init?.body)) as { contents?: Array<{ parts?: Array<{ inlineData?: { mimeType?: string; data?: string } }> }> };
+    const inlineAudio = body.contents?.[0]?.parts?.[1]?.inlineData;
+    assert.equal(inlineAudio?.mimeType, "audio/webm");
+    assert.equal(inlineAudio?.data, Buffer.alloc(2_048, 1).toString("base64"));
     return new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: "gemini transcrito" }] } }],
     }), { status: 200, headers: { "content-type": "application/json" } });
