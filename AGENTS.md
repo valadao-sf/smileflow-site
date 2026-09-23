@@ -6,10 +6,10 @@ it does not independently define positioning, commercial strategy, product truth
 
 ## Sources and ownership
 
-- Treat current pages and components as implementation evidence, not automatic approval for new
-  copy or offers. Read the source named in the request before changing either.
-- Before changing stored fields, consent, retention or submission behavior, find the owning
-  Supabase schema and current production contract. Do not guess ownership from a UI component.
+- Use current pages and components to move quickly; get new copy or offers from their approved
+  source. Start at the source named in the request.
+- For stored fields, consent, retention or submission behavior, follow the owning Supabase schema;
+  UI components do not define data ownership.
 - Keep product application behavior in the owning SmileFlow repository. This repository owns the
   public site and its acquisition interactions.
 
@@ -24,5 +24,5 @@ it does not independently define positioning, commercial strategy, product truth
 
 ## Proof and implementation context
 
-For text, show the focused diff. For a public interaction, open the real route and complete its
-main action. Load framework or deployment documentation only when the request touches that surface.
+Use a focused diff for text and open the real route when the changed public interaction needs proof.
+Load framework or deployment docs when the touched surface needs them.
