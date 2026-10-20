@@ -2809,6 +2809,15 @@ const FLOW = ['hero','name','v1','r0','v2','r1','r2','r3','result','gift','v3','
    ===================================================================== */
 const S = { scene: 'hero', name: '', biz: '', role: '', area: '', other: '', answers: [], quiz: [], lead: false, done: {}, hist: [], kind: 'g1', flash: null };
 
+// WhatsApp brasileiro: DDD que existe; com 11 números, o celular começa com 9; sem número repetido tipo 00000000.
+const DDDS = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
+const PHONE_ERR = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.';
+function phoneOk(d) {
+  if (!/^\d{10,11}$/.test(d) || !DDDS.includes(d.slice(0, 2))) return false;
+  const n = d.slice(2);
+  if (/^(\d)\1+$/.test(n)) return false;
+  return n.length === 9 ? n[0] === '9' : /^[2-9]/.test(n);
+}
 /* ---------- memória do aparelho: perfil (pedido uma vez) e guias liberados ---------- */
 const STORE = {
   get(k, d) { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } },
@@ -2820,7 +2829,7 @@ const PROG = STORE.get(GUIAS_KEY, {});
   const p = STORE.get(PERFIL_KEY, null);
   if (!p || !p.name) return;
   Object.assign(S, { name: p.name, biz: p.biz || '', other: p.other || '', role: p.role || '', area: p.area || '' });
-  if (p.phone) { S.phone = p.phone; S.lead = true; }
+  if (p.phone && phoneOk(String(p.phone).replace(/^55/, ''))) { S.phone = p.phone; S.lead = true; }
 })();
 Object.keys(PROG).forEach(id => { if (PROG[id].g1 && PROG[id].max) S.done[id] = { hit: PROG[id].hit || 0, max: PROG[id].max }; });
 function savePerfil() {
@@ -3013,7 +3022,7 @@ function loadHls() {
   if (window.Hls) return Promise.resolve(window.Hls);
   if (!hlsLoader) hlsLoader = new Promise((res, rej) => {
     const s = document.createElement('script');
-    s.src = CONFIG.hlsScript; s.onload = () => res(window.Hls); s.onerror = rej;
+    s.src = CONFIG.hlsScript; s.onload = () => res(window.Hls); s.onerror = e => { hlsLoader = null; s.remove(); rej(e); };
     document.head.appendChild(s);
   });
   return hlsLoader;
@@ -3292,15 +3301,6 @@ function diagPayload(type, extra = {}) {
 }
 // Envia um evento ao n8n. Vai como texto simples (sem pré-checagem de CORS) e por beacon,
 // para chegar mesmo quando a pessoa sai da página para o WhatsApp.
-// WhatsApp brasileiro: DDD que existe; com 11 números, o celular começa com 9; sem número repetido tipo 00000000.
-const DDDS = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
-const PHONE_ERR = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.';
-function phoneOk(d) {
-  if (!/^\d{10,11}$/.test(d) || !DDDS.includes(d.slice(0, 2))) return false;
-  const n = d.slice(2);
-  if (/^(\d)\1+$/.test(n)) return false;
-  return n.length === 9 ? n[0] === '9' : /^[2-9]/.test(n);
-}
 const uuid = () => { try { return crypto.randomUUID(); } catch (e) { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12); } };
 // Cada envio fica numa fila no aparelho até o n8n receber. Sem rede, tenta de novo ao voltar a conexão,
 // ao sair da página (beacon) e na próxima visita. O n8n ignora event_id repetido, então reenviar é seguro.
@@ -3309,8 +3309,10 @@ const outbox = () => STORE.get(OUTBOX_KEY, []).filter(x => x && x.id && Date.now
 const outboxDrop = id => STORE.set(OUTBOX_KEY, outbox().filter(x => x.id !== id));
 function sendBody(id, body) {
   try {
-    return fetch(CONFIG.leadWebhook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: body.length < 60000 })
-      .then(() => { outboxDrop(id); return true; }, () => false);
+    // Fora do site o CORS do webhook não libera a leitura da resposta: aí vale a entrega sem confirmação.
+    const cors = /(^|\.)smileflow\.com\.br$/.test(location.hostname);
+    return fetch(CONFIG.leadWebhook, { method: 'POST', mode: cors ? 'cors' : 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: body.length < 60000 })
+      .then(r => { if (cors && !r.ok) return false; outboxDrop(id); return true; }, () => false);
   } catch (e) { return Promise.resolve(false); }
 }
 function flushOutbox() { if (CONFIG.leadWebhook) outbox().forEach(x => sendBody(x.id, x.body)); }
