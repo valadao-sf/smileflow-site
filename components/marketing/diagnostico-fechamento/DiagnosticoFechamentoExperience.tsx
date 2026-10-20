@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Check, Download, Play, Volume2 } from "lucide-react";
+import { sfTrack } from "@/lib/tracking";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
@@ -18,10 +19,9 @@ type Screen = "opening" | "question" | "result" | "video";
 const ANSWER_CONFIRM_MS = 280;
 
 function emit(eventName: string, detail: Record<string, string> = {}) {
-  const analyticsWindow = window as Window & { fbq?: (...args: unknown[]) => void };
   const payload = { route: "/diagnostico-de-fechamento", ...detail };
   try {
-    analyticsWindow.fbq?.("trackCustom", eventName, payload);
+    sfTrack(eventName, payload);
     window.dispatchEvent(new CustomEvent("smileflow:marketing", { detail: { eventName, ...payload } }));
   } catch {
     // Measurement never blocks the diagnosis.
