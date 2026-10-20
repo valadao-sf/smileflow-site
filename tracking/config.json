@@ -1,0 +1,25 @@
+{
+  "$comment": "IDs de medição de smileflow.com.br. ID vazio = a plataforma não carrega. Tokens de servidor (CAPI, Events API, Google Ads API) nunca entram aqui: ficam nas credenciais do n8n.",
+  "hosts": ["smileflow.com.br", "www.smileflow.com.br"],
+  "currency": "BRL",
+  "consent": {
+    "$comment": "required=false mantém o comportamento de hoje (tudo carrega). Com o banner (item 9), vira true: GA4 sem cookie antes do aceite; pixels de anúncio e Clarity só depois.",
+    "required": false
+  },
+  "userData": {
+    "$comment": "Telefone e nome com hash para as plataformas (advanced matching / enhanced conversions). Só liga depois do novo texto de aceite e da /privacidade aprovados.",
+    "enabled": false
+  },
+  "ga4": { "id": "G-ZC4Y4L1YQN" },
+  "meta": { "pixelId": "888486630406077" },
+  "googleAds": {
+    "id": "",
+    "labels": { "diagnostico_concluido": "", "guia_liberado": "", "pedido_contato": "", "clique_whatsapp": "" }
+  },
+  "tiktok": { "pixelId": "" },
+  "microsoftUet": { "tagId": "" },
+  "clarity": { "projectId": "" },
+  "linkedin": { "partnerId": "", "conversions": { "diagnostico_concluido": "" } },
+  "pinterest": { "tagId": "" },
+  "kwai": { "pixelId": "" }
+}

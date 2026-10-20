@@ -95,13 +95,10 @@ for d in DATA:
         crumbs(url, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL), (d['phrase'].strip('“”').capitalize(), url)])]))
 BY_ID = {d['id']: d for d in DATA}
 
-TAGS = '''<script>
-(function(){var h=location.hostname;if(h!=='smileflow.com.br'&&h!=='www.smileflow.com.br')return;
-var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-ZC4Y4L1YQN';document.head.appendChild(s);
-window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','G-ZC4Y4L1YQN');
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','888486630406077');fbq('track','PageView');})();
-</script>'''
+# Medição: a camada única de smileflow.com.br (tracking/ → public/_sf/track.js). Ela carrega GA4, Meta e as outras
+# plataformas só no domínio e só com ID. O stub guarda as chamadas feitas antes do script chegar.
+TAGS = '''<script>window.sfTrack=window.sfTrack||function(){(window.sfTrack.q=window.sfTrack.q||[]).push(arguments)};</script>
+<script async src="/_sf/track.js"></script>'''
 
 
 def asset_abs(s):

@@ -21,13 +21,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="https://smileflow-marketing.vercel.app/favicon.ico">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://smileflow.com.br/#organizacao", "name": "SmileFlow", "url": "https://smileflow.com.br"}, {"@type": "Person", "@id": "https://smileflow.com.br/#nathalya-mello", "name": "Nathálya Mello", "jobTitle": "Especialista em Vendas", "description": "Sócia-fundadora e Diretora Comercial da SmileFlow", "worksFor": {"@id": "https://smileflow.com.br/#organizacao"}, "image": "https://smileflow.com.br/simulador-objecoes/assets/nath-avatar.webp", "sameAs": ["https://www.instagram.com/nathmellop/"]}, {"@type": "WebPage", "@id": "https://smileflow.com.br/simulador-objecoes/medo#pagina", "url": "https://smileflow.com.br/simulador-objecoes/medo", "name": "O que responder quando o paciente diz “tenho medo”? | Simulação grátis", "headline": "O que responder quando o paciente diz “tenho medo”?", "description": "Acolha. Pergunte. Entenda o medo. Depois, explique. Na simulação grátis da Nathálya Mello, você atende 4 pacientes que dizem “tenho medo” e vê onde a sua resposta trava a venda.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://smileflow.com.br/simulador-objecoes#pagina"}, "author": {"@id": "https://smileflow.com.br/#nathalya-mello"}, "publisher": {"@id": "https://smileflow.com.br/#organizacao"}, "primaryImageOfPage": "https://smileflow.com.br/simulador-objecoes/assets/og-medo.jpg", "breadcrumb": {"@id": "https://smileflow.com.br/simulador-objecoes/medo#trilha"}}, {"@type": "FAQPage", "@id": "https://smileflow.com.br/simulador-objecoes/medo#perguntas", "mainEntity": [{"@type": "Question", "name": "O que responder quando o paciente diz “tenho medo”?", "acceptedAnswer": {"@type": "Answer", "text": "Medo não se resolve com argumento. Se resolve com conversa. Quando a pessoa diz que tem medo, a vontade é tranquilizar rápido ou provar o seu valor. Segure essa vontade por um instante. Primeiro, acolha: é normal ter medo. Depois, pergunte o que exatamente preocupa. Entenda de onde vem esse medo: uma experiência ruim, um caso que a pessoa viu, a falta de informação ou uma dúvida sobre a saúde. Só então explique, com calma e com garantias concretas."}}]}, {"@type": "BreadcrumbList", "@id": "https://smileflow.com.br/simulador-objecoes/medo#trilha", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "SmileFlow", "item": "https://smileflow.com.br"}, {"@type": "ListItem", "position": 2, "name": "Simulador de objeções", "item": "https://smileflow.com.br/simulador-objecoes"}, {"@type": "ListItem", "position": 3, "name": "Tenho medo", "item": "https://smileflow.com.br/simulador-objecoes/medo"}]}]}</script>
-<script>
-(function(){var h=location.hostname;if(h!=='smileflow.com.br'&&h!=='www.smileflow.com.br')return;
-var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-ZC4Y4L1YQN';document.head.appendChild(s);
-window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','G-ZC4Y4L1YQN');
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','888486630406077');fbq('track','PageView');})();
-</script>
+<script>window.sfTrack=window.sfTrack||function(){(window.sfTrack.q=window.sfTrack.q||[]).push(arguments)};</script>
+<script async src="/_sf/track.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,300..700&family=Manrope:wght@300;400;500;600;700;800&display=swap">
@@ -1119,6 +1114,7 @@ try {
 // teste: fora de smileflow.com.br ou com ?teste=1 nada chega na equipe
 const IS_TEST = (() => {
   try { const q = new URLSearchParams(location.search); if (q.get('teste') === '1' || /^(1|true)$/.test(q.get('is_test') || '')) return true; } catch (e) {}
+  try { if (sessionStorage.getItem('sf_test')) return true; } catch (e) {}
   return !/(^|\.)smileflow\.com\.br$/.test(location.hostname);
 })();
 const SID = Math.random().toString(36).slice(2, 10);
@@ -1132,36 +1128,27 @@ const AB = (() => {
   return v;
 })();
 
-// eventos que viram conversão no GA4 e no Meta (só carregam em smileflow.com.br)
-const AD_EVENTS = {
-  wa_click: ['generate_lead', { lead_type: 'whatsapp' }, 'Contact'],
-  callback: ['generate_lead', { lead_type: 'callback' }, 'Lead'],
-  lead: ['sign_up', { method: 'guia' }, 'Lead'],
-  diag_done: ['diagnostico_concluido', {}, null],
-  diag_start: ['diagnostico_iniciado', {}, null],
-  sim_start: ['simulacao_iniciada', {}, null],
-  flash_start: ['flashcards_iniciados', {}, null],
-  guide_open: ['guia_liberado', {}, null],
-  waitlist: ['lista_espera', { lead_type: 'lista_espera' }, null],
+// Nome de cada evento na camada única de medição (smileflow.com.br/_sf/track.js, fonte em tracking/).
+// A camada decide o evento de cada plataforma: conversão padrão só para saude_estetica; o resto vira evento personalizado.
+const SF_EVENTS = {
+  diag_done: 'diagnostico_concluido',   // conversão principal (com WhatsApp)
+  lead: 'guia_liberado', callback: 'pedido_contato', wa_click: 'clique_whatsapp', waitlist: 'lista_espera',
   // o meio do funil, para ver onde as pessoas param
-  profile: ['perfil_preenchido', {}, null],
-  result: ['resultado_simulacao', {}, null],
-  quiz_done: ['cartoes_concluidos', {}, null],
-  gift_view: ['pedido_whatsapp_visto', {}, null]
+  diag_start: 'diagnostico_iniciado', sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
+  profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto'
 };
-function adEvent(ev, d) {
-  const m = AD_EVENTS[ev]; if (!m || IS_TEST) return;   // teste não conta como conversão de anúncio
+function sfEvent(ev, d) {
+  const name = SF_EVENTS[ev]; if (!name || !window.sfTrack) return;
   const seg = bizGroup();
-  const params = { objection: d.intent, ab: d.ab, ...m[1], ...(d.phase ? { phase: d.phase } : {}), ...(seg ? { segment_group: seg } : {}) };
-  try { if (window.gtag) window.gtag('event', m[0], params); } catch (e) {}
-  // Quem não é da saúde e estética não vira Lead/Contact no Meta: assim o anúncio não aprende a buscar esse público.
-  const std = seg && seg !== 'saude_estetica' ? null : m[2];
-  try { if (window.fbq) std ? window.fbq('track', std, params) : window.fbq('trackCustom', m[0], params); } catch (e) {}
+  const params = { objection: d.intent, ab: d.ab, has_whatsapp: !!S.phone, ...(d.phase ? { phase: d.phase } : {}), ...(d.where ? { where: d.where } : {}),
+                   ...(seg ? { segment_group: seg } : {}), ...(typeof d.value === 'number' ? { value: d.value } : {}) };
+  try { window.sfTrack(name, params, d.event_id ? { eventId: d.event_id } : {}); } catch (e) {}
 }
+const sfAttribution = () => { try { return window.sfTrack && window.sfTrack.attribution ? { ...window.sfTrack.attribution(), ids: window.sfTrack.ids() } : null; } catch (e) { return null; } };
 function track(ev, props = {}) {
   const d = { event: 'mnc_' + ev, intent: O ? O.id : '', biz: S.biz, role: S.role, ab: AB, ...props, ...UTM };
   try { (window.dataLayer = window.dataLayer || []).push(d); } catch (e) {}
-  adEvent(ev, d);
+  sfEvent(ev, d);
   if (CONFIG.webhook) {
     try { navigator.sendBeacon(CONFIG.webhook, JSON.stringify({ ...d, sid: SID, ts: Date.now() })); } catch (e) {}
   }
@@ -3499,11 +3486,10 @@ function sendBody(id, body) {
   } catch (e) { return Promise.resolve(false); }
 }
 function flushOutbox() { if (CONFIG.leadWebhook) outbox().forEach(x => sendBody(x.id, x.body)); }
-function postLead(payload) {
+function postLead(payload, id = uuid()) {
   if (!CONFIG.leadWebhook) return Promise.resolve(false);
-  const id = uuid();
   const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.2.0', audience_type: 'lead',
-                                is_test: IS_TEST, page: location.pathname, ...payload });
+                                is_test: IS_TEST, page: location.pathname, attribution: sfAttribution(), ...payload });
   STORE.set(OUTBOX_KEY, [...outbox(), { id, body, at: Date.now() }]);
   return sendBody(id, body);
 }
@@ -3554,8 +3540,9 @@ function finishDiag() {
   DG.done = true;
   try { localStorage.setItem(DG_KEY, JSON.stringify({ a: DG.a, ts: Date.now() })); } catch (e) {}
   const R = diagResult();
-  track('diag_done', { phase: R.phase, quando: R.quando, where: DG.from });
-  postLead(diagPayload('diagnostico'));
+  const eid = uuid();
+  track('diag_done', { phase: R.phase, quando: R.quando, where: DG.from, event_id: eid });
+  postLead(diagPayload('diagnostico'), eid);
   paintMnc();
   go('diagres');
 }
@@ -3624,8 +3611,9 @@ function wireWaitlist() {
     S.name = nm;
     S.phone = '55' + dg;
     savePerfil();
-    track('waitlist', {});
-    postLead(diagPayload('lista_espera', { consent: true, consent_text: LISTA_CONSENT }));
+    const eid = uuid();
+    track('waitlist', { event_id: eid });
+    postLead(diagPayload('lista_espera', { consent: true, consent_text: LISTA_CONSENT }), eid);
     STORE.set(LISTA_KEY, { ts: Date.now(), area: myArea() });
     $('#wl').outerHTML = waitCard();
   };
@@ -3705,8 +3693,9 @@ function wireCallback() {
   };
 }
 function sendCallback(box) {
-  track('callback', { phase: diagResult().phase });
-  postLead(diagPayload('callback', { consent: true, consent_text: 'Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp.' }));
+  const eid = uuid();
+  track('callback', { phase: diagResult().phase, event_id: eid });
+  postLead(diagPayload('callback', { consent: true, consent_text: 'Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp.' }), eid);
   const d = S.phone.slice(2);
   box.innerHTML = `<p class="note" style="text-align:center">Pronto. A equipe da Nath vai chamar você no WhatsApp ${esc(maskPhone(d))}.</p>`;
 }
@@ -4094,8 +4083,9 @@ async function submitLead(e) {
     profile: P.key, patients: P.open, quiz: P.quiz, score: P.hit, max: P.max, exercise: S.kind === 'g2' ? 'flashcards' : 'simulacao', flash: S.flash,
     answers: S.answers.map(a => a && a.mode), utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id
   };
-  track('lead', { profile: P.key, score: P.hit });
-  postLead({ type: 'guia', first_contact: true, ab: AB, ...payload });
+  const eid = uuid();
+  track('lead', { profile: P.key, score: P.hit, event_id: eid });
+  postLead({ type: 'guia', first_contact: true, ab: AB, ...payload }, eid);
   savePerfil();
   S.lead = true;
   $('#giftwrap').classList.remove('locked');
@@ -4535,7 +4525,7 @@ document.addEventListener('click', e => {
   if (!a) return;
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
   if (a.dataset.wa && DG.done) a.href = waLink(diagWaText());
-  if (a.dataset.wa) { track('wa_click', { where: a.dataset.wa, phase: DG.done ? diagResult().phase : '' }); postLead(diagPayload('whatsapp', { where: a.dataset.wa })); }
+  if (a.dataset.wa) { const eid = uuid(); track('wa_click', { where: a.dataset.wa, phase: DG.done ? diagResult().phase : '', event_id: eid }); postLead(diagPayload('whatsapp', { where: a.dataset.wa }), eid); }
 });
 
 /* =====================================================================

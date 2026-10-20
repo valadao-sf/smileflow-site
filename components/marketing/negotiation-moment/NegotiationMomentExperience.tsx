@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { sfTrack } from "@/lib/tracking";
 
 import type {
   AnswerId,
@@ -78,9 +79,8 @@ export function NegotiationMomentExperience({ config }: { config: NegotiationMom
       ...readAttribution(),
       ...extra,
     };
-    const marketingWindow = window as Window & { fbq?: (...args: unknown[]) => void };
     try {
-      marketingWindow.fbq?.("trackCustom", eventName, payload);
+      sfTrack(eventName, payload);
       window.dispatchEvent(new CustomEvent("smileflow:marketing", { detail: { eventName, ...payload } }));
     } catch {
       // Measurement must never block the experience.
