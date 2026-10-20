@@ -1052,22 +1052,22 @@ function track(ev, props = {}) {
 /* =====================================================================
    QUEM É A PESSOA
    ===================================================================== */
-// Grande área de quem faz o teste. É o que a triagem usa primeiro (segment_group).
+// Grande área de quem faz o teste. Vai em `business`; `segment_group` diz só se é o público do MNC (saude_estetica) ou não (fora_saude).
 // Depois, todo mundo escreve o que faz, em texto livre: é esse texto que a IA lê para categorizar e achar nichos novos.
 // Na saúde, o texto também escolhe os exemplos do teste (odontologia, estética ou fono); nas outras áreas, os exemplos são de odontologia.
 const BIZ = [
-  { id: 'saude',    group: 'saude_estetica',  label: 'Saúde e estética', hint: 'Clínicas, consultórios, odontologia, estética, fisioterapia, nutrição',
+  { id: 'saude_estetica', group: 'saude_estetica',  label: 'Saúde e estética', hint: 'Clínicas, consultórios, odontologia, estética, fisioterapia, nutrição',
     ph: 'Ex.: tenho uma clínica odontológica; cuido da recepção de uma clínica de estética' },
-  { id: 'servicos', group: 'outros_servicos', label: 'Outros serviços',  hint: 'Consultoria, educação, imóveis, seguros, advocacia',
+  { id: 'servicos',       group: 'fora_saude',      label: 'Outros serviços',  hint: 'Consultoria, educação, imóveis, seguros, advocacia',
     ph: 'Ex.: vendo seguros de vida; tenho uma escola de idiomas' },
-  { id: 'comercio', group: 'comercio',        label: 'Comércio',         hint: 'Loja, revenda, distribuição, venda on-line',
+  { id: 'comercio',       group: 'fora_saude',      label: 'Comércio',         hint: 'Loja, revenda, distribuição, venda on-line',
     ph: 'Ex.: loja de móveis planejados; revenda de carros' },
-  { id: 'outro',    group: 'outro',           label: 'Outro',            hint: '',
+  { id: 'outro',          group: 'fora_saude',      label: 'Outro',            hint: '',
     ph: 'Ex.: conte o que você vende e para quem' }
 ];
-// Perfis salvos antes desta versão usavam a clínica como área.
-const LEGACY_BIZ = { odonto: 'saude', estetica: 'saude', fono: 'saude' };
-const isHealth = () => S.biz === 'saude';
+// Ids da versão 1.1.0 guardados no aparelho de quem já fez o teste.
+const LEGACY_BIZ = { odonto: 'saude_estetica', estetica: 'saude_estetica', fono: 'saude_estetica', saude: 'saude_estetica' };
+const isHealth = () => S.biz === 'saude_estetica';
 // Os exemplos do teste seguem o que a pessoa escreveu, quando ela é da saúde.
 function inferArea(t) {
   const x = String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -2978,7 +2978,7 @@ function renderNameStep(dir = 1) {
     <header class="stack"><p class="eyebrow">${nameEyebrow()}</p><h2 class="display">O que você faz?</h2>
       <p class="lede">Em poucas palavras, do seu jeito.${isHealth() ? '' : ' Os exemplos do teste são de clínica, mas o jeito de responder é o mesmo em qualquer venda.'}</p></header>
     <div class="field"><label class="sr" for="in-other">O que você faz?</label>
-      <textarea class="input area" id="in-other" rows="3" maxlength="160" autocapitalize="sentences" placeholder="${esc(biz.ph)}">${esc(S.other)}</textarea></div>
+      <textarea class="input area" id="in-other" rows="3" maxlength="120" autocapitalize="sentences" placeholder="${esc(biz.ph)}">${esc(S.other)}</textarea></div>
     <div class="formfoot"><button class="btn btn-main" id="n-go" ${S.other.trim().length >= 3 ? '' : 'disabled'}>Continuar <span class="arr">→</span></button></div>`;
   if (k === 'role') body = `
     <header class="stack"><p class="eyebrow">${nameEyebrow()}</p><h2 class="display">E o que você faz lá?</h2>

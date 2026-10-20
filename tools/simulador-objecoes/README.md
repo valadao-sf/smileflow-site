@@ -43,6 +43,6 @@ Os vídeos de cada objeção ficam em `OBJECTIONS[id].videos.v1/v2`. Sem `id` do
 
 - Eventos vão para `https://n8n.smileflow.me/webhook/simulador-objecoes` (workflow em `automation-ops/workflows/simulador-objecoes`).
 - `form_id: simulador_objecoes_v1`, `form_version: 1.2.0`. Ao mudar pergunta ou texto de aceite, suba a versão para manter o vínculo entre envio, versão e consentimento.
-- Campos de triagem em todo evento: `segment_group` (`saude_estetica` | `outros_servicos` | `comercio` | `outro`), `business` (`saude` | `servicos` | `comercio` | `outro`), `business_label`, `business_other` (o que a pessoa escreveu em "O que você faz?", sempre preenchido), `role_label`.
+- Campos de triagem em todo evento: `business` (a grande área: `saude_estetica` | `servicos` | `comercio` | `outro`; perfis antigos com `odonto`, `estetica`, `fono` ou `saude` viram `saude_estetica`), `segment_group` (`saude_estetica` para saúde e estética, `fora_saude` para o resto), `business_label`, `business_other` (o que a pessoa escreveu em "O que você faz?", sempre preenchido, até 120 caracteres), `role_label`.
 - Na saúde, o texto livre escolhe os exemplos do teste (odontologia, estética ou fono, em `inferArea`). Nas outras áreas, os exemplos são de odontologia.
 - Quem não é de `saude_estetica` vai para a lista de espera e não dispara Lead/Contact no Meta.
