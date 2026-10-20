@@ -210,8 +210,8 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .vbottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding-block:0 18px;display:flex;flex-direction:column;gap:6px;align-items:center}
 .vagain{display:none}
 .vfull.ended .vagain{display:inline-block}
-.vfull.failed .vagain{display:inline-block}
-.vfull.failed .vplayicon{display:none}
+.vfull.failed:not(.script) .vagain{display:inline-block}
+.vfull.failed:not(.script) .vplayicon{display:none}
 .vsay .verr{display:block;margin-top:6px;color:var(--paper)}
 .vfull.ended .vbottom .btn-main{animation:nudge 1.6s var(--ease) infinite}
 #s-v3.ended::after{height:56%;background:linear-gradient(to top,rgba(10,7,12,.95) 45%,rgba(10,7,12,0))}
@@ -965,7 +965,26 @@ const CONFIG = {
   mnc: {
     // O que é o MNC, em até 3 linhas curtas (formato, duração, para quem). Só aparece quando preenchido.
     about: [],
-    video: { id: '3f90255a-b443-4de3-b991-60c2632db2d1', mp4: '/simulador-objecoes/assets/v3.mp4', poster: '/simulador-objecoes/assets/v3-poster.webp' },
+    video: { id: '3f90255a-b443-4de3-b991-60c2632db2d1', mp4: '/simulador-objecoes/assets/v3.mp4', poster: '/simulador-objecoes/assets/v3-poster.webp', title: 'O recado da Nath — por que uma regra isolada não resolve',
+      fallback: { photo: '/simulador-objecoes/assets/v3-poster.webp', script: [
+        'Tem uma coisa que eu vejo acontecer direto.',
+        'A profissional aprende o que falar quando escuta “tá caro”. Depois aprende uma frase para o “vou pensar”, outra para o desconto, outra para quando aparece marido, concorrente, silêncio, WhatsApp.',
+        'Daqui a pouco ela tem um repertório enorme de respostas e, mesmo assim, trava quando a paciente fala alguma coisa diferente.',
+        '**Porque negociação não é saber responder frase.**',
+        'O que a paciente fala no final é só uma parte da conversa.',
+        'Antes do “tá caro”, teve tudo o que você perguntou. Teve o que você entendeu daquela paciente, o plano que você indicou, o jeito que apresentou, a segurança com que falou o valor.',
+        'Tudo isso chega junto na hora da decisão.',
+        'Então não adianta ficar colecionando scripts se você não entende o que está acontecendo na conversa.',
+        'Foi por isso que eu organizei o Método Negociação Clínica em três movimentos:',
+        '**Ler a paciente, comandar o plano e fechar.**',
+        'Ler é entender o que realmente importa para aquela pessoa.',
+        'Comandar é conseguir dizer: “pelo que você me contou, é esse o caminho que eu recomendo”. Sem entregar um cardápio e pedir para a paciente escolher sozinha.',
+        'E fechar é continuar conduzindo quando chega a parte que dá desconforto: preço, dúvida, silêncio, objeção, decisão.',
+        'Não é para virar uma vendedora chata. É justamente o contrário: é conseguir cuidar da conversa até o final, sem sumir dela quando chega a parte difícil.',
+        'Eu não quero que você fique procurando a próxima frase pronta. Eu quero que você olhe para a situação e saiba exatamente o que fazer depois.',
+        '**Para você não depender de vender por sorte.**',
+        'É isso que a gente treina no MNC.'
+      ] } },
     // VSL do teste B. Enquanto não for gravado, aparece a foto da Nath com o roteiro em legenda.
     // Quando gravar, troque { photo, script } por { id, mp4, poster }.
     vsl: {
@@ -1379,8 +1398,33 @@ return {
   said: 'Você falou o valor.',
   modes: ['facilitar', 'defender', 'escutar'], okMode: 'escutar', okNote: 'você perguntou antes de responder',
   videos: {
-    v1: { id: 'b5afda20-1b76-454a-8745-16ed048bd5a9', mp4: '/simulador-objecoes/assets/v1.mp4', poster: '/simulador-objecoes/assets/v1-poster.webp' },
-    v2: { id: 'ed0a382d-d8db-4798-a1ca-459898eba3b0', mp4: '/simulador-objecoes/assets/v2.mp4', poster: '/simulador-objecoes/assets/v2-poster.webp' }
+    // fallback: a fala do vídeo em legenda, para quando o Panda não carregar
+    v1: { id: 'b5afda20-1b76-454a-8745-16ed048bd5a9', mp4: '/simulador-objecoes/assets/v1.mp4', poster: '/simulador-objecoes/assets/v1-poster.webp', title: 'Vídeo 1 — “Nossa, achei caro.”',
+      fallback: { photo: '/simulador-objecoes/assets/v1-poster.webp', script: [
+        'Olha só essa situação.',
+        'Você terminou de conversar com a paciente, mostrou o tratamento que acredita ser o melhor caminho e chegou a temida hora: a hora de passar o valor.',
+        'Você fala o preço, ela te olha por um segundo e manda a seguinte frase:',
+        '**“Nossa, achei caro.”**',
+        'O que você fala? E eu quero a resposta de verdade. Não a resposta bonita.',
+        'Pensa em você ali na frente dela, com dois segundos apenas para responder.',
+        '**Qual dessas parece mais com o que sairia da sua boca?**',
+        'Escolhe uma. Depois eu te mostro como eu pensaria essa conversa.'
+      ] } },
+    v2: { id: 'ed0a382d-d8db-4798-a1ca-459898eba3b0', mp4: '/simulador-objecoes/assets/v2.mp4', poster: '/simulador-objecoes/assets/v2-poster.webp', title: 'Vídeo 2 — “O que está pesando mais?”',
+      fallback: { photo: '/simulador-objecoes/assets/v2-poster.webp', script: [
+        'Quando a paciente fala **“tá caro”**, você ainda não sabe o que está caro.',
+        'Pode ser o valor da parcela. Pode ser o valor total. Pode ser que ela não esperava gastar aquilo agora. Pode ser que ela esteja comparando com outra clínica.',
+        'Às vezes o plano nem fez sentido para ela.',
+        'E é aí que muita gente se atropela.',
+        'Escuta “tá caro” e já oferece desconto, começa a falar da parcela, explica por que custa aquilo, tira uma parte do tratamento.',
+        'Calma. Eu não quero provar para a paciente que não está caro. Eu quero entender o que ela quis dizer.',
+        'Então eu perguntaria uma coisa simples:',
+        '**“Quando você fala que ficou caro, o que está pesando mais para você?”**',
+        'E aí eu escuto.',
+        'Se ela estiver falando de condição, é uma conversa. Se estiver comparando com outra clínica, é outra. Se o problema for o momento, eu vou por outro caminho.',
+        'Percebe? Eu não preciso ter a resposta pronta para o “tá caro”.',
+        '**Eu preciso primeiro descobrir com o que eu estou lidando.**'
+      ] } }
   },
   rounds: ROUNDS, quiz: QUIZ, profiles: PROFILES,
   rule: {
@@ -3062,42 +3106,65 @@ function loadHls() {
   });
   return hlsLoader;
 }
-function videoFailed(v) {
+// HLS nativo só no Safari e no iOS. O Chrome novo responde "maybe" para HLS mas não toca: lá vai o HLS.js.
+const UA = navigator.userAgent || '';
+const APPLE_HLS = /iP(hone|ad|od)/.test(UA) || (/Safari/.test(UA) && !/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\/|Android/.test(UA)) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+// O vídeo não carregou de jeito nenhum: mostra a foto com a fala da Nath em legenda (o mesmo modo das objeções sem vídeo).
+function videoFailed(v, m) {
   const sc = v.closest('.vfull'); if (!sc || sc.classList.contains('failed')) return;
-  sc.classList.add('failed', 'ended');
-  const say = $('.vsay', sc);
-  if (say) say.insertAdjacentHTML('beforeend', '<b class="verr"> O vídeo não carregou. Toque em “Ver o vídeo de novo” ou siga em frente.</b>');
-  track('video_error', { video: sc.dataset.vkey });
+  const key = sc.dataset.vkey;
+  sc.classList.add('failed');
+  track('video_error', { video: key, fallback: m && m.fallback ? 'script' : 'none' });
+  if (m && m.fallback && m.fallback.script) {
+    useScript(sc, key, { ...m.fallback, title: m.title });
+    $('.vsay', sc)?.insertAdjacentHTML('beforeend', '<b class="verr"> O vídeo não carregou. Aqui está o que a Nath diz nele.</b>');
+    if (S.scene === key) MEDIA[key].player.restart();
+    return;
+  }
+  sc.classList.add('ended');
+  $('.vsay', sc)?.insertAdjacentHTML('beforeend', '<b class="verr"> O vídeo não carregou. Toque em “Ver o vídeo de novo” ou siga em frente.</b>');
 }
 function attachSource(v, m) {
   const scf = v.closest && v.closest('.vfull');
   if (scf) { scf.classList.remove('failed'); $('.verr', scf)?.remove(); }
   if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
+  const gen = v._gen = (v._gen || 0) + 1;   // uma tentativa nova cancela as anteriores
   const mp4 = m.mp4;
   const hls = CONFIG.pandaHls + m.id + '/playlist.m3u8';
   const useHls = CONFIG.videoSource === 'panda' || (CONFIG.videoSource === 'auto' && !IN_ARTIFACT);
-  const fallback = () => {
-    if (IN_ARTIFACT || CONFIG.videoSource === 'mp4') { if (!v.src.endsWith('.mp4')) v.src = mp4; return; }
-    videoFailed(v);   // no site não há MP4 local: avisa e deixa tentar de novo
-  };
   if (!useHls) { v.src = mp4; return; }
-  if (v.canPlayType('application/vnd.apple.mpegurl')) {
+  const canNative = !!v.canPlayType('application/vnd.apple.mpegurl');
+  const tried = new Set();
+  const fail = () => {
+    if (v._gen !== gen) return;
+    if (IN_ARTIFACT || CONFIG.videoSource === 'mp4') { if (!v.src.endsWith('.mp4')) v.src = mp4; return; }
+    videoFailed(v, m);
+  };
+  // se um caminho falha, tenta o outro; só desiste quando os dois falharam
+  const other = from => { if (v._gen !== gen) return; if (from === 'native' && !tried.has('js')) viaJs(); else if (from === 'js' && canNative && !tried.has('native')) native(); else fail(); };
+  const native = () => {
+    tried.add('native');
+    v.addEventListener('error', () => other('native'), { once: true });
     v.src = hls;
-    v.addEventListener('error', fallback, { once: true });
-    return;
-  }
-  loadHls().then(Hls => {
-    if (!Hls || !Hls.isSupported()) return fallback();
-    const h = new Hls({ capLevelToPlayerSize: true });
-    v._hls = h;
-    let dead = false;
-    h.on(Hls.Events.ERROR, (_, d) => {
-      if (!d.fatal || dead) return;
-      dead = true;
-      setTimeout(() => { try { h.detachMedia(); h.destroy(); } catch (e) {} fallback(); }, 0);
-    });
-    h.loadSource(hls); h.attachMedia(v);
-  }).catch(fallback);
+  };
+  const viaJs = () => {
+    tried.add('js');
+    loadHls().then(Hls => {
+      if (v._gen !== gen) return;
+      if (!Hls || !Hls.isSupported()) return other('js');
+      v.removeAttribute('src');
+      const h = new Hls({ capLevelToPlayerSize: true });
+      v._hls = h;
+      let dead = false;
+      h.on(Hls.Events.ERROR, (_, d) => {
+        if (!d.fatal || dead) return;
+        dead = true;
+        setTimeout(() => { try { h.detachMedia(); h.destroy(); } catch (e) {} if (v._hls === h) v._hls = null; other('js'); }, 0);
+      });
+      h.loadSource(hls); h.attachMedia(v);
+    }).catch(() => other('js'));
+  };
+  APPLE_HLS && canNative ? native() : viaJs();
 }
 function tryPlay(sc) {
   const v = $('video', sc);
@@ -3164,6 +3231,20 @@ function openScript(sc, key) {
   sc.appendChild(sh);
   sh.addEventListener('click', e => { if (e.target.closest('[data-close]')) { sh.remove(); MEDIA[key].player.play(); } });
 }
+function useScript(sc, key, m) {
+  const v = $('video', sc), img = $('.vphoto', sc);
+  try { v.pause(); } catch (e) {}
+  v._gen = (v._gen || 0) + 1;
+  if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
+  v.removeAttribute('src'); v.removeAttribute('poster'); v.hidden = true;
+  img.src = m.photo; img.hidden = false;
+  sc.classList.add('script'); sc.classList.remove('ended', 'paused');
+  $('.vtap', sc).setAttribute('aria-label', 'Pausar ou continuar');
+  $('.vagain', sc).textContent = 'Ver de novo';
+  $('.vscript', sc).hidden = false;
+  $('.vcap', sc).innerHTML = '';
+  MEDIA[key] = { script: true, m, player: scriptPlayer(sc, key, m) };
+}
 // Prepara as duas telas de vídeo para a objeção atual: vídeo de verdade ou foto com o roteiro.
 function setupMedia(key) {
   const sc = $('#s-' + key), v = $('video', sc), img = $('.vphoto', sc), m = key === 'v3' ? CONFIG.mnc.video : key === 'vsl' ? CONFIG.mnc.vsl : O.videos[key];
@@ -3183,13 +3264,8 @@ function setupMedia(key) {
   $('.vscript', sc).hidden = !script;
   $('.vcap', sc).innerHTML = '';
   $('.vprog i', sc).style.transform = 'scaleX(0)';
-  if (script) {
-    try { v.pause(); } catch (e) {}
-    if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
-    v.removeAttribute('src'); v.removeAttribute('poster'); v.hidden = true;
-    img.src = m.photo; img.hidden = false;
-    MEDIA[key] = { script: true, m, player: scriptPlayer(sc, key, m) };
-  } else {
+  if (script) useScript(sc, key, m);
+  else {
     img.hidden = true; img.removeAttribute('src'); v.hidden = false;
     if (m.poster) v.poster = m.poster;
     attachSource(v, m);
