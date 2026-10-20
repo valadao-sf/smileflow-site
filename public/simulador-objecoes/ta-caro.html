@@ -206,6 +206,9 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .vbottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding-block:0 18px;display:flex;flex-direction:column;gap:6px;align-items:center}
 .vagain{display:none}
 .vfull.ended .vagain{display:inline-block}
+.vfull.failed .vagain{display:inline-block}
+.vfull.failed .vplayicon{display:none}
+.vsay .verr{display:block;margin-top:6px;color:var(--paper)}
 .vfull.ended .vbottom .btn-main{animation:nudge 1.6s var(--ease) infinite}
 #s-v3.ended::after{height:56%;background:linear-gradient(to top,rgba(10,7,12,.95) 45%,rgba(10,7,12,0))}
 /* enquanto o V3 toca, só o botão: a legenda do vídeo fica livre. No fim, entra o título. */
@@ -1032,7 +1035,7 @@ const AD_EVENTS = {
   gift_view: ['pedido_whatsapp_visto', {}, null]
 };
 function adEvent(ev, d) {
-  const m = AD_EVENTS[ev]; if (!m) return;
+  const m = AD_EVENTS[ev]; if (!m || IS_TEST) return;   // teste não conta como conversão de anúncio
   const seg = bizGroup();
   const params = { objection: d.intent, ab: d.ab, ...m[1], ...(d.phase ? { phase: d.phase } : {}), ...(seg ? { segment_group: seg } : {}) };
   try { if (window.gtag) window.gtag('event', m[0], params); } catch (e) {}
@@ -2871,22 +2874,35 @@ function go(id, dir = 1) {
     from.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-10px)' }], { duration: dur * .6, easing: 'ease-in', fill: 'forwards' }).onfinish = close;
     setTimeout(close, dur * .6 + 150);   // se a animação não terminar (aba em segundo plano, troca de versão), destrava assim mesmo
   } else busy = false;
+  if (dir > 0) armBackGuard();
   track('scene', { scene: id });
 }
 const next = () => go(FLOW[FLOW.indexOf(S.scene) + 1]);
 // Voltar: dentro do formulário e do certo ou errado, volta uma pergunta; nas outras telas, volta uma tela.
 function back() {
-  if (busy) return;
+  if (busy) return true;
   const s = S.scene;
+  if (!$('#bio').hidden) { closeBio(); return true; }
   track('back', { from: s });
-  if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return; }
-  if (s === 'quiz' && quizBack()) return;
-  if (s === 'diag' && DG.i > 0) { DG.i--; renderDiag(-1); return; }
+  if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
+  if (s === 'quiz' && quizBack()) return true;
+  if (s === 'diag' && DG.i > 0) { DG.i--; renderDiag(-1); return true; }
   const h = S.hist.pop();
-  if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return; }
+  if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
   const i = FLOW.indexOf(s);
-  if (i > 0) go(FLOW[i - 1], -1);
+  if (i > 0) { go(FLOW[i - 1], -1); return true; }
+  return false;
 }
+// O voltar do celular (botão ou gesto) e o do navegador passam pelo mesmo back() da seta da tela.
+// Uma entrada extra no histórico segura a pessoa no treino; na primeira tela, o voltar sai da página como sempre.
+const NAV_GUARD = { sim: 'nath' };
+function armBackGuard() {
+  try { if (!(history.state && history.state.sim)) history.pushState(NAV_GUARD, ''); } catch (e) {}
+}
+addEventListener('popstate', () => {
+  if (back()) armBackGuard();
+  else try { history.back(); } catch (e) {}
+});
 document.addEventListener('click', e => {
   if (e.target.closest('[data-back]')) { e.preventDefault(); back(); return; }
   const dgb = e.target.closest('[data-diag]'); if (dgb) { e.preventDefault(); startDiag(dgb.dataset.diag); return; }
@@ -2927,8 +2943,9 @@ function nameNext() {
   if (nStep < steps.length - 1) { nStep++; renderNameStep(1); }
   else { track('profile', { role: S.role, biz: S.biz, other: S.other, segment_group: bizGroup() }); savePerfil(); const to = S.afterName || 'v1'; S.nameMode = ''; go(to); }
 }
+let nameTok = 0;
 function renderNameStep(dir = 1) {
-  const steps = nameSteps(), k = steps[nStep], n = firstName();
+  const steps = nameSteps(), k = steps[nStep], n = firstName(), my = ++nameTok;
   const biz = BIZ.find(b => b.id === S.biz);
   let body = '';
   if (k === 'name') body = `
@@ -2976,10 +2993,13 @@ function renderNameStep(dir = 1) {
     if (matchMedia('(pointer:fine)').matches) setTimeout(() => inp.focus(), 350);
   }
   $$('#s-name .choice').forEach(b => b.onclick = () => {
+    if (nameTok !== my) return;
     $$('#s-name .choice').forEach(c => c.setAttribute('aria-pressed', c === b));
     if (b.dataset.biz) setBiz(b.dataset.biz);
     if (b.dataset.role) S.role = b.dataset.role;
-    setTimeout(nameNext, REDUCED ? 0 : 240);
+    nameTok++;   // trava os outros toques nesta pergunta
+    const tok = nameTok;
+    setTimeout(() => { if (nameTok === tok && S.scene === 'name') nameNext(); }, REDUCED ? 0 : 240);
   });
 }
 ENTER.name = dir => { nStep = dir < 0 ? nameSteps().length - 1 : 0; renderNameStep(dir < 0 ? -1 : 1); };
@@ -2998,12 +3018,24 @@ function loadHls() {
   });
   return hlsLoader;
 }
+function videoFailed(v) {
+  const sc = v.closest('.vfull'); if (!sc || sc.classList.contains('failed')) return;
+  sc.classList.add('failed', 'ended');
+  const say = $('.vsay', sc);
+  if (say) say.insertAdjacentHTML('beforeend', '<b class="verr"> O vídeo não carregou. Toque em “Ver o vídeo de novo” ou siga em frente.</b>');
+  track('video_error', { video: sc.dataset.vkey });
+}
 function attachSource(v, m) {
+  const scf = v.closest && v.closest('.vfull');
+  if (scf) { scf.classList.remove('failed'); $('.verr', scf)?.remove(); }
   if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
   const mp4 = m.mp4;
   const hls = CONFIG.pandaHls + m.id + '/playlist.m3u8';
   const useHls = CONFIG.videoSource === 'panda' || (CONFIG.videoSource === 'auto' && !IN_ARTIFACT);
-  const fallback = () => { if (!v.src.endsWith('.mp4')) v.src = mp4; };
+  const fallback = () => {
+    if (IN_ARTIFACT || CONFIG.videoSource === 'mp4') { if (!v.src.endsWith('.mp4')) v.src = mp4; return; }
+    videoFailed(v);   // no site não há MP4 local: avisa e deixa tentar de novo
+  };
   if (!useHls) { v.src = mp4; return; }
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = hls;
@@ -3156,7 +3188,11 @@ $$('.vfull').forEach(sc => {
     v.muted = !v.muted; SOUND = !v.muted; sc.classList.toggle('sound', SOUND);
     if (SOUND && v.paused) v.play().catch(() => {});
   });
-  $('.vagain', sc).addEventListener('click', () => { if (isScript()) MEDIA[key].player.restart(); else { v.currentTime = 0; v.play().catch(() => {}); } });
+  $('.vagain', sc).addEventListener('click', () => {
+    if (isScript()) { MEDIA[key].player.restart(); return; }
+    if (sc.classList.contains('failed')) { attachSource(v, MEDIA[key].m); sc.classList.remove('ended'); tryPlay(sc); return; }
+    v.currentTime = 0; v.play().catch(() => {});
+  });
   $('.vscript', sc).addEventListener('click', () => openScript(sc, key));
   ENTER[key] = () => {
     sc.classList.remove('ended', 'paused'); $('.sheet', sc)?.remove();
@@ -3204,7 +3240,7 @@ const PART_NOTE = {
   fechar: ['Você descobre o que ficou em aberto, ali mesmo.', 'No “vou pensar”, a conversa vira mensagem.', 'No “vou pensar”, a conversa acaba ali.']
 };
 const DG_KEY = 'nath_diag';
-const DG = { i: 0, a: {}, done: false, from: '' };
+const DG = { i: 0, a: {}, done: false, from: '', r: 0 };
 try { const saved = JSON.parse(localStorage.getItem(DG_KEY) || 'null'); if (saved && saved.a) { DG.a = saved.a; DG.done = true; } } catch (e) {}
 const opts = q => q.o();
 const dval = k => { const o = opts(DIAG.find(d => d.k === k)), x = DG.a[k]; return x == null || !o[x] ? null : o[x][1]; };
@@ -3256,15 +3292,41 @@ function diagPayload(type, extra = {}) {
 }
 // Envia um evento ao n8n. Vai como texto simples (sem pré-checagem de CORS) e por beacon,
 // para chegar mesmo quando a pessoa sai da página para o WhatsApp.
-const uuid = () => { try { return crypto.randomUUID(); } catch (e) { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12); } };
-function postLead(payload) {
-  if (!CONFIG.leadWebhook) return Promise.resolve();
-  const body = JSON.stringify({ event_id: uuid(), form_id: 'simulador_objecoes_v1', form_version: '1.1.0', audience_type: 'lead',
-                                is_test: IS_TEST, page: location.pathname, ...payload });
-  try { if (navigator.sendBeacon && navigator.sendBeacon(CONFIG.leadWebhook, new Blob([body], { type: 'text/plain;charset=UTF-8' }))) return Promise.resolve(); } catch (e) {}
-  try { fetch(CONFIG.leadWebhook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: true }).catch(() => {}); } catch (e) {}
-  return Promise.resolve();
+// WhatsApp brasileiro: DDD que existe; com 11 números, o celular começa com 9; sem número repetido tipo 00000000.
+const DDDS = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
+const PHONE_ERR = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.';
+function phoneOk(d) {
+  if (!/^\d{10,11}$/.test(d) || !DDDS.includes(d.slice(0, 2))) return false;
+  const n = d.slice(2);
+  if (/^(\d)\1+$/.test(n)) return false;
+  return n.length === 9 ? n[0] === '9' : /^[2-9]/.test(n);
 }
+const uuid = () => { try { return crypto.randomUUID(); } catch (e) { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12); } };
+// Cada envio fica numa fila no aparelho até o n8n receber. Sem rede, tenta de novo ao voltar a conexão,
+// ao sair da página (beacon) e na próxima visita. O n8n ignora event_id repetido, então reenviar é seguro.
+const OUTBOX_KEY = 'nath_fila';
+const outbox = () => STORE.get(OUTBOX_KEY, []).filter(x => x && x.id && Date.now() - (x.at || 0) < 14 * 864e5);
+const outboxDrop = id => STORE.set(OUTBOX_KEY, outbox().filter(x => x.id !== id));
+function sendBody(id, body) {
+  try {
+    return fetch(CONFIG.leadWebhook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: body.length < 60000 })
+      .then(() => { outboxDrop(id); return true; }, () => false);
+  } catch (e) { return Promise.resolve(false); }
+}
+function flushOutbox() { if (CONFIG.leadWebhook) outbox().forEach(x => sendBody(x.id, x.body)); }
+function postLead(payload) {
+  if (!CONFIG.leadWebhook) return Promise.resolve(false);
+  const id = uuid();
+  const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.1.0', audience_type: 'lead',
+                                is_test: IS_TEST, page: location.pathname, ...payload });
+  STORE.set(OUTBOX_KEY, [...outbox(), { id, body, at: Date.now() }]);
+  return sendBody(id, body);
+}
+setTimeout(flushOutbox, 1500);
+addEventListener('online', flushOutbox);
+addEventListener('pagehide', () => {
+  try { outbox().forEach(x => navigator.sendBeacon && navigator.sendBeacon(CONFIG.leadWebhook, new Blob([x.body], { type: 'text/plain;charset=UTF-8' }))); } catch (e) {}
+});
 function startDiag(where) {
   track('diag_start', { where });
   DG.i = 0; DG.a = {}; DG.done = false; DG.from = where;
@@ -3272,7 +3334,7 @@ function startDiag(where) {
   go('diag');
 }
 function renderDiag(dir = 1) {
-  const q = DIAG[DG.i], cur = DG.a[q.k];
+  const q = DIAG[DG.i], cur = DG.a[q.k], my = ++DG.r;   // cada tela nova invalida o avanço que ainda estava esperando
   const sc = $('#s-diag');
   sc.scrollTop = 0;
   sc.innerHTML = `
@@ -3289,12 +3351,17 @@ function renderDiag(dir = 1) {
     <p class="dfoot">Suas respostas vão só para a equipe da Nath.</p>`;
   if (!REDUCED) $('.stack:nth-of-type(2)', sc)?.animate([{ opacity: 0, transform: `translateX(${dir * 18}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out' });
   $('.dopts', sc).onclick = async e => {
-    const b = e.target.closest('[data-opt]'); if (!b) return;
+    const b = e.target.closest('[data-opt]'); if (!b || DG.lock === my) return;
+    DG.lock = my;
     DG.a[q.k] = +b.dataset.opt;
     $$('.dopt', sc).forEach(x => x.classList.toggle('sel', x === b));
     track('diag_answer', { q: q.k, a: opts(q)[+b.dataset.opt][0] });
     await wait(260);
-    if (DG.i < DIAG.length - 1) { DG.i++; renderDiag(1); } else finishDiag();
+    if (DG.r !== my || S.scene !== 'diag') return;
+    const miss = DIAG.findIndex(d => DG.a[d.k] == null);
+    if (DG.i < DIAG.length - 1) { DG.i++; renderDiag(1); }
+    else if (miss >= 0) { DG.i = miss; renderDiag(-1); }
+    else finishDiag();
   };
 }
 ENTER.diag = () => { if (DG.i >= DIAG.length) DG.i = DIAG.length - 1; renderDiag(1); };
@@ -3366,10 +3433,10 @@ function wireWaitlist() {
     if (!S.phone) {
       nm = $('#wl-name').value.trim(); dg = $('#wl-phone').value.replace(/\D/g, '');
       if (nm.length < 2) { err.textContent = 'Escreva o seu nome.'; return; }
-      if (!/^\d{10,11}$/.test(dg)) { err.textContent = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.'; return; }
+      if (!phoneOk(dg)) { err.textContent = PHONE_ERR; return; }
     }
     if (!$('#wl-ok').checked) { err.textContent = 'Marque a caixa para a equipe poder avisar você.'; return; }
-    if (!S.name) S.name = nm;
+    S.name = nm;
     S.phone = '55' + dg;
     savePerfil();
     track('waitlist', {});
@@ -3420,7 +3487,8 @@ ENTER.diagres = () => {
     ${conta}
     ${isWaitlist() ? '' : proofBlock()}
     ${isWaitlist() ? waitCard() : AB === 'B' ? vslCard() : waCard('resultado')}
-    <button class="link" data-go="${S.fromHub ? 'hub' : S.kind === 'g2' ? 'final' : 'ig'}" style="align-self:center">${S.fromHub ? 'Voltar para as objeções' : 'Continuar no treino'}</button>`;
+    <button class="link" data-go="${S.fromHub ? 'hub' : S.kind === 'g2' ? 'final' : 'ig'}" style="align-self:center">${S.fromHub ? 'Voltar para as objeções' : 'Continuar no treino'}</button>
+    <button class="link" data-diag="refazer" style="align-self:center">Refazer o diagnóstico</button>`;
   wireCallback(); wireWaitlist();
 };
 function wireCallback() {
@@ -3442,9 +3510,9 @@ function wireCallback() {
       e.preventDefault();
       const nm = $('#cb-name').value.trim(), dg = $('#cb-phone').value.replace(/\D/g, ''), err = $('#cb-err');
       if (nm.length < 2) { err.textContent = 'Escreva o seu nome.'; return; }
-      if (!/^\d{10,11}$/.test(dg)) { err.textContent = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.'; return; }
+      if (!phoneOk(dg)) { err.textContent = PHONE_ERR; return; }
       if (!$('#cb-ok').checked) { err.textContent = 'Marque a caixa para a equipe poder chamar você.'; return; }
-      if (!S.name) S.name = nm;
+      S.name = nm;
       S.phone = '55' + dg;
       savePerfil();
       sendCallback(box);
@@ -3829,10 +3897,10 @@ async function submitLead(e) {
   const name = $('#ld-name').value.trim(), digits = $('#ld-phone').value.replace(/\D/g, '');
   const err = $('#ld-err');
   if (name.length < 2) { err.textContent = 'Escreva o seu nome.'; $('#ld-name').focus(); return; }
-  if (!/^\d{10,11}$/.test(digits)) { err.textContent = 'Confira o WhatsApp. Ele precisa ter o DDD e 8 ou 9 números.'; $('#ld-phone').focus(); return; }
+  if (!phoneOk(digits)) { err.textContent = PHONE_ERR; $('#ld-phone').focus(); return; }
   if (!$('#ld-ok').checked) { err.textContent = 'Marque a caixa para receber o guia.'; return; }
   err.textContent = '';
-  if (!S.name) S.name = name;
+  S.name = name;
   S.phone = '55' + digits;
   const btn = $('#ld-send'); btn.disabled = true; btn.textContent = 'Liberando…';
   const P = computeProfile();
@@ -3974,7 +4042,7 @@ function ocardHTML(it) {
 const SITE = CONFIG.site || {};
 const ON_SITE = !IN_ARTIFACT && !!SITE.base;
 const qs = () => { try { return location.search; } catch (e) { return ''; } };
-const withEx = (url, ex) => { const u = new URL(url, location.href); if (ex) u.searchParams.set('ex', ex); else u.searchParams.delete('ex'); return u.pathname + u.search; };
+const withEx = (url, ex) => { const u = new URL(url, location.href); u.searchParams.delete('obj'); if (ex) u.searchParams.set('ex', ex); else u.searchParams.delete('ex'); return u.pathname + u.search; };
 function startObjection(id, ex = '') {
   track('objection_switch', { from: O.id, to: id, ex });
   if (ON_SITE) { location.href = withEx(SITE.base + '/' + id + qs(), ex); return; }
