@@ -1,0 +1,116 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,300..700&family=Manrope:wght@300;400;500;600;700;800&display=swap">
+</head><body>
+<script>
+// Guia 2 de cada objeção: "Mitos e verdades", liberado pelos flashcards (as 5 cartas de certo ou errado).
+const GUIDES = {
+  'ta-caro': { title: 'do “tá caro”', band: ['Pare. Pergunte. Entenda.', 'Só depois, negocie.'], items: [
+    [0, 'Dar desconto logo evita perder a venda.', 'O desconto só resolve quando o problema é o valor. Primeiro, pergunte o que pesou.'],
+    [1, '“Tá caro” quer dizer coisas diferentes para cada pessoa.', 'Pode ser o valor total, a parcela, a época, uma comparação ou a falta de motivo.'],
+    [0, 'Se a pessoa achou caro, explique de novo tudo o que está incluído.', 'Se ela já entendeu o plano, explicar de novo só a deixa na defensiva.'],
+    [1, 'Antes de falar em parcela ou desconto, pergunte o que pesou.', 'Assim você não gasta o desconto à toa, e a pessoa sente que foi ouvida.'],
+    [0, 'Tirar parte do tratamento é a melhor saída.', 'Diminuir o plano antes de entender o motivo pode tirar algo de que a pessoa precisa.'] ] },
+  'vou-pensar': { title: 'do “vou pensar”', band: ['Não brigue com o “vou pensar”.', 'Descubra o que falta decidir.'], items: [
+    [0, 'Responder “qualquer coisa, me chama” é respeitar a pessoa.', 'Ela vai embora sem dizer o que ficou em aberto. Pergunte o que ela quer pensar.'],
+    [1, '“Vou pensar” pode esconder medo, dinheiro, o momento ou outra pessoa.', 'Descubra qual é antes de responder.'],
+    [0, 'Um desconto para fechar hoje resolve o “vou pensar”.', 'Só ajuda se o problema for dinheiro. E pode deixar a pessoa desconfiada.'],
+    [1, 'Perguntar o que a pessoa quer pensar não é insistir.', 'Feita com calma, a pergunta ajuda a decisão a ficar clara.'],
+    [0, 'Se a pessoa quiser pensar, é só deixar ir.', 'Combine quando vocês vão se falar, por onde e o que ela vai avaliar até lá.'] ] },
+  'marido': { title: 'do “falar com o marido”', band: ['Não negocie contra a outra pessoa.', 'Entenda o papel dela na decisão.'], items: [
+    [0, 'Quando a pessoa diz que precisa falar com o marido, é só desculpa.', 'Muitas vezes é verdade. Em muitas casas, decisões grandes são tomadas a dois.'],
+    [1, 'A mesma frase pode esconder situações bem diferentes.', 'Entenda o papel da outra pessoa na decisão antes de responder.'],
+    [0, '“Mas é você que vai fazer o tratamento, né?” ajuda a decidir.', 'Soa como se a família não importasse. Ajude a preparar a conversa em casa.'],
+    [0, 'Mandar o orçamento no WhatsApp para a pessoa mostrar em casa resolve.', 'A outra pessoa vê só um número, sem a explicação que você deu.'],
+    [1, 'Se a pessoa vai conversar em casa, combine dia e hora para se falarem.', 'Assim a conversa não fica solta e o retorno já tem assunto.'] ] },
+  'medo': { title: 'do “tenho medo”', band: ['Medo não se resolve com argumento.', 'Se resolve com conversa.'], items: [
+    [0, 'Dizer que não é nada e que vai dar tudo certo tranquiliza.', 'A pessoa sente que não foi ouvida, e o medo continua lá, calado.'],
+    [1, '“Tenho medo” pode esconder motivos bem diferentes.', 'Uma experiência ruim, um caso que a pessoa viu, falta de informação ou a saúde.'],
+    [0, '“Eu já fiz centenas e nunca deu errado” passa segurança.', 'Para a pessoa, importa o que vai acontecer com ela. Entenda o medo primeiro.'],
+    [1, 'Com medo, quem decide a velocidade é a pessoa.', 'Pressa aumenta o medo. Vá com calma e dê garantias concretas.'],
+    [0, 'Vale insistir: “você veio até aqui, não vai desistir agora”.', 'Medo pressionado vira resistência. O importante é a pessoa decidir informada.'] ] },
+  'outra-clinica': { title: 'do “lá é mais barato”', band: ['Não fale mal da outra clínica.', 'Torne a comparação completa.'], items: [
+    [0, 'O melhor é explicar que o seu material é superior.', '“Material melhor” todo mundo diz. Pergunte o que a pessoa está comparando.'],
+    [1, '“Lá é mais barato” pode esconder situações bem diferentes.', 'Menos coisas no orçamento, um valor que aperta, alguém testando o preço ou propostas iguais.'],
+    [0, 'Falar mal da outra clínica ajuda a pessoa a escolher você.', 'Parece insegurança. Deixe a comparação completa e ela tira a conclusão.'],
+    [0, 'Cobrir o preço da outra clínica na hora é o mais seguro.', 'Quando o preço cai rápido, a pessoa pensa que o valor de antes era inventado.'],
+    [1, 'Se as propostas forem iguais, admita e fale do valor com transparência.', 'Inventar uma diferença que não existe faz você perder credibilidade.'] ] },
+  'desconto': { title: 'do “faz um desconto?”', band: ['Desconto não é reflexo.', 'É ferramenta.'], items: [
+    [0, 'Dar o desconto logo evita perder a venda.', 'Você pode abrir mão de dinheiro sem resolver nada. Pergunte o que pesa.'],
+    [1, '“Faz um desconto?” pode esconder situações bem diferentes.', 'A entrada, o mês, uma dúvida sobre o plano ou uma troca justa.'],
+    [0, '“Não trabalhamos com desconto” protege o seu preço.', 'Um “não” seco fecha a conversa antes de você saber o que a pessoa precisa.'],
+    [0, 'Tirar parte do tratamento resolve o pedido de desconto.', 'A pessoa pode desconfiar: se dava para tirar, era mesmo necessário?'],
+    [1, 'Desconto faz sentido com uma condição real e uma troca justa.', 'Como o pagamento à vista. Aí ele é ferramenta, e não reflexo de medo.'] ] }
+};
+
+async function draw(id) {
+  const G = GUIDES[id];
+  await Promise.all(['600 84px Fraunces', 'italic 400 84px Fraunces', 'italic 400 40px Fraunces', '800 24px Manrope', '400 30px Manrope', '600 30px Manrope'].map(f => document.fonts.load(f)));
+  const W = 1080, H = 1920, M = 96, cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  const C = { paper: '#f6f4f2', plum: '#2a1f3d', wine: '#7a4a5a', ink: '#1e1e24', soft: '#6b5f82', rule: '#e0d8e4' };
+  x.fillStyle = C.paper; x.fillRect(0, 0, W, H);
+  x.textBaseline = 'top';
+  const lines = (t, font, maxW) => {
+    x.font = font; const out = []; let line = '';
+    for (const w of t.split(' ')) { const tt = line ? line + ' ' + w : w; if (x.measureText(tt).width > maxW && line) { out.push(line); line = w; } else line = tt; }
+    if (line) out.push(line); return out;
+  };
+  let y = M;
+  x.font = '800 24px Manrope, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
+  y += 60;
+  x.font = '600 84px Fraunces, Georgia, serif'; x.fillStyle = C.plum; x.fillText('Mitos e verdades', M, y);
+  y += 96;
+  let tf = 84;
+  do { x.font = `italic 400 ${tf}px Fraunces, Georgia, serif`; tf -= 2; } while (x.measureText(G.title).width > W - 2 * M && tf > 56);
+  x.fillStyle = C.wine; x.fillText(G.title, M, y);
+  y += 116;
+
+  const TW = W - 2 * M, bandTop = H - M - 64 - 220, bottom = bandTop - 44;
+  // diminui a letra até as 5 cartas caberem acima da faixa
+  let sf = 40, wf = 29, blocks, hOf, SF, WF, total;
+  for (;;) {
+    SF = `italic 400 ${sf}px Fraunces, Georgia, serif`; WF = `400 ${wf}px Manrope, sans-serif`;
+    const sl = Math.round(sf * 1.24), wl = Math.round(wf * 1.36);
+    blocks = G.items.map(([ok, s, w]) => ({ ok, sl: lines(s, SF, TW), wl: lines(w, WF, TW), slh: sl, wlh: wl }));
+    hOf = b => 30 + 12 + b.sl.length * b.slh + 6 + b.wl.length * b.wlh;
+    total = blocks.reduce((a, b) => a + hOf(b), 0);
+    if (total + 4 * 26 <= bottom - y || sf <= 32) break;
+    sf -= 1; wf = Math.max(25, wf - 0.5);
+  }
+  const gap = Math.max(22, (bottom - y - total) / (blocks.length - 1));
+  blocks.forEach((b, i) => {
+    if (i) { x.fillStyle = C.rule; x.fillRect(M, y - gap / 2, TW, 2); }
+    // etiqueta
+    const tag = b.ok ? 'VERDADE' : 'MITO';
+    x.font = '800 22px Manrope, sans-serif';
+    x.font = '800 21px Manrope, sans-serif'; const tw = x.measureText(tag).width + 28;
+    x.beginPath(); if (x.roundRect) x.roundRect(M, y, tw, 30, 7); else x.rect(M, y, tw, 30);
+    if (b.ok) { x.fillStyle = C.plum; x.fill(); x.fillStyle = C.paper; }
+    else { x.strokeStyle = C.wine; x.lineWidth = 2.5; x.stroke(); x.fillStyle = C.wine; }
+    x.font = '800 21px Manrope, sans-serif'; x.fillText(tag, M + 14, y + 5);
+    let yy = y + 30 + 12;
+    x.font = SF; x.fillStyle = C.plum; b.sl.forEach(l => { x.fillText(l, M, yy); yy += b.slh; });
+    yy += 6;
+    x.font = WF; x.fillStyle = C.ink; b.wl.forEach(l => { x.fillText(l, M, yy); yy += b.wlh; });
+    y += hOf(b) + gap;
+  });
+
+  // faixa e assinatura, como nos outros guias
+  x.fillStyle = C.plum; x.fillRect(0, bandTop, W, 220);
+  const bandLine = (t, style, color, yy) => {
+    let f = 54;
+    do { x.font = `${style} ${f}px Fraunces, Georgia, serif`; f -= 2; } while (x.measureText(t).width > W - 2 * M && f > 36);
+    x.fillStyle = color; x.fillText(t, M, yy);
+  };
+  bandLine(G.band[0], '600', C.paper, bandTop + 44);
+  bandLine(G.band[1], 'italic 400', '#d6a3b2', bandTop + 118);
+  let sig = 'Nathálya Mello · Especialista em Vendas · @nathmellop', fs = 30;
+  do { x.font = `600 ${fs}px Manrope, sans-serif`; fs--; } while (x.measureText(sig).width > W - 2 * M && fs > 20);
+  x.fillStyle = C.ink; x.fillText(sig, M, H - M - 30);
+  return cv.toDataURL('image/png');
+}
+window.renderAll = async () => { const out = {}; for (const id in GUIDES) out[id] = await draw(id); return out; };
+</script>
+</body></html>
