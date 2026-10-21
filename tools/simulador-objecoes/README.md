@@ -12,6 +12,8 @@ Não edite `public/simulador-objecoes/*.html` à mão: esses arquivos são gerad
 | `engine.html` | O motor: telas, conteúdo das 6 objeções, diagnóstico, lista de espera, eventos. A configuração fica no objeto `CONFIG`, no começo do script. |
 | `build.py` | Gera as 7 páginas (`index` = tela inicial e uma por objeção) em `public/simulador-objecoes/`, com título, descrição, dados estruturados, imagem de compartilhamento, GA4 e pixel. Depois abre cada página num navegador e grava no HTML a primeira tela já montada. Precisa de Playwright com Chromium. |
 | `render_guides.py` | Gera de novo a imagem do guia de cada objeção (`guia1-*`: `.webp`, `-sm.webp` e o `.jpg` do botão Baixar) quando o texto dele muda. |
+| `fonts.py` | Gera de novo a Inter de `assets/fonts` (só os caracteres do motor, pesos 400 a 800, tamanho óptico). Rode quando o texto ganhar um caractere novo. |
+| `render_og.py` | Gera de novo as imagens de compartilhamento (`og-*.jpg`) com a Inter e a abertura de cada objeção. |
 | `mitos.html` | Guia de mitos e verdades dos antigos cartões de treino. Saiu do funil em out/2026; fica só como referência. |
 
 ## Editar e publicar
@@ -25,6 +27,15 @@ python3 tools/simulador-objecoes/render_guides.py
 ```
 
 `?teste=1` marca todos os eventos como teste: o n8n guarda, mas não avisa a equipe.
+
+## Tipografia
+
+- Só Inter, hospedada em `assets/fonts` (sem Google Fonts): uns 45 KB por estilo, com pré-carregamento do normal. O itálico só baixa quando aparece.
+- Tamanho óptico automático: nos títulos grandes a Inter usa o desenho Display.
+- Espaçamento de letras pela fórmula do autor da fonte: −0,011em no texto, −0,019em perto de 24px, −0,022em a partir de 32px.
+- Pesos: 400 texto, 500 leve destaque, 600 subtítulos e botões, 700 títulos e a frase da objeção nos cartões, 800 o título da tela da objeção.
+- Destaque por cor, não por itálico. Itálico só em fala (pacientes, Nath) e depoimentos.
+- Mudou texto de guia: `render_guides.py`. Mudou abertura de objeção: `render_og.py`.
 
 ## Como o funil funciona
 

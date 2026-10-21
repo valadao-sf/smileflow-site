@@ -23,10 +23,15 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://smileflow.com.br/#organizacao", "name": "SmileFlow", "url": "https://smileflow.com.br"}, {"@type": "Person", "@id": "https://smileflow.com.br/#nathalya-mello", "name": "Nathálya Mello", "jobTitle": "Especialista em Vendas", "description": "Sócia-fundadora e Diretora Comercial da SmileFlow", "worksFor": {"@id": "https://smileflow.com.br/#organizacao"}, "image": "https://smileflow.com.br/simulador-objecoes/assets/nath-avatar.webp", "sameAs": ["https://www.instagram.com/nathmellop/"]}, {"@type": "WebPage", "@id": "https://smileflow.com.br/simulador-objecoes/medo#pagina", "url": "https://smileflow.com.br/simulador-objecoes/medo", "name": "O que responder quando o paciente diz “tenho medo”? | Simulação grátis", "headline": "O que responder quando o paciente diz “tenho medo”?", "description": "Acolha. Pergunte. Entenda o medo. Depois, explique. Na simulação grátis da Nathálya Mello, você atende 4 pacientes que dizem “tenho medo” e vê onde a sua resposta trava a venda.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://smileflow.com.br/simulador-objecoes#pagina"}, "author": {"@id": "https://smileflow.com.br/#nathalya-mello"}, "publisher": {"@id": "https://smileflow.com.br/#organizacao"}, "primaryImageOfPage": "https://smileflow.com.br/simulador-objecoes/assets/og-medo.jpg", "breadcrumb": {"@id": "https://smileflow.com.br/simulador-objecoes/medo#trilha"}}, {"@type": "FAQPage", "@id": "https://smileflow.com.br/simulador-objecoes/medo#perguntas", "mainEntity": [{"@type": "Question", "name": "O que responder quando o paciente diz “tenho medo”?", "acceptedAnswer": {"@type": "Answer", "text": "Medo não se resolve com argumento. Se resolve com conversa. Quando a pessoa diz que tem medo, a vontade é tranquilizar rápido ou provar o seu valor. Segure essa vontade por um instante. Primeiro, acolha: é normal ter medo. Depois, pergunte o que exatamente preocupa. Entenda de onde vem esse medo: uma experiência ruim, um caso que a pessoa viu, a falta de informação ou uma dúvida sobre a saúde. Só então explique, com calma e com garantias concretas."}}]}, {"@type": "BreadcrumbList", "@id": "https://smileflow.com.br/simulador-objecoes/medo#trilha", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "SmileFlow", "item": "https://smileflow.com.br"}, {"@type": "ListItem", "position": 2, "name": "Simulador de objeções", "item": "https://smileflow.com.br/simulador-objecoes"}, {"@type": "ListItem", "position": 3, "name": "Tenho medo", "item": "https://smileflow.com.br/simulador-objecoes/medo"}]}]}</script>
 <script>window.sfTrack=window.sfTrack||function(){(window.sfTrack.q=window.sfTrack.q||[]).push(arguments)};</script>
 <script async src="/_sf/track.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&display=swap">
+<link rel="preload" href="/simulador-objecoes/assets/fonts/inter-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Inter hospedada aqui (/simulador-objecoes/assets/fonts, gerada por fonts.py): só os caracteres do simulador, pesos 400 a 800 e o eixo de
+   tamanho óptico (14 a 32), que usa o desenho "Display" nos títulos grandes. Sem chamada ao Google: abre mais rápido e
+   não manda o IP de quem visita para terceiros. O itálico só baixa quando aparece na tela. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400 800;font-display:swap;src:url(/simulador-objecoes/assets/fonts/inter-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:italic;font-weight:400 800;font-display:swap;src:url(/simulador-objecoes/assets/fonts/inter-italic.woff2) format('woff2')}
+/* Enquanto a Inter não chega: Arial com as medidas da Inter, para o texto não pular de lugar. */
+@font-face{font-family:'Inter Fallback';src:local('Arial'),local('Helvetica Neue'),local('Helvetica');ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%;size-adjust:107.4%}
 /* Layout: uma coluna do tamanho de um celular, como o palco de uma consulta.
    Cada tela é uma cena: uma decisão por vez. Vídeos ocupam a tela inteira. */
 :root{
@@ -41,8 +46,8 @@
   --wine-hi:#d6a3b2;    /* vinho claro, para texto sobre fundo escuro */
   --sand:#b8ada4;       /* texto secundário */
   --soft:#9a8fb0;       /* rótulos */
-  --display:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;   /* versão de comparação: tudo em Inter */
-  --ui:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --display:'Inter','Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --ui:'Inter','Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --ease:cubic-bezier(.2,.7,.2,1);
   color-scheme:dark;
 }
@@ -730,14 +735,31 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .mosaic .col{animation:none}
   .timer{display:none}
 }
-/* ---------- versão de comparação: só Inter ----------
-   Inter nos títulos fica melhor um pouco mais pesada e com letras mais juntas; o itálico rosa vira peso médio. */
-.display{font-weight:700;letter-spacing:-.028em;line-height:1.06}
-.display em{font-weight:500;letter-spacing:-.022em}
-.objs h1{font-style:italic;font-weight:500;letter-spacing:-.03em}
-.objs h1 small{font-style:normal;letter-spacing:0}
-.ex h2,.card h3,h3{letter-spacing:-.018em}
-q,.ocardx q,.ocard q{letter-spacing:-.012em}
+/* ---------- TIPOGRAFIA (só Inter) ----------
+   - Tamanho óptico automático: acima de ~24px a Inter usa o desenho Display, mais fechado e elegante.
+   - Espaçamento de letras pela fórmula do autor da fonte (Rasmus Andersson): −0,011em em 16px, −0,019em em 24px,
+     −0,022em a partir de 32px; texto pequeno sem ajuste.
+   - Pesos como no shadcn: 400 texto, 500 leve destaque, 600 subtítulos e botões, 700 títulos, 800 o título principal.
+   - Destaque por cor, não por itálico: o itálico fica só para fala (o que a pessoa e a Nath dizem) e depoimentos.
+   - Números tabulares onde o número muda ou é comparado (valores, contas, placares). */
+html{font-optical-sizing:auto;font-kerning:normal;text-rendering:optimizeLegibility}
+body{letter-spacing:-.011em}
+small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
+.eyebrow{font-weight:700;letter-spacing:.08em}
+.display{font-weight:700;letter-spacing:-.022em;line-height:1.08}
+.display em,.porta h3 em,.storyq em{font-style:normal;font-weight:inherit;color:var(--wine-hi)}
+.objs h1{font-style:normal;font-weight:800;letter-spacing:-.022em;line-height:1.04}
+.objs h1 small{font-weight:600;letter-spacing:-.006em}
+.ex h2,.card h3,h3,.dbig{letter-spacing:-.019em}
+/* a frase da objeção: o "título" de cada cartão */
+.ocardx q,.ocard q{font-style:normal;font-weight:700;letter-spacing:-.019em}
+.hcard b,.gsec h3,.hcont q{font-style:normal;font-weight:700}
+.gtext summary b{font-style:normal;font-weight:700;letter-spacing:-.019em}
+.gtlinks a{font-style:normal;font-weight:600;letter-spacing:-.011em}
+.vcap.em{font-style:normal;font-weight:600}
+.rule li:last-child{font-style:normal;font-weight:700}
+.line{font-weight:500;letter-spacing:-.019em}
+.dbig,.ticket b,.okline,.ocardx .pr,.ocard small,.exhead em,.mnccta .price{font-variant-numeric:tabular-nums}
 </style>
 <style>html,body{margin:0;background:#0b080e}</style>
 </head>
@@ -1240,7 +1262,7 @@ function mapGuide(cfg) {
     y += 60;
     x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText(cfg.title[0], M, y);
     y += 96;
-    x.font = 'italic 500 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(cfg.title[1], M, y);
+    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(cfg.title[1], M, y);
     y += 140;
     y = step(1, cfg.s1[0], y);
     y = wrap(cfg.s1[1], '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
@@ -1520,7 +1542,7 @@ return {
     y += 60;
     x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText('Antes de responder', M, y);
     y += 96;
-    x.font = 'italic 500 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText('um “tá caro”', M, y);
+    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText('um “tá caro”', M, y);
     y += 140;
     y = step(1, 'Pare', y);
     y = wrap('“Tá caro” pode querer dizer muitas coisas. Não responda no impulso.', '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
@@ -4065,7 +4087,7 @@ function renderGiftOpen() {
 
 async function fontsReady() {
   try {
-    await Promise.all(['700 84px Inter', 'italic 500 44px Inter', '800 24px Inter', '400 34px Inter', '600 30px Inter']
+    await Promise.all(['700 84px Inter', 'italic 400 44px Inter', '800 24px Inter', '400 34px Inter', '600 30px Inter']
       .map(f => document.fonts.load(f)));
   } catch (e) {}
 }
@@ -4102,7 +4124,7 @@ async function drawGift() {
     x.fillStyle = color; x.fillText(t, M, yy);
   };
   bandLine(O.band[0], '600', C.paper, bandY + 44);
-  bandLine(O.band[1], 'italic 400', '#d6a3b2', bandY + 118);
+  bandLine(O.band[1], '600', '#d6a3b2', bandY + 118);
   x.font = '600 30px Inter, sans-serif'; x.fillStyle = C.ink;
   let sig = `Nathálya Mello · Especialista em Vendas · ${CONFIG.igHandle}`, fs = 30;
   do { x.font = `600 ${fs}px Inter, sans-serif`; fs--; } while (x.measureText(sig).width > W - 2 * M && fs > 20);
