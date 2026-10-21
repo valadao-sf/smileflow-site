@@ -57,6 +57,9 @@ python3 tools/simulador-objecoes/render_guides.py
 
 - Cada objeção tem um exercício, a simulação com 4 pessoas, e um guia. Os cartões de treino (certo ou errado) e o segundo guia saíram em out/2026; links antigos com `?ex=flash` abrem a simulação.
 - Não existe mais a tela "Meus guias": o guia liberado aparece no cartão da objeção, na tela inicial e na tela da objeção, com o botão "Baixar o guia" (`assets/guia1-<id>.jpg`).
+- A tela inicial é a mesma para todo mundo: o título, o elenco (as 24 pessoas das simulações, subindo devagar; parado com movimento reduzido), as objeções e, depois delas, o cartão "Além das objeções", que leva ao vídeo da Nath. Não há diagnóstico, bio nem rodapé na tela inicial.
+- Quem já tem perfil vê o nome só no subtítulo ("Ana, qual frase mais trava você?"). O nome abre o formulário com as respostas de antes, para corrigir; no formulário, "Não é você? Começar do zero" apaga do navegador o perfil, os guias, o diagnóstico e a lista de espera (fica o grupo do teste A/B, a origem da visita e a fila de envios).
+- Os cartões das objeções têm só a frase, grande, e o estado ("Simulação · 3 min" ou "Guia liberado" com o botão de baixar). Os rostos ficam no elenco do topo e na simulação.
 - A tela final termina com o link "Voltar ao início". O resultado do diagnóstico termina com um link só: "Continuar" quando a pessoa veio de uma objeção, "Voltar ao início" quando veio da tela inicial.
 - No pedido do guia, o topo do guia aparece nítido e some num degradê. É o mesmo trecho que a prévia do guia já mostra.
 - Nomes fixos nos textos: "simulação" (as 4 conversas), "diagnóstico" (as 7 perguntas), "guia", "Método Negociação Clínica (MNC)" por extenso na primeira vez em cada tela. O mesmo botão tem o mesmo nome em todas as telas ("Começar a simulação", "Ver onde minha venda escapa", "Enviar no WhatsApp", "Baixar o guia").
@@ -66,8 +69,9 @@ python3 tools/simulador-objecoes/render_guides.py
 - Robôs que não rodam JavaScript (os do ChatGPT, do Claude e do Perplexity) leem só o HTML. Por isso o `build.py` grava em cada página a primeira tela já montada: a tela inicial no `index` e a tela da objeção nas outras. Cada página tem o seu próprio texto.
 - Título e H1 seguem a pergunta que se digita no Google: "O que responder quando o paciente diz “tá caro”?". O verbo fica em `OBJECTIONS[id].ask`; `q` troca a pergunta inteira quando a busca é outra (no desconto, "pede desconto"). Fora da saúde, depois do perfil, a tela diz "o cliente".
 - Logo abaixo do H1 vem a resposta em uma frase (`OBJECTIONS[id].answer`) e só depois o convite para a simulação: é a frase que busca e IA citam. A descrição de busca usa `snippet`, a versão curta da mesma resposta (o `build.py` barra descrição com mais de 155 caracteres). As duas saem da `rule`; não invente nada que não esteja nela.
-- "Resposta curta", na tela da objeção, mostra a `rule` da objeção. É o mesmo texto do `FAQPage` nos dados estruturados: mudou um, o `build.py` atualiza o outro.
-- O texto aberto é só a regra. As perguntas para usar na conversa continuam no guia em imagem, que a simulação libera.
+- Na tela da objeção, a explicação aparece aberta, no formato da conversa da simulação: a foto da Nath, o título `rule.head` e os parágrafos `rule.text`, com o link dos destaques do Instagram no fim. `rule.text` é o mesmo texto do `FAQPage` nos dados estruturados: mudou um, o `build.py` atualiza o outro.
+- O texto aberto é só a explicação. As perguntas para usar na conversa continuam no guia em imagem, que a simulação libera.
+- Tom dos textos (explicação, guia, explicação depois de cada resposta, resultado e perfis): objetivo. O que a resposta fez, o efeito na pessoa e o que fazer. Sem frase de efeito, bordão de uma palavra ("Pare.", "Acolha."), "Segure essa vontade" ou fecho de impacto. As falas da Nath nos roteiros dos vídeos ficam como ela fala.
 - Para conferir, extraia o texto sem JavaScript das 7 páginas: nenhuma pode repetir o texto de outra objeção.
 
 ## O que preencher em `CONFIG`
