@@ -51,9 +51,8 @@ def local_pages(directory, paths, fn):
 # 1. Texto de cada objeção, direto do motor
 DATA = local_pages(HERE, ['/engine.html'], lambda pg: pg.evaluate("""() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => {
   const o = OBJECTIONS[id];
-  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, hero: o.hero, n: (o.rounds || []).length };
+  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: (o.rounds || []).length };
 })"""))['/engine.html']
-PLURAL = {'diz': 'dizem', 'pergunta': 'perguntam'}
 
 ORG = {'@type': 'Organization', '@id': f'{ORIGIN}/#organizacao', 'name': 'SmileFlow', 'url': ORIGIN}
 NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathálya Mello', 'jobTitle': 'Especialista em Vendas',
@@ -61,9 +60,10 @@ NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathály
         'image': f'{ORIGIN}{BASE}/assets/nath-avatar.webp', 'sameAs': [INSTAGRAM]}
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'
-HUB_TITLE = 'Como responder objeções de pacientes: simulador grátis | Nathálya Mello'
-HUB_DESC = ('Exercícios grátis de 3 minutos para responder “tá caro”, “vou pensar”, “tenho medo”, “faz um desconto?” '
-            'e outras objeções de pacientes. Por Nathálya Mello, especialista em vendas.')
+HUB_TITLE = 'Como responder objeções de pacientes | Simulador grátis'
+HUB_DESC = ('Treine em 3 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. '
+            'Grátis, com Nathálya Mello.')
+BRAND = 'Treinos da Nath'   # nome que aparece na tela inicial
 
 
 def crumbs(url, items):
@@ -73,7 +73,7 @@ def crumbs(url, items):
 
 PAGES = []   # (arquivo, id da objeção ou 'hub', título, descrição, dados estruturados)
 PAGES.append(('index', 'hub', HUB_TITLE, HUB_DESC, [ORG, NATH,
-    {'@type': 'CollectionPage', '@id': HUB_URL + '#pagina', 'url': HUB_URL, 'name': HUB_TITLE, 'description': HUB_DESC,
+    {'@type': 'CollectionPage', '@id': HUB_URL + '#pagina', 'url': HUB_URL, 'name': HUB_NAME, 'alternateName': BRAND, 'headline': HUB_TITLE, 'description': HUB_DESC,
      'inLanguage': 'pt-BR', 'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']},
      'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/og-hub.jpg', 'breadcrumb': {'@id': HUB_URL + '#trilha'},
      'mainEntity': {'@type': 'ItemList', 'itemListElement': [
@@ -82,8 +82,9 @@ PAGES.append(('index', 'hub', HUB_TITLE, HUB_DESC, [ORG, NATH,
 for d in DATA:
     url = f'{HUB_URL}/{d["id"]}'
     title = f'{d["q"]} | Simulação grátis'
-    desc = (f'{" ".join(d["steps"])} Na simulação grátis da Nathálya Mello, você atende {d["n"]} pacientes que '
-            f'{PLURAL.get(d["ask"], d["ask"])} {d["phrase"]} e vê onde a sua resposta trava a venda.')
+    # A resposta vem primeiro, numa frase inteira (o snippet de cada objeção, no motor). Até 155 caracteres.
+    desc = f'{d["snippet"]} Treine com {d["n"]} pacientes na simulação grátis da Nathálya Mello.'
+    assert len(desc) <= 155, (d['id'], len(desc))
     PAGES.append((d['id'], d['id'], title, desc, [ORG, NATH,
         {'@type': 'WebPage', '@id': url + '#pagina', 'url': url, 'name': title, 'headline': d['q'], 'description': desc,
          'inLanguage': 'pt-BR', 'isPartOf': {'@id': HUB_URL + '#pagina'}, 'author': {'@id': NATH['@id']},
@@ -179,6 +180,6 @@ for fname, oid, *_ in PAGES:
     doc = re.sub(r'(<p class="chip" id="hero-chip"><i></i>).*?(</p>)', lambda m: m[1] + (e(d['hero']['chip']) if d else '') + m[2], doc, count=1)
     doc = re.sub(r'(<h1 class="display" id="hero-h1">).*?(</h1>)', lambda m: m[1] + (d['hero']['h1'] if d else '') + m[2], doc, count=1)
     doc = re.sub(r'(<p class="lede" id="hero-lede">).*?(</p>)', lambda m: m[1] + (e(d['hero']['lede']) if d else '') + m[2], doc, count=1)
-    doc = re.sub(r'(<h2 class="storyq" id="ig-q">).*?(</h2>)', lambda m: m[1] + (f'Lá no meu Instagram, nos destaques, eu explico melhor <em>o {d["phrase"]}.</em>' if d else '') + m[2], doc, count=1)
+    doc = re.sub(r'(<h2 class="storyq" id="ig-q">).*?(</h2>)', lambda m: m[1] + (f'Nos destaques do meu Instagram, tem mais conversas com <em>{d["phrase"]}{"" if d["phrase"].endswith("?”") else "."}</em>' if d else '') + m[2], doc, count=1)
     open(path, 'w', encoding='utf-8').write(doc)
     print('page', fname, len(doc))
