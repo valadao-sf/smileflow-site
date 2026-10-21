@@ -447,12 +447,9 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hsoon em{flex:none;padding:5px 8px;border-radius:6px;border:1px solid var(--soft);font:800 10px/1 var(--ui);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:#d9cfe0}
 /* ---------- DIAGNÓSTICO (perguntas → resultado → WhatsApp) ---------- */
 .diag,.diagres{gap:18px;padding-block:20px 18px}
-.dprog{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.dprog{display:grid;grid-template-columns:repeat(var(--n,6),1fr);gap:5px}
 .dprog i{height:4px;border-radius:4px;background:var(--line)}
 .dprog i.on{background:var(--wine-hi)}
-.dpart{display:flex;gap:6px;flex-wrap:wrap}
-.dpart span{padding:5px 8px;border-radius:6px;border:1px solid transparent;font:800 11px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
-.dpart span.on{background:var(--wine-hi);border-color:var(--wine-hi);color:var(--plum)}
 .dq{margin:0;font:600 clamp(23px,6.6vw,27px)/1.14 var(--display);text-wrap:balance}
 .dopts{display:flex;flex-direction:column;gap:10px}
 .dopt{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 16px;border-radius:14px;background:var(--stage);border:1px solid var(--line);color:var(--paper);font:600 15px/1.35 var(--ui);text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
@@ -461,18 +458,17 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .dopt.sel{border-color:var(--wine-hi);background:var(--plum)}
 .dopt.sel i{background:var(--wine-hi);border-color:var(--wine-hi)}
 .dfoot{margin-top:auto;text-align:center;font-size:12.5px;color:var(--soft)}
-.dmeter{display:flex;flex-direction:column;gap:14px}
-.drow{display:flex;flex-direction:column;gap:6px}
-.drow .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-size:15px}
-.drow .t small{font:700 12.5px var(--ui);color:var(--sand)}
-.drow .bar{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.drow .bar i{height:6px;border-radius:6px;background:var(--line)}
-.drow .bar i.on{background:var(--sand)}
-.drow p{margin:0;font-size:13.5px;line-height:1.45;color:var(--sand)}
-.drow.weak{padding:12px;margin:0 -12px;border-radius:12px;background:var(--plum);border:1px solid var(--wine-hi)}
-.drow.weak .bar i.on{background:var(--wine-hi)}
-.drow.weak .t small{color:var(--wine-hi)}
-.drow.weak p{color:#d9cfe0}
+.dnum{display:flex;flex-direction:column;gap:12px}
+.dnumrow{display:flex;align-items:center;gap:14px}
+.dnumrow .input{width:128px;flex:none;height:72px;font:600 40px/1 var(--display);text-align:center;padding:0 10px;font-variant-numeric:tabular-nums}
+.dnumrow span{font:600 17px/1.3 var(--ui);color:var(--sand)}
+.dstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.dstat{display:flex;flex-direction:column;gap:6px;min-width:0}
+.dstat b{font:600 40px/1 var(--display);font-variant-numeric:tabular-nums}
+.dstat span{font-size:13px;line-height:1.35;color:var(--sand)}
+.dstat.hi b{color:var(--wine-hi)}
+.dline{display:flex;flex-direction:column;gap:6px}
+.dline + .dline{padding-top:14px;border-top:1px solid var(--line)}
 .dbig{margin:0;font:600 34px/1.05 var(--display)}
 .dbig small{font:700 15px var(--ui);color:var(--sand)}
 .cbform{display:flex;flex-direction:column;gap:12px}
@@ -1008,9 +1004,9 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
       <div class="vlinks"><button class="link vagain" style="color:var(--paper)">Ver o vídeo de novo</button><button class="link vscript" style="color:var(--paper)" hidden>Ler o roteiro</button></div>
       <p class="vcap" aria-live="polite"></p>
       <div class="mnccta">
-        <h3>Em qual parte a sua venda escapa?</h3>
-        <p>Ler, comandar ou fechar: descubra em 7 perguntas rápidas.</p>
-        <button class="btn btn-main" data-diag="video">Ver onde minha venda escapa <span class="arr">→</span></button>
+        <h3>Quanto está parado nos seus orçamentos?</h3>
+        <p>6 perguntas rápidas sobre a sua semana passada, com os seus números.</p>
+        <button class="btn btn-main" data-diag="video">Fazer o diagnóstico <span class="arr">→</span></button>
         <span class="price">Diagnóstico grátis · 2 minutos</span>
       </div>
       <button class="link" id="v3-skip" data-go="final" style="color:var(--paper)">Agora não</button>
@@ -1196,7 +1192,7 @@ const CONFIG = {
   objHighlight: '',       // link do destaque “Objeções” (instagram.com/stories/highlights/ID/); vazio = perfil
   publicUrl: 'https://smileflow.com.br/simulador-objecoes/medo',           // endereço público deste teste, para ir no texto de compartilhar
   leadWebhook: 'https://n8n.smileflow.me/webhook/simulador-objecoes', // n8n: contatos, diagnósticos e cliques (workflow “SmileFlow | Simulador de objeções”)
-  // Porta para o MNC: V3 (vídeo final universal) → 7 perguntas → resultado → WhatsApp da equipe.
+  // Porta para o MNC: V3 (vídeo final universal) → diagnóstico (6 perguntas) → resultado → WhatsApp da equipe.
   whatsapp: '5527997801809', // número da equipe da Nath, só dígitos com DDI e DDD, ex.: '5527999999999'
   mnc: {
     // O que é o MNC, em até 3 linhas curtas (formato, duração, para quem). Só aparece quando preenchido.
@@ -1354,16 +1350,8 @@ function inferArea(t) {
 }
 // Vocabulário. Antes de a pessoa dizer a área, e em tudo que é igual para todos (guias, vídeos, ensino), o texto diz "a pessoa".
 // Depois que ela escolhe a área, as poucas falas que nomeiam quem compra usam "paciente" na saúde e "cliente" nas outras áreas.
-const HEALTH_VOC = { cli: 'paciente', clis: 'pacientes', sua: 'a sua clínica', na: 'na sua clínica',
-  qPlano: 'Quando você apresenta o plano de tratamento, o que costuma fazer?', explica: 'Falo que depende e explico o tratamento',
-  qAval: 'Quantas avaliações ou orçamentos vocês fazem por mês?', qTaxa: 'De cada 10 avaliações, quantas viram tratamento?',
-  qTicket: 'Qual o valor médio de um tratamento?', avals: 'avaliações', qt: 'quantas', um: 'tratamento', varios: 'tratamentos',
-  medio: 'Com um tratamento médio de', naoMede: 'Vocês ainda não medem quantas avaliações viram tratamento.' };
-const OTHER_VOC = { cli: 'cliente', clis: 'clientes', sua: 'o seu negócio', na: 'no seu negócio',
-  qPlano: 'Quando você apresenta a proposta, o que costuma fazer?', explica: 'Falo que depende e explico a proposta',
-  qAval: 'Quantos orçamentos ou propostas vocês fazem por mês?', qTaxa: 'De cada 10 orçamentos, quantos viram venda?',
-  qTicket: 'Qual o valor médio de uma venda?', avals: 'orçamentos', qt: 'quantos', um: 'venda', varios: 'vendas',
-  medio: 'Com uma venda média de', naoMede: 'Vocês ainda não medem quantos orçamentos viram venda.' };
+const HEALTH_VOC = { cli: 'paciente', clis: 'pacientes', sua: 'a sua clínica', na: 'na sua clínica', um: 'tratamento', varios: 'tratamentos' };
+const OTHER_VOC = { cli: 'cliente', clis: 'clientes', sua: 'o seu negócio', na: 'no seu negócio', um: 'venda', varios: 'vendas' };
 const VOC = () => (S.biz ? (isHealth() ? HEALTH_VOC : OTHER_VOC) : { ...OTHER_VOC, sua: 'o seu caso', na: 'na sua venda' });
 const clientWord = () => VOC().clis;
 // Contagens que aparecem antes e depois do formulário: "pessoas" até a pessoa dizer a área.
@@ -3139,7 +3127,7 @@ function back() {
   if (!$('#bio').hidden) { closeBio(); return true; }
   track('back', { from: s });
   if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
-  if (s === 'diag' && DG.i > 0) { DG.i--; renderDiag(-1); return true; }
+  if (s === 'diag') { const pv = diagPrev(DG.i); if (pv >= 0) { DG.i = pv; renderDiag(-1); return true; } }
   const h = S.hist.pop();
   if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
   const i = FLOW.indexOf(s);
@@ -3493,59 +3481,74 @@ $$('.vfull').forEach(sc => {
 /* ---------- porta para o MNC ---------- */
 const V3_KEY = 'nath_mnc_v3';
 const v3Seen = () => { if (S.v3) return true; try { return localStorage.getItem(V3_KEY) === '1'; } catch (e) { return false; } };
-/* ---------- diagnóstico: 7 perguntas, resultado e WhatsApp ---------- */
-// Nas perguntas e no resultado, quem compra é sempre "a pessoa": serve para qualquer área e não marca gênero.
-const PW = () => ({ a: 'a pessoa', A: 'A pessoa', ela: 'ela' });
+/* ---------- diagnóstico: 6 perguntas sobre a semana passada, resultado e WhatsApp ---------- */
+// Mesmo corte e mesmas perguntas do "Diagnóstico Comercial da Clínica" (Tally): orçamentos acima de R$ 2 mil, na semana passada.
+// Os números a pessoa digita (type: 'num'); o resto é escolha. Quem não apresentou nenhum orçamento pula "quantos fecharam";
+// se também não tem nenhum parado, pula o valor médio, porque não há conta para fazer.
+const CUT = 'R$\u00a02\u00a0mil';   // com espaço que não quebra, para o valor não ficar dividido entre duas linhas
+const pl = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+const upper1 = t => t.charAt(0).toUpperCase() + t.slice(1);
 const DIAG = [
-  { k: 'ler', part: 'Ler', q: () => `${PW().A} pergunta o preço logo no começo. O que você faz?`,
-    o: () => [['Falo o valor', 0], [VOC().explica, 1], [`Pergunto antes o que ${PW().a} quer resolver`, 2]] },
-  { k: 'comandar', part: 'Comandar', q: () => VOC().qPlano,
-    o: () => [['Recomendo um caminho e explico por quê', 2], ['Mostro o mais completo e já ofereço um mais barato', 1], [`Mostro as opções e deixo ${PW().a} escolher`, 0]] },
-  { k: 'fechar', part: 'Fechar', q: () => `${PW().A} diz “vou pensar”. O que você faz?`,
-    o: () => [['Pergunto ali mesmo o que ficou em aberto', 2], ['Combino de mandar mensagem depois', 1], [`Deixo ${PW().a} pensar`, 0]] },
-  { k: 'aval', part: 'Seus números', q: () => VOC().qAval,
-    o: () => [['Até 20', 15], ['De 21 a 50', 35], ['De 51 a 100', 75], ['Mais de 100', 120]] },
-  { k: 'taxa', part: 'Seus números', q: () => VOC().qTaxa,
-    o: () => [['Até 2', 0.15], ['3 ou 4', 0.35], ['5 ou 6', 0.55], ['7 ou mais', 0.75], ['Não sei', null]] },
-  { k: 'ticket', part: 'Seus números', q: () => VOC().qTicket,
-    o: () => [['Até R$ 2 mil', 1500], ['De R$ 2 mil a R$ 5 mil', 3500], ['De R$ 5 mil a R$ 15 mil', 9000], ['Mais de R$ 15 mil', 20000]] },
+  { k: 'apresentados', type: 'num', part: 'Semana passada', unit: n => (n === 1 ? 'orçamento' : 'orçamentos'),
+    q: () => `Na semana passada, quantos orçamentos acima de ${CUT} vocês apresentaram?`,
+    hint: () => 'Pode ser um número aproximado. Se não teve nenhum, escreva 0.' },
+  { k: 'fechados', type: 'num', part: 'Semana passada', unit: () => `de ${DG.a.apresentados ?? 0}`,
+    q: () => 'Desses, quantos fecharam?', hint: () => 'Conte os que fecharam até hoje.' },
+  { k: 'parados', type: 'num', part: 'Hoje', unit: n => (n === 1 ? 'orçamento' : 'orçamentos'),
+    q: () => `Hoje, quantos orçamentos acima de ${CUT} estão sem resposta há mais de 2 dias?`,
+    hint: () => `${upper1(VOC().clis)} que receberam o valor e ainda não disseram sim nem não.` },
+  { k: 'valor', part: 'Seus orçamentos', q: () => 'Em média, qual o valor desses orçamentos?',
+    o: () => [['De R$ 2 mil a R$ 5 mil', 3500, 'de R$ 2 mil a R$ 5 mil'], ['De R$ 5 mil a R$ 10 mil', 7500, 'de R$ 5 mil a R$ 10 mil'],
+              ['De R$ 10 mil a R$ 20 mil', 15000, 'de R$ 10 mil a R$ 20 mil'], ['Mais de R$ 20 mil', 25000, 'de mais de R$ 20 mil']] },
+  { k: 'quem', part: 'Seus orçamentos', q: () => 'Quem passa o valor desses orçamentos?',
+    o: () => (isHealth()
+      ? [['Eu', 'eu', 'sou eu'], ['Secretária ou recepção', 'recepcao', 'é a secretária ou a recepção'], ['Quem faz a avaliação', 'avaliacao', 'é quem faz a avaliação'], ['Vendedor ou comercial', 'comercial', 'é o comercial']]
+      : [['Eu', 'eu', 'sou eu'], ['Alguém do atendimento', 'atendimento', 'é alguém do atendimento'], ['Vendedor ou comercial', 'comercial', 'é o comercial']]) },
   { k: 'quando', part: 'Por último', q: () => 'Quando você quer melhorar as suas vendas?',
     o: () => [['Agora, ainda este mês', 'agora'], ['Nos próximos 3 meses', '3 meses'], ['Ainda não sei, só estou conhecendo', 'conhecendo']] }
 ];
+// Onde trava, nesta ordem: poucos orçamentos (até 2 na semana) → fecha menos de 3 de cada 10 → metade ou mais parada → fecha bem.
 const PHASE = {
-  ler: { h: 'Sua venda escapa na hora de <em>ler a pessoa.</em>', t: 'ler a pessoa',
-         p: () => `Você responde antes de entender o que ${PW().a} quer resolver. Aí o preço chega sem contexto, e qualquer valor parece alto.` },
-  comandar: { h: 'Sua venda escapa na hora de <em>comandar o plano.</em>', t: 'comandar o plano',
-         p: () => `Você entende ${PW().a}, mas entrega as opções e deixa a escolha com ${PW().ela}. Sem uma recomendação clara, ${PW().ela} sai para pensar.` },
-  fechar: { h: 'Sua venda escapa na hora de <em>fechar.</em>', t: 'fechar',
-         p: () => 'Você conduz bem até o valor. Quando vem a dúvida ou o silêncio, a conversa sai da sua mão e vira mensagem depois.' },
-  consistencia: { h: 'Você já conduz <em>as 3 partes.</em>', t: 'fazer isso sempre',
-         p: () => 'O que costuma faltar nesse ponto é fazer isso sempre, em toda conversa e com toda a equipe, e não só quando dá tempo.' }
-};
-const PART_NOTE = {
-  ler: ['Você deixa o preço para depois de entender a pessoa.', 'Você explica, mas ainda responde antes de perguntar.', 'O preço chega antes de você saber o que importa.'],
-  comandar: ['Você recomenda um caminho e diz por quê.', 'Você recomenda, mas já abre espaço para o mais barato.', 'A escolha fica com a pessoa, sozinha.'],
-  fechar: ['Você descobre o que ficou em aberto, ali mesmo.', 'No “vou pensar”, você deixa para resolver por mensagem.', 'No “vou pensar”, a conversa acaba ali.']
+  fluxo: { h: 'Antes de fechar mais, você precisa de <em>mais orçamentos.</em>',
+    p: R => `${R.O === 0 ? `Na semana passada, não teve orçamento acima de ${CUT}. Sem orçamento, não há o que fechar` : `Na semana passada, ${R.O === 1 ? 'foi 1 orçamento' : `foram ${R.O} orçamentos`} acima de ${CUT}. Com tão poucos, fechar 1 a mais muda pouco no mês`}: o que mais pesa agora é ter mais ${VOC().clis} chegando até o valor.`,
+    wa: 'O diagnóstico mostrou que primeiro preciso de mais orçamentos.' },
+  fechamento: { h: 'Sua venda trava <em>no fechamento.</em>',
+    p: R => `Vocês apresentaram ${pl(R.O, 'orçamento', 'orçamentos')} acima de ${CUT} e ${R.V === 0 ? 'nenhum fechou' : `fecharam ${R.V}: cerca de ${R.x10} de cada 10`}. A maior parte recebe o valor e não fecha.`,
+    wa: 'O diagnóstico mostrou que a minha venda trava no fechamento.' },
+  retorno: { h: 'Sua venda trava <em>no retorno.</em>',
+    p: R => `Hoje, ${pl(R.U, 'orçamento', 'orçamentos')} acima de ${CUT} ${R.U === 1 ? 'está' : 'estão'} sem resposta há mais de 2 dias. Quanto mais tempo um orçamento fica parado, menor a chance de ele fechar.`,
+    wa: 'O diagnóstico mostrou que a minha venda trava no retorno dos orçamentos.' },
+  escala: { h: 'O próximo passo é <em>fazer isso sempre.</em>',
+    p: R => `${R.V === R.O ? `Vocês fecharam todos os orçamentos acima de ${CUT} da semana passada` : `Vocês fecham cerca de ${R.x10} de cada 10 orçamentos acima de ${CUT}`}, e quase nada fica parado. O ganho agora está em manter isso em toda conversa e com toda a equipe.`,
+    wa: 'O diagnóstico mostrou que já fecho bem e quero fazer isso sempre.' }
 };
 const DG_KEY = 'nath_diag';
 const DG = { i: 0, a: {}, done: false, from: '', r: 0 };
-try { const saved = JSON.parse(localStorage.getItem(DG_KEY) || 'null'); if (saved && saved.a) { DG.a = saved.a; DG.done = true; } } catch (e) {}
+// O diagnóstico antigo (ler, comandar, fechar) ficou salvo sem versão: é ignorado, e a pessoa faz o novo.
+try { const saved = JSON.parse(localStorage.getItem(DG_KEY) || 'null'); if (saved && saved.v === 2 && saved.a) { DG.a = saved.a; DG.done = true; } } catch (e) {}
 const opts = q => q.o();
-const dval = k => { const o = opts(DIAG.find(d => d.k === k)), x = DG.a[k]; return x == null || !o[x] ? null : o[x][1]; };
-const dlabel = k => { const o = opts(DIAG.find(d => d.k === k)), x = DG.a[k]; return x == null || !o[x] ? '' : o[x][0]; };
+const dq = k => DIAG.find(d => d.k === k);
+const dskip = d => (d.k === 'fechados' && DG.a.apresentados === 0) || (d.k === 'valor' && DG.a.apresentados === 0 && DG.a.parados === 0);
+const dseq = () => DIAG.filter(d => !dskip(d));
+const dval = k => {
+  const d = dq(k), x = DG.a[k];
+  if (dskip(d)) return k === 'fechados' ? 0 : null;
+  if (d.type === 'num') return Number.isInteger(x) ? x : null;
+  const o = opts(d); return x == null || !o[x] ? null : o[x][1];
+};
+const dlabel = k => { const d = dq(k), x = dval(k); return x == null ? '' : d.type === 'num' ? String(x) : opts(d)[DG.a[k]][0]; };
+const dphrase = k => { const d = dq(k), x = dval(k); return x == null || d.type === 'num' ? '' : opts(d)[DG.a[k]][2] || ''; };
 function diagResult() {
-  const parts = ['ler', 'comandar', 'fechar'].map(k => ({ k, v: dval(k) ?? 0 }));
-  const min = Math.min(...parts.map(p => p.v));
-  const phase = min === 2 ? 'consistencia' : parts.find(p => p.v === min).k;
-  const aval = dval('aval'), taxa = dval('taxa'), ticket = dval('ticket');
-  let conta = null;
-  if (aval && taxa != null && ticket) {
-    const up = taxa >= 0.75 ? 1 : 2, trat = Math.max(1, Math.round(aval * up / 10));
-    conta = { up, trat, money: trat * ticket };
-  }
-  return { parts, phase, conta, quando: dval('quando') };
+  const O = dval('apresentados') ?? 0, V = Math.min(dval('fechados') ?? 0, O), U = dval('parados') ?? 0, T = dval('valor');
+  const taxa = O > 0 ? V / O : null, x10 = taxa == null ? null : Math.round(taxa * 10);
+  const phase = O <= 2 ? 'fluxo' : x10 < 3 ? 'fechamento' : U >= 2 && U >= O / 2 ? 'retorno' : 'escala';
+  const parado = U > 0 && T ? U * T : 0;
+  // 1 a mais de cada 10 orçamentos da semana, nas 4 semanas do mês. Quem já fecha 9 de cada 10 não tem essa conta.
+  const trat = O > 0 && taxa < 0.9 && T ? Math.max(1, Math.round(O * 0.4)) : 0;
+  return { O, V, U, T, taxa, x10, phase, quando: dval('quando'), conta: { parado, trat, money: trat * (T || 0) } };
 }
-const money = v => (v >= 1000 ? `R$ ${Math.round(v / 1000).toLocaleString('pt-BR')} mil` : `R$ ${v}`);
+const money = v => (v >= 1e6 ? `R$ ${(v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} ${v >= 2e6 ? 'milhões' : 'milhão'}`
+  : v >= 1000 ? `R$\u00a0${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: v < 1e5 ? 1 : 0 })}\u00a0mil` : `R$\u00a0${v}`);
 function diagWaText() {
   const R = diagResult(), n = firstName();
   const biz = BIZ.find(b => b.id === S.biz), role = ROLES.find(r => r.id === S.role);
@@ -3553,13 +3556,18 @@ function diagWaText() {
   const out = [n ? `Oi! Meu nome é ${n}.` : 'Oi!'];
   // A mensagem usa as palavras da pessoa, do jeito que ela escreveu: "O que eu faço: vendo seguros de vida."
   const own0 = (S.other || '').trim().replace(/[.!]+$/, '');
-  const own = /^[A-Z\u00C0-\u00DA][a-z\u00E0-\u00FA]/.test(own0) ? own0.charAt(0).toLowerCase() + own0.slice(1) : own0;
+  const own = /^[A-ZÀ-Ú][a-zà-ú]/.test(own0) ? own0.charAt(0).toLowerCase() + own0.slice(1) : own0;
   if (biz) out.push(own ? `O que eu faço: ${own}.` : `Trabalho com ${biz.label.toLowerCase()}.`);
   if (rw) out.push(rw);
-  out.push(R.phase === 'consistencia'
-    ? `Fiz a simulação do ${O.phrase} da Nath, e o diagnóstico mostrou que já conduzo as 3 partes, mas quero fazer isso sempre.`
-    : `Fiz a simulação do ${O.phrase} da Nath, e o diagnóstico mostrou que a minha venda escapa na hora de ${PHASE[R.phase].t}.`);
-  if (dlabel('aval')) out.push(`Fazemos ${dlabel('aval').toLowerCase()} ${VOC().avals} por mês` + (dval('taxa') == null ? ` e ainda não medimos ${VOC().qt} fecham.` : ` e fechamos ${dlabel('taxa').toLowerCase()} de cada 10.`));
+  out.push(`Fiz a simulação do ${O.phrase} da Nath e o diagnóstico.`);
+  out.push(R.O === 0 ? `Na semana passada, não apresentamos orçamento acima de ${CUT}.`
+    : `Na semana passada, apresentamos ${pl(R.O, 'orçamento', 'orçamentos')} acima de ${CUT} e ${R.V === 0 ? 'nenhum fechou' : `fechamos ${R.V}`}.`);
+  out.push(R.U === 0 ? 'Hoje, nenhum orçamento está sem resposta há mais de 2 dias.'
+    : `Hoje, ${pl(R.U, 'orçamento', 'orçamentos')}${R.O === 0 ? ` acima de ${CUT}` : ''} ${R.U === 1 ? 'está' : 'estão'} sem resposta há mais de 2 dias.`);
+  const vp = dphrase('valor'), qp = dphrase('quem');
+  if (vp && qp) out.push(`Em média, cada orçamento é ${vp}, e quem passa o valor ${qp}.`);
+  else if (qp) out.push(`Quem passa o valor ${qp}.`);
+  out.push(PHASE[R.phase].wa);
   const q = R.quando;
   if (q === 'agora') out.push('Quero melhorar isso ainda este mês e entender como o MNC pode me ajudar.');
   else if (q === '3 meses') out.push('Penso em melhorar isso nos próximos 3 meses e quero entender como o MNC pode me ajudar.');
@@ -3574,9 +3582,12 @@ function paintMnc() {
   $$('a[data-wa]').forEach(a => { a.href = href; });
 }
 function diagPayload(type, extra = {}) {
-  const R = diagResult();
+  // Sem diagnóstico feito (clique no WhatsApp de outra tela), vai sem números nem fase.
+  const R = DG.done ? diagResult() : null;
   return { type, name: S.name || '', phone: S.phone || '', objection: O.id, ...profileFields(),
-           answers: Object.fromEntries(DIAG.map(d => [d.k, dlabel(d.k)])), phase: R.phase, conta: R.conta, quando: R.quando,
+           answers: R ? Object.fromEntries(DIAG.map(d => [d.k, dlabel(d.k)]).filter(([, v]) => v !== '')) : {},
+           numbers: R ? { apresentados: R.O, fechados: R.V, parados: R.U, ticket: R.T, taxa: R.taxa == null ? null : Math.round(R.taxa * 100) / 100 } : null,
+           phase: R ? R.phase : '', conta: R ? R.conta : null, quando: R ? R.quando : '',
            ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id, ...extra };
 }
 // Envia um evento ao n8n. Vai como texto simples (sem pré-checagem de CORS) e por beacon,
@@ -3598,7 +3609,7 @@ function sendBody(id, body) {
 function flushOutbox() { if (CONFIG.leadWebhook) outbox().forEach(x => sendBody(x.id, x.body)); }
 function postLead(payload, id = uuid()) {
   if (!CONFIG.leadWebhook) return Promise.resolve(false);
-  const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.3.1', audience_type: 'lead',
+  const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.4.0', audience_type: 'lead',
                                 is_test: IS_TEST, page: location.pathname, attribution: sfAttribution(), ...payload });
   STORE.set(OUTBOX_KEY, [...outbox(), { id, body, at: Date.now() }]);
   return sendBody(id, body);
@@ -3614,23 +3625,61 @@ function startDiag(where) {
   if (!S.biz || !S.role) { S.afterName = 'diag'; S.nameMode = S.biz ? 'role' : 'full'; go('name'); return; }
   go('diag');
 }
+// Próxima e anterior pulam as perguntas que não se aplicam (ver dskip).
+const diagNext = from => { for (let j = from + 1; j < DIAG.length; j++) if (!dskip(DIAG[j])) return j; return -1; };
+const diagPrev = from => { for (let j = from - 1; j >= 0; j--) if (!dskip(DIAG[j])) return j; return -1; };
+const answered = d => (d.type === 'num' ? Number.isInteger(DG.a[d.k]) : DG.a[d.k] != null);
+function diagAdvance(my) {
+  if (DG.r !== my || S.scene !== 'diag') return;
+  const nx = diagNext(DG.i), miss = DIAG.findIndex(d => !dskip(d) && !answered(d));
+  if (nx >= 0) { DG.i = nx; renderDiag(1); }
+  else if (miss >= 0) { DG.i = miss; renderDiag(-1); }
+  else finishDiag();
+}
 function renderDiag(dir = 1) {
   const q = DIAG[DG.i], cur = DG.a[q.k], my = ++DG.r;   // cada tela nova invalida o avanço que ainda estava esperando
-  const sc = $('#s-diag');
+  const seq = dseq(), pos = Math.max(0, seq.indexOf(q)), sc = $('#s-diag');
+  const num = q.type === 'num', has = num && Number.isInteger(cur);
   sc.scrollTop = 0;
   sc.innerHTML = `
     <header class="stack" style="gap:14px">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow" style="flex:1">Diagnóstico da sua venda</p><p class="eyebrow">${DG.i + 1} de ${DIAG.length}</p></div>
-      <div class="dprog" aria-hidden="true">${DIAG.map((_, j) => `<i class="${j <= DG.i ? 'on' : ''}"></i>`).join('')}</div>
+      <div class="navrow">${BACK_BTN}<p class="eyebrow" style="flex:1">Diagnóstico da sua venda</p><p class="eyebrow">${pos + 1} de ${seq.length}</p></div>
+      <div class="dprog" aria-hidden="true" style="--n:${seq.length}">${seq.map((_, j) => `<i class="${j <= pos ? 'on' : ''}"></i>`).join('')}</div>
     </header>
     <div class="stack" style="gap:12px">
-      ${DG.i < 3 ? `<div class="dpart">${['Ler', 'Comandar', 'Fechar'].map(p => `<span class="${p === q.part ? 'on' : ''}">${p}</span>`).join('')}</div>` : `<p class="eyebrow">${q.part}</p>`}
-      <h2 class="dq">${esc(q.q())}</h2>
-      ${DG.i === 0 ? '<p class="note">Responda com o que você faz de verdade, não com o que seria o certo.</p>' : ''}
+      <p class="eyebrow">${q.part}</p>
+      <h2 class="dq" id="dg-q">${esc(q.q())}</h2>
+      ${q.hint ? `<p class="note">${esc(q.hint())}</p>` : ''}
     </div>
-    <div class="dopts" role="list">${opts(q).map((o, j) => `<button class="dopt${cur === j ? ' sel' : ''}" data-opt="${j}" role="listitem"><i></i>${esc(o[0])}</button>`).join('')}</div>
+    ${num ? `
+    <form class="dnum" id="dg-form" novalidate>
+      <div class="dnumrow"><input class="input" id="dg-n" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="next" aria-labelledby="dg-q" aria-describedby="dg-err" value="${has ? cur : ''}"><span id="dg-unit">${esc(q.unit(has ? cur : 2))}</span></div>
+      <p class="err" id="dg-err" aria-live="polite"></p>
+      <button class="btn btn-main" type="submit">Continuar <span class="arr">→</span></button>
+    </form>` : `
+    <div class="dopts" role="list">${opts(q).map((o, j) => `<button class="dopt${cur === j ? ' sel' : ''}" data-opt="${j}" role="listitem"><i></i>${esc(o[0])}</button>`).join('')}</div>`}
     <p class="dfoot">Suas respostas montam o seu resultado e vão para a equipe da Nath.</p>`;
   if (!REDUCED) $('.stack:nth-of-type(2)', sc)?.animate([{ opacity: 0, transform: `translateX(${dir * 18}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out' });
+  if (num) {
+    const f = $('#dg-form', sc), inp = $('#dg-n', sc), err = $('#dg-err', sc), unit = $('#dg-unit', sc);
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '').slice(0, 3); err.textContent = '';
+      const v = parseInt(inp.value, 10); unit.textContent = q.unit(Number.isFinite(v) ? v : 2);
+    });
+    setTimeout(() => { if (DG.r === my && S.scene === 'diag') inp.focus({ preventScroll: true }); }, REDUCED ? 0 : 320);
+    f.onsubmit = e => {
+      e.preventDefault();
+      if (DG.lock === my) return;
+      if (inp.value === '') { err.textContent = 'Escreva um número. Pode ser aproximado.'; inp.focus(); return; }
+      const v = parseInt(inp.value, 10), max = DG.a.apresentados ?? 0;
+      if (q.k === 'fechados' && v > max) { err.textContent = `Não pode passar de ${pl(max, 'orçamento apresentado', 'orçamentos apresentados')}. Confira os dois números.`; inp.focus(); return; }
+      DG.lock = my;
+      DG.a[q.k] = v;
+      track('diag_answer', { q: q.k, a: String(v) });
+      diagAdvance(my);
+    };
+    return;
+  }
   $('.dopts', sc).onclick = async e => {
     const b = e.target.closest('[data-opt]'); if (!b || DG.lock === my) return;
     DG.lock = my;
@@ -3638,17 +3687,17 @@ function renderDiag(dir = 1) {
     $$('.dopt', sc).forEach(x => x.classList.toggle('sel', x === b));
     track('diag_answer', { q: q.k, a: opts(q)[+b.dataset.opt][0] });
     await wait(260);
-    if (DG.r !== my || S.scene !== 'diag') return;
-    const miss = DIAG.findIndex(d => DG.a[d.k] == null);
-    if (DG.i < DIAG.length - 1) { DG.i++; renderDiag(1); }
-    else if (miss >= 0) { DG.i = miss; renderDiag(-1); }
-    else finishDiag();
+    diagAdvance(my);
   };
 }
-ENTER.diag = () => { if (DG.i >= DIAG.length) DG.i = DIAG.length - 1; renderDiag(1); };
+ENTER.diag = () => {
+  if (DG.i >= DIAG.length) DG.i = DIAG.length - 1;
+  if (dskip(DIAG[DG.i])) DG.i = Math.max(0, diagPrev(DG.i));
+  renderDiag(1);
+};
 function finishDiag() {
   DG.done = true;
-  try { localStorage.setItem(DG_KEY, JSON.stringify({ a: DG.a, ts: Date.now() })); } catch (e) {}
+  try { localStorage.setItem(DG_KEY, JSON.stringify({ v: 2, a: DG.a, ts: Date.now() })); } catch (e) {}
   const R = diagResult();
   const eid = uuid();
   track('diag_done', { phase: R.phase, quando: R.quando, where: DG.from, event_id: eid });
@@ -3739,24 +3788,27 @@ function vslCard() {
     </div>`;
 }
 ENTER.diagres = () => {
-  const R = diagResult(), n = firstName(), sc = $('#s-diagres');
-  const rows = R.parts.map((p, j) => {
-    const weak = R.phase === p.k, lvl = p.v === 2 ? 'Forte' : p.v === 1 ? 'Pode melhorar' : 'Também escapa';
-    return `<div class="drow${weak ? ' weak' : ''}">
-      <div class="t">${j + 1}. ${['Ler', 'Comandar', 'Fechar'][j]}<small>${weak ? 'Onde escapa' : lvl}</small></div>
-      <div class="bar" aria-hidden="true">${[0, 1, 2].map(x => `<i class="${x <= p.v ? 'on' : ''}"></i>`).join('')}</div>
-      <p>${esc(PART_NOTE[p.k][2 - p.v])}</p></div>`;
-  }).join('');
-  const conta = R.conta ? `
-    <div class="card">
-      <p class="eyebrow">A conta, com as suas respostas</p>
-      <p class="dbig">+${R.conta.trat} ${R.conta.trat === 1 ? VOC().um : VOC().varios} <small>por mês</small></p>
-      <p class="note">Vocês fazem ${esc(dlabel('aval').toLowerCase())} ${VOC().avals} por mês e fecham ${esc(dlabel('taxa').toLowerCase())} de cada 10. Se fechassem ${R.conta.up} a mais em cada 10, seriam cerca de ${R.conta.trat} ${R.conta.trat === 1 ? VOC().um : VOC().varios} a mais. ${VOC().medio} R$ ${dval('ticket').toLocaleString('pt-BR')}, isso dá perto de <b style="color:var(--paper)">${money(R.conta.money)} por mês.</b></p>
-      <p class="small" style="text-align:left">Conta simples, feita com o meio de cada faixa que você marcou.</p>
-    </div>` : `
-    <div class="card">
-      <p class="eyebrow">A conta</p>
-      <p class="note">${VOC().naoMede} ${isWaitlist() ? 'Esse é o primeiro número para começar a medir' : 'Esse é o primeiro ponto que a equipe vai olhar com você'}: sem ele, não dá para saber quanto está escapando.</p>
+  const R = diagResult(), n = firstName(), sc = $('#s-diagres'), V = VOC();
+  const stat = (big, lab, hi) => `<div class="dstat${hi ? ' hi' : ''}"><b>${big}</b><span>${lab}</span></div>`;
+  const stats = `
+    <div class="card"><p class="eyebrow">Seus orçamentos acima de ${CUT}</p>
+      <div class="dstats">
+        ${stat(R.O, `${R.O === 1 ? 'apresentado' : 'apresentados'} na semana passada`, R.phase === 'fluxo')}
+        ${stat(R.O ? R.V : '–', R.O ? `${R.V === 1 ? 'fechou' : 'fecharam'}${R.V === R.O ? ': todos' : R.O > 2 ? `: cerca de ${R.x10} de cada 10` : ''}` : 'sem orçamento para fechar', R.phase === 'fechamento')}
+        ${stat(R.U, 'sem resposta há mais de 2 dias', R.phase === 'retorno')}
+      </div>
+    </div>`;
+  const tk = R.T ? `R$\u00a0${R.T.toLocaleString('pt-BR')}` : '';
+  const lines = [];
+  if (R.conta.parado) lines.push(`
+      <div class="dline"><p class="dbig">${money(R.conta.parado)} <small>parados agora</small></p>
+        <p class="note">${pl(R.U, 'orçamento', 'orçamentos')} sem resposta × ${tk}, o meio da faixa de valor que você marcou. É o que está esperando retorno hoje, não um valor por mês.</p></div>`);
+  if (R.conta.trat) lines.push(`
+      <div class="dline"><p class="dbig">+${money(R.conta.money)} <small>por mês</small></p>
+        <p class="note">Se vocês fechassem 1 a mais de cada 10 orçamentos acima de ${CUT}, seriam cerca de ${pl(R.conta.trat, V.um, V.varios)} a mais por mês, com ${tk} cada. Conta simples: a semana passada vezes as 4 semanas do mês.</p></div>`);
+  const conta = `
+    <div class="card"><p class="eyebrow">A conta, com os seus números</p>${lines.length ? lines.join('') : `
+      <p class="note">${R.O ? 'Vocês fecharam quase todos os orçamentos e nenhum está parado: não sobra conta para fazer aqui.' : `Sem orçamento acima de ${CUT} na semana passada e sem nenhum parado, ainda não há conta para fazer.`}</p>`}
     </div>`;
   sc.scrollTop = 0;
   sc.innerHTML = `
@@ -3764,9 +3816,9 @@ ENTER.diagres = () => {
       <div class="navrow">${BACK_BTN}<p class="eyebrow">Seu diagnóstico</p></div>
       ${n ? `<p class="body" style="color:var(--wine-hi);font-weight:700;margin:0">Pronto, ${esc(n)}.</p>` : ''}
       <h2 class="display">${PHASE[R.phase].h}</h2>
-      <p class="lede">${esc(PHASE[R.phase].p())}</p>
+      <p class="lede">${esc(PHASE[R.phase].p(R))}</p>
     </header>
-    <div class="card"><p class="eyebrow">As 3 partes da venda</p><div class="dmeter">${rows}</div></div>
+    ${stats}
     ${conta}
     ${isWaitlist() ? '' : proofBlock()}
     ${isWaitlist() ? waitCard() : AB === 'B' ? vslCard() : waCard('resultado')}
@@ -3830,9 +3882,9 @@ const mncCard = where => DG.done ? (() => {
 })() : `
     <div class="card mnc">
       <p class="eyebrow">Diagnóstico grátis · 2 min</p>
-      <h3>Em qual parte a sua venda escapa?</h3>
-      <p class="note">Responda 7 perguntas rápidas e veja em que parte a sua venda escapa: na hora de ler a pessoa, de comandar o plano ou de fechar.</p>
-      <button class="btn btn-main" data-diag="${where}">Ver onde minha venda escapa</button>
+      <h3>Quanto está parado nos seus orçamentos?</h3>
+      <p class="note">6 perguntas sobre a sua semana passada: quantos orçamentos acima de ${CUT} vocês apresentaram, quantos fecharam e quantos estão sem resposta. No fim, você vê a sua taxa e quanto está esperando retorno.</p>
+      <button class="btn btn-main" data-diag="${where}">Fazer o diagnóstico</button>
       <button class="link" data-go="v3" style="align-self:center">${v3Seen() ? 'Ver o vídeo da Nath de novo' : 'Ver o vídeo da Nath'}</button>
     </div>`;
 {

@@ -62,7 +62,7 @@ python3 tools/simulador-objecoes/render_guides.py
 - Os cartões das objeções têm só a frase, grande, e o estado ("Simulação · 3 min" ou "Guia liberado" com o botão de baixar). Os rostos ficam no elenco do topo e na simulação.
 - A tela final termina com o link "Voltar ao início". O resultado do diagnóstico termina com um link só: "Continuar" quando a pessoa veio de uma objeção, "Voltar ao início" quando veio da tela inicial.
 - No pedido do guia, o topo do guia aparece nítido e some num degradê. É o mesmo trecho que a prévia do guia já mostra.
-- Nomes fixos nos textos: "simulação" (as 4 conversas), "diagnóstico" (as 7 perguntas), "guia", "Método Negociação Clínica (MNC)" por extenso na primeira vez em cada tela. O mesmo botão tem o mesmo nome em todas as telas ("Começar a simulação", "Ver onde minha venda escapa", "Enviar no WhatsApp", "Baixar o guia").
+- Nomes fixos nos textos: "simulação" (as 4 conversas), "diagnóstico" (as 6 perguntas sobre a semana passada), "guia", "Método Negociação Clínica (MNC)" por extenso na primeira vez em cada tela. O mesmo botão tem o mesmo nome em todas as telas ("Começar a simulação", "Fazer o diagnóstico", "Enviar no WhatsApp", "Baixar o guia").
 
 ## Busca e assistentes de IA
 
@@ -92,10 +92,22 @@ Os vídeos de cada objeção ficam em `OBJECTIONS[id].videos.v1/v2`. Sem `id` do
 - Gravados (21/out/2026): todos os V1 e V2, menos o V2 do “vou pensar”, que continua com foto e legenda. O recado do diagnóstico (`CONFIG.mnc.vsl`) também está gravado, mas o teste que o mostra (`CONFIG.ab.vsl`) está desligado (0) até o site ter tráfego: todo mundo vai do resultado direto para o WhatsApp. Com 0 (ou 100), ninguém fica com grupo salvo no navegador; com um valor entre os dois, o grupo é sorteado uma vez e guardado em `nath_ab`. `?ab=B` mostra o recado para conferir.
 - Pôsteres: `assets/<objeção>-v1-poster.webp` e `-v2-`, um quadro do começo de cada vídeo (540×952).
 
+## Diagnóstico
+
+- Mesmo corte e mesmas perguntas do "Diagnóstico Comercial da Clínica" (Tally `2EgJqV`): orçamentos acima de R$ 2 mil, olhando a semana passada. Os números a pessoa digita; o resto é escolha.
+- Perguntas (`DIAG`): orçamentos apresentados (`apresentados`), quantos fecharam (`fechados`, não passa de `apresentados`), quantos estão sem resposta há mais de 2 dias (`parados`), valor médio (`valor`: R$ 2–5 mil, 5–10 mil, 10–20 mil, mais de 20 mil; a conta usa o meio da faixa), quem passa o valor (`quem`) e quando quer melhorar (`quando`).
+- Quem apresentou 0 pula "quantos fecharam"; se também não tem nenhum parado, pula o valor médio.
+- Onde trava (`phase`), nesta ordem: `fluxo` (até 2 orçamentos na semana), `fechamento` (menos de 3 de cada 10), `retorno` (2 ou mais parados e pelo menos a metade dos apresentados), `escala` (o resto).
+- A conta: dinheiro parado agora = parados × valor (não é por mês); por mês = 1 a mais de cada 10 orçamentos da semana × 4 semanas × valor (não aparece para quem já fecha 9 de cada 10).
+- Todo mundo vai para o WhatsApp da equipe, inclusive quem tem pouco fluxo; fora da saúde continua na lista de espera.
+- O resultado fica salvo no navegador (`nath_diag`, com `v: 2`). O diagnóstico antigo (ler, comandar, fechar) é ignorado e a pessoa refaz.
+- O recado do teste B (`CONFIG.mnc.vsl`) foi gravado para o diagnóstico antigo ("em qual parte a sua venda escapa"). Antes de religar o teste, regravar ou revisar o recado.
+
 ## Dados
 
 - Eventos vão para `https://n8n.smileflow.me/webhook/simulador-objecoes` (workflow em `automation-ops/workflows/simulador-objecoes`).
-- `form_id: simulador_objecoes_v1`, `form_version: 1.3.1`. Ao mudar pergunta ou texto de aceite, suba a versão para manter o vínculo entre envio, versão e consentimento.
+- Diagnóstico (1.4.0): `answers` com o texto de cada resposta, `numbers` (`apresentados`, `fechados`, `parados`, `ticket`, `taxa`), `phase` (`fluxo` | `fechamento` | `retorno` | `escala`), `conta` (`parado`, `trat`, `money`) e `quando`.
+- `form_id: simulador_objecoes_v1`, `form_version: 1.4.0`. Ao mudar pergunta ou texto de aceite, suba a versão para manter o vínculo entre envio, versão e consentimento.
 - Campos de triagem em todo evento: `business` (a grande área: `saude_estetica` | `servicos` | `comercio` | `outro`; perfis antigos com `odonto`, `estetica`, `fono` ou `saude` viram `saude_estetica`), `segment_group` (`saude_estetica` para saúde e estética, `fora_saude` para o resto), `business_label`, `business_other` (o que a pessoa escreveu em "Com o que você trabalha?", sempre preenchido, até 120 caracteres), `role_label`.
 - Na saúde, o texto livre escolhe os exemplos da simulação (odontologia, estética ou fono, em `inferArea`). Nas outras áreas, os exemplos são de odontologia.
 - Quem não é de `saude_estetica` vai para a lista de espera e não dispara Lead/Contact no Meta.
