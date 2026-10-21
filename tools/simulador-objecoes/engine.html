@@ -1175,7 +1175,7 @@ const CONFIG = {
       ]
     }
   },
-  ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = ninguém; 50 = metade). ?ab=B força o B.
+  ab: { vsl: 50 },         // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = ninguém; 50 = metade). ?ab=B força o B. Ligado em 21/out/2026; quem já tinha grupo salvo continua nele.
   site: { base: '' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
   // Vídeos: 'auto' usa o HLS do Panda no site e os MP4 locais (assets/v1.mp4…) dentro do artifact.
@@ -3659,7 +3659,7 @@ function vslCard() {
     <div class="card mnc">
       <p class="eyebrow">O próximo passo</p>
       <h3>Antes, um recado da Nath.</h3>
-      <p class="note">Ela explica, em 2 minutos, o que acontece quando você manda o seu resultado para a equipe.</p>
+      <p class="note">Ela explica, em pouco mais de 1 minuto, o que acontece quando você manda o seu resultado para a equipe.</p>
       <button class="btn btn-main" data-go="vsl">${ICON('sound')}Ver o recado da Nath</button>
       <a class="link" data-out="whatsapp" data-wa="resultado-b" href="${esc(waLink(diagWaText()))}" target="_blank" rel="noopener" style="align-self:center">Ir direto para o WhatsApp</a>
     </div>`;
