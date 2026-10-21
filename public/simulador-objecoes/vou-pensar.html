@@ -90,6 +90,9 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .btn svg{width:19px;height:19px;flex:none}
 .link{font:600 14px/1.4 var(--ui);color:var(--sand);text-decoration:underline;text-underline-offset:3px;background:none;border:0;cursor:pointer;padding:6px 0}
 .link:hover{color:var(--paper)}
+/* alvo de toque de 44 px sem mudar o desenho: uma área invisível por cima */
+.link,.follow,.gtlinks a{position:relative}
+.link::after,.follow::after,.dl::after,.gtlinks a::after,.readmore button::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:max(100%,44px);transform:translateY(-50%)}
 
 /* Nath + Instagram */
 .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;border:1px solid var(--line)}
@@ -156,7 +159,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 @keyframes slidein-back{from{opacity:.001;transform:translateX(-28px)}to{opacity:1;transform:none}}
 .choices{display:flex;flex-direction:column;gap:10px}
 .choice{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:58px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--stage);font:600 16px/1.3 var(--ui);text-align:left;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
-.choice:hover{border-color:var(--wine-hi);background:var(--hover)}
+@media (hover:hover){.choice:hover{border-color:var(--wine-hi);background:var(--hover)}}
 .choice:active{transform:scale(.99)}
 .choice .arr{font-family:var(--display);font-size:20px;line-height:0;color:var(--soft)}
 .choice[aria-pressed="true"]{background:var(--paper);color:var(--plum);border-color:var(--paper)}
@@ -172,7 +175,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .vfull video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 .vfull .vphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;transform-origin:50% 35%;animation:breathe 26s ease-in-out infinite alternate}
 .vfull.script .vpill,.vfull.script .vmute{display:none}
-.vcap{position:absolute;left:0;right:0;margin-inline:auto;bottom:calc(142px + env(safe-area-inset-bottom,0px));z-index:2;width:fit-content;max-width:min(86%,400px);box-sizing:border-box;padding:9px 14px 10px;border-radius:10px;background:var(--paper);color:#141018;font:800 17px/1.3 var(--ui);text-align:center;text-wrap:balance;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.vcap{position:absolute;left:0;right:0;margin-inline:auto;bottom:calc(142px + env(safe-area-inset-bottom,0px));z-index:2;width:fit-content;max-width:min(86%,400px);box-sizing:border-box;padding:9px 14px 10px;border-radius:10px;background:rgba(18,13,23,.84);color:var(--paper);font:800 17px/1.3 var(--ui);text-align:center;text-wrap:balance;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .vcap:empty,.vfull:not(.script) .vcap{display:none}
 .vcap.em{background:var(--wine);color:var(--paper);font:italic 500 21px/1.3 var(--display)}
 .vlinks{display:flex;gap:20px;justify-content:center}
@@ -211,7 +214,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .vfull.sound .vpill{display:none}
 .vplayicon{display:none;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;width:76px;height:76px;border-radius:50%;background:rgba(246,244,242,.92);place-items:center}
 .vplayicon::before{content:"";border-left:20px solid var(--plum);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
-.vfull.paused .vplayicon,.vfull.ended .vplayicon{display:grid}
+.vfull.paused:not(.ended) .vplayicon{display:grid}
 .vfull.paused .vpill,.vfull.ended .vpill{display:none}
 .vbottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding-block:0 18px;display:flex;flex-direction:column;gap:6px;align-items:center}
 .vagain{display:none}
@@ -238,6 +241,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .hubtop strong{display:block;font-weight:700;font-size:14px;line-height:1.2;white-space:nowrap}
 .hubtop span{display:block;font-size:12.5px;color:var(--sand)}
 .hub h1{font-size:clamp(30px,8.6vw,36px)}
+.cast{display:none}
 .hsteps{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
 .hsteps li{display:flex;gap:12px;align-items:flex-start}
 .hsteps i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--plum);border:1px solid var(--line);font:800 13px/1 var(--ui);font-style:normal;color:var(--paper)}
@@ -293,7 +297,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .hguias{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:var(--stage);border:1px solid var(--line);color:var(--paper);text-align:left;cursor:pointer;font:inherit}
 .hguias .t{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .hv3{display:flex;gap:14px;align-items:stretch}
-.hv3 .pv{position:relative;flex:none;width:96px;aspect-ratio:9/16;border-radius:10px;overflow:hidden;border:0;padding:0;cursor:pointer;background:#000}
+.hv3 .pv{position:relative;flex:none;width:116px;aspect-ratio:9/16;border-radius:10px;overflow:hidden;border:0;padding:0;cursor:pointer;background:#000}
 .hv3 .pv img{width:100%;height:100%;object-fit:cover}
 .hv3 .pv i{position:absolute;inset:0;display:grid;place-items:center}
 .hv3 .pv i::before{content:'';width:34px;height:34px;border-radius:50%;background:rgba(246,244,242,.92)}
@@ -400,7 +404,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .exdeck .ce svg{width:12px;height:12px}
 /* o guia que o exercício libera */
 .exguide{display:flex;gap:12px;align-items:center;padding:8px 12px 8px 8px;border-radius:12px;background:var(--ink);border:1px solid var(--line);cursor:pointer;font:inherit;color:var(--paper);text-align:left;width:100%}
-.exguide .th{flex:none;width:34px;height:60px;border-radius:5px;overflow:hidden;background:var(--paper)}
+.exguide .th{flex:none;width:44px;height:78px;border-radius:5px;overflow:hidden;background:var(--paper)}
 .exguide .th img{width:100%;height:100%;object-fit:cover;object-position:top}
 .exguide .t{flex:1;min-width:0}
 .exguide small{display:flex;align-items:center;gap:5px;font:800 10.5px/1.2 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--wine-hi)}
@@ -447,12 +451,12 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .dprog i{height:4px;border-radius:4px;background:var(--line)}
 .dprog i.on{background:var(--wine-hi)}
 .dpart{display:flex;gap:6px;flex-wrap:wrap}
-.dpart span{padding:5px 8px;border-radius:6px;border:1px solid var(--line);font:800 11px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.dpart span{padding:5px 8px;border-radius:6px;border:1px solid transparent;font:800 11px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
 .dpart span.on{background:var(--wine-hi);border-color:var(--wine-hi);color:var(--plum)}
 .dq{margin:0;font:600 clamp(23px,6.6vw,27px)/1.14 var(--display);text-wrap:balance}
 .dopts{display:flex;flex-direction:column;gap:10px}
 .dopt{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 16px;border-radius:14px;background:var(--stage);border:1px solid var(--line);color:var(--paper);font:600 15px/1.35 var(--ui);text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
-.dopt:hover{border-color:var(--soft)}
+@media (hover:hover){.dopt:hover{border-color:var(--soft)}}
 .dopt i{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--soft)}
 .dopt.sel{border-color:var(--wine-hi);background:var(--plum)}
 .dopt.sel i{background:var(--wine-hi);border-color:var(--wine-hi)}
@@ -482,11 +486,11 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%;transform-origin:50% 30%;animation:breathe 14s ease-in-out infinite alternate}
 @keyframes breathe{to{transform:scale(1.06)}}
 .portrait::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,var(--ink) 4%,rgba(18,13,23,0))}
-.round.answered .portrait{height:22%}
-.round.answered .portrait img{object-position:center 22%}
+.round.answered .portrait{height:26%}
+.round.answered .portrait img{object-position:center 30%}
+.round.answered .portrait::after{height:30%}
 .topbar{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;align-items:center;gap:8px;padding-block:14px}
-.topbar .igpill{margin-left:auto}
-@media (max-width:420px){.topbar .pw{display:none}}
+@media (max-width:340px){.topbar .pw{display:none}}
 .topbar{gap:6px}
 .pill{flex:none;display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:999px;background:rgba(18,13,23,.74);border:1px solid rgba(246,244,242,.12);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font:700 12px/1 var(--ui);text-decoration:none;color:var(--paper);white-space:nowrap}
 .pill img{position:static;inset:auto;width:20px;height:20px;border-radius:50%;object-fit:cover;flex:none;animation:none;transform:none}
@@ -517,7 +521,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .ask.late .ask-label{color:var(--wine-hi)}
 .opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--stage);cursor:pointer;font:500 15px/1.4 var(--ui);transition:border-color .2s,transform .15s,background .2s}
 .opt b{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font:800 12px/1 var(--ui);background:var(--ink);border:1px solid var(--line);color:var(--sand)}
-.opt:hover{border-color:var(--wine-hi);background:var(--hover)}
+@media (hover:hover){.opt:hover{border-color:var(--wine-hi);background:var(--hover)}}
 .opt:active{transform:scale(.99)}
 .opt.in{animation:rise .45s var(--ease) both}
 .bubble{max-width:88%;padding:11px 14px;border-radius:18px;font-size:15px;line-height:1.45;animation:pop .35s var(--ease) both}
@@ -591,7 +595,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .qbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .qbtns .btn{min-height:66px;font-size:18px;flex-direction:column;gap:4px}
 .qopt{background:var(--stage);color:var(--paper);border:1.5px solid var(--line)}
-.qopt:hover{border-color:var(--wine-hi);background:var(--hover)}
+@media (hover:hover){.qopt:hover{border-color:var(--wine-hi);background:var(--hover)}}
 .qbtns .btn svg{width:22px;height:22px}
 .qanswer{display:flex;flex-direction:column;gap:8px;animation:pop .4s var(--ease) both}
 .qanswer b{font:700 16px/1.3 var(--ui)}
@@ -626,17 +630,14 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .gift{gap:16px;padding-block:24px 20px}
 .giftwrap{position:relative;height:min(46svh,520px);aspect-ratio:9/16;max-width:100%;margin:0 auto;flex:none;border-radius:14px;overflow:hidden;box-shadow:0 22px 50px rgba(0,0,0,.5);background:var(--paper);animation:pop .6s var(--ease) both}
 .giftwrap img{width:100%;height:100%;object-fit:cover;transition:filter .9s var(--ease),transform .9s var(--ease)}
-.giftwrap.locked img{filter:blur(9px) saturate(.8);transform:scale(1.06)}
 .giftwrap .lock{position:absolute;inset:auto 12px 12px 12px;display:flex;align-items:center;gap:8px;justify-content:center;padding:10px 12px;border-radius:12px;background:rgba(18,13,23,.88);color:var(--paper);font:700 13px/1.3 var(--ui);text-align:center;transition:opacity .4s}
 .giftwrap .lock svg{width:16px;height:16px;flex:none}
 .giftwrap:not(.locked) .lock{opacity:0;pointer-events:none}
 .giftwrap.open{height:min(58svh,640px)}
-@media (max-width:899px){
-  .giftwrap.locked{height:240px;aspect-ratio:auto;width:min(100%,330px)}
-  .giftwrap.locked img{filter:none;transform:none;object-position:top}
-  .giftwrap.locked::after{content:"";position:absolute;inset:auto 0 0;height:62%;background:linear-gradient(to top,var(--paper) 38%,rgba(246,244,242,0))}
-  .giftwrap.locked .lock{z-index:1}
-}
+.giftwrap.locked img{object-position:top}
+.giftwrap.locked::after{content:"";position:absolute;inset:auto 0 0;height:62%;background:linear-gradient(to top,var(--paper) 38%,rgba(246,244,242,0))}
+.giftwrap.locked .lock{z-index:1}
+@media (max-width:899px){.giftwrap.locked{height:240px;aspect-ratio:auto;width:min(100%,330px)}}
 .check{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--sand);cursor:pointer}
 .check input{width:22px;height:22px;accent-color:var(--wine-hi);flex:none;margin:0}
 .err{color:var(--wine-hi);font:600 13.5px/1.4 var(--ui);margin:0;min-height:1.4em}
@@ -707,16 +708,48 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
    no centro, com a própria imagem desfocada em volta. No celular nada muda. */
 #amb{display:none}
 .exgrid,.gsecs{display:contents}
+/* tablet em pé: coluna de 600 px para ler; foto, vídeo e Instagram num quadro 9:16 calculado pela altura */
+@media (min-width:600px) and (max-width:899px) and (min-height:700px){
+  #app{max-width:none;border-inline:0}
+  #amb{display:block;position:absolute;inset:-60px;z-index:0;background:var(--ink) center/cover no-repeat;filter:blur(42px) saturate(1.15) brightness(.42);transform:scale(1.08);opacity:0;transition:opacity .45s ease}
+  #amb.on{opacity:1}
+  .scene.pad{--col:600px;padding-left:max(32px,calc((100% - var(--col)) / 2));padding-right:max(32px,calc((100% - var(--col)) / 2));padding-top:32px}
+  .scene.name .formfoot{margin-top:28px}
+  .scene.round,.scene.vfull,.scene.story,.scene.hero{left:0;right:0;width:min(calc((100vh - 48px) * 9 / 16),calc(100% - 64px));margin-inline:auto;top:24px;bottom:24px;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(246,244,242,.08)}
+  .round.answered .portrait{height:30%}
+  .scene.gift .gimg{width:300px}
+  .bio .sheet2,.prev .sheet2{max-width:600px}
+}
 @media (min-width:900px){
   #app{max-width:none;border-inline:0}
   #amb{display:block;position:absolute;inset:-60px;z-index:0;background:var(--ink) center/cover no-repeat;filter:blur(42px) saturate(1.15) brightness(.42);transform:scale(1.08);opacity:0;transition:opacity .45s ease}
   #amb.on{opacity:1}
-  .scene.pad{--col:720px;padding-left:max(40px,calc((100% - var(--col)) / 2));padding-right:max(40px,calc((100% - var(--col)) / 2))}
-  .scene.hub,.scene.objs,.scene.guias{--col:960px}
-  .scene.name,.scene.diag,.scene.quiz{--col:600px;padding-top:40px}
+  .scene.pad{--col:640px;padding-left:max(40px,calc((100% - var(--col)) / 2));padding-right:max(40px,calc((100% - var(--col)) / 2));padding-top:32px}
+  .scene.hub,.scene.objs,.scene.guias,.scene.final,.scene.gift,.scene.diagres{--col:960px}
   .scene.name .formfoot{margin-top:28px}
-  .scene.result{--col:680px}
-  .scene.round,.scene.vfull,.scene.story,.scene.hero{left:0;right:0;width:min(460px,100%);margin-inline:auto;top:20px;bottom:20px;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(246,244,242,.08)}
+  /* formulários no meio da altura, com o voltar no lugar de sempre */
+  .scene.name .nbody{justify-content:safe center}
+  .scene.diag > header + .stack{margin-top:auto}
+  .scene.diag > .dopts{margin-bottom:auto}
+  /* botões da largura do texto, com mínimo de 280 px; em formulário e em grade, a largura toda */
+  .scene.pad .btn{width:auto;min-width:280px;align-self:flex-start}
+  .scene.pad .row2 .btn,.scene.pad .exgrid .btn,.scene.pad .fpair .btn,.scene.pad form .btn,.scene.name .btn,.scene.diagres .card.mnc .btn{width:100%;min-width:0;align-self:stretch}
+  .scene.pad .copyrow .btn{width:auto;min-width:0;align-self:auto}
+  .dock .btn{right:auto;min-width:280px}
+  /* início: o elenco da imagem de compartilhar ao lado do título */
+  .hhead{display:grid;grid-template-columns:minmax(0,1fr) 312px;column-gap:48px;align-items:center}
+  .cast{display:grid;grid-template-columns:repeat(2,150px);grid-auto-rows:150px;gap:12px;padding-bottom:36px;position:relative}
+  .cast img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;border-radius:16px;border:1px solid var(--line);background:var(--stage)}
+  .cast img:nth-child(even){transform:translateY(36px)}
+  .cast::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-2px;height:42%;background:linear-gradient(to top,var(--ink) 8%,rgba(18,13,23,0));pointer-events:none}
+  .scene.hub .hv3 .pv{width:168px}
+  /* resultado do diagnóstico: o próximo passo numa coluna à direita, preso enquanto se rola */
+  .scene.diagres{display:grid;grid-template-columns:minmax(0,1fr) 380px;column-gap:40px;row-gap:16px;align-content:start}
+  .scene.diagres > *{grid-column:1}
+  .scene.diagres > header{grid-column:1 / -1}
+  .scene.diagres > .card.mnc{grid-column:2;grid-row:2 / span 8;align-self:start;position:sticky;top:0;margin:0}
+  .scene.diagres > .link{justify-self:center}
+  .scene.round,.scene.vfull,.scene.story,.scene.hero{left:0;right:0;width:min(calc((100vh - 40px) * 9 / 16),100%);margin-inline:auto;top:20px;bottom:20px;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(246,244,242,.08)}
   h2.display{font-size:36px}
   .hub h1{font-size:46px;max-width:14em}
   .hgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
@@ -726,7 +759,9 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   /* um exercício só: fotos à esquerda, texto, guia e botão à direita */
   .exgrid.one{display:block}
   .exgrid.one .ex{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:28px;row-gap:14px;align-content:center;padding:16px}
-  .exgrid.one .exfaces{grid-column:1;grid-row:1 / span 5;align-self:center}
+  .exgrid.one .exfaces{grid-column:1;grid-row:1 / span 5;align-self:stretch;grid-template-rows:minmax(0,1fr)}
+  .exgrid.one .exfaces figure{aspect-ratio:auto;height:100%;min-height:200px}
+  .exgrid.one .exfaces img{position:absolute;inset:0}
   .exgrid.one .ex > :not(.exfaces){grid-column:2}
   .gsecs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px}
   .scene.hub .card.mnc:has(.hv3){display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px;row-gap:6px}
@@ -735,14 +770,18 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .scene.hub .card.mnc:has(.hv3) > .link{align-self:start}
   .bio,.prev{align-items:center}
   /* tela final: compartilhar e MNC lado a lado, objeções em 3 colunas */
-  .scene.final{--col:960px}
   .fpair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
   .fpair > .card{margin:0}
   .scene.final .ogrid{grid-template-columns:repeat(3,minmax(0,1fr))}
   /* guia: imagem à esquerda, texto e formulário à direita */
-  .scene.gift{--col:880px;display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:56px;row-gap:20px;align-content:start}
+  .scene.gift{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:56px;row-gap:20px;align-content:safe center}
   .scene.gift > *{grid-column:2}
-  .scene.gift > .giftside,.scene.gift > .gimg{grid-column:1;grid-row:1 / 4;align-self:start;position:sticky;top:0}
+  /* o voltar fica no canto de cima, como nas outras telas; o bloco fica no meio da altura */
+  .scene.gift > header,.scene.gift > .gtop{display:contents}
+  .scene.gift > header > :not(.navrow),.scene.gift > .gtop > :not(.navrow){grid-column:2}
+  .scene.gift .navrow{grid-column:1 / -1}
+  .scene.gift > .giftside{grid-column:1;grid-row:2 / span 4;align-self:start;position:sticky;top:0}
+  .scene.gift > .gimg{grid-column:1;grid-row:2 / span 2;align-self:start;position:sticky;top:0}
   .scene.gift .giftwrap{height:auto;width:100%;margin:0}
   .scene.gift > .gimg{width:100%}
   .scene.gift > .link{align-self:start!important;justify-self:start}
@@ -750,9 +789,19 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .obnath{max-width:none}
   .obnath .igcard{grid-template-columns:auto minmax(0,1fr) auto;align-items:center;padding:16px 18px}
   .obnath .ring{grid-row:auto}
-  .obnath .obcta{grid-column:3;justify-self:end;margin:0;display:inline-flex;align-items:center;gap:6px;font:700 13px/1 var(--ui);padding:11px 16px;border-radius:999px;background:var(--paper);color:var(--plum);text-decoration:none;white-space:nowrap}
+  .obnath .obcta{grid-column:3;justify-self:end;margin:0;display:inline-flex;align-items:center;gap:6px;font:700 13px/1 var(--ui);padding:11px 16px;border-radius:999px;background:transparent;color:var(--paper);border:1px solid var(--edge);text-decoration:none;white-space:nowrap}
   .obnath .obcta svg{width:15px;height:15px}
   .bio .sheet2,.prev .sheet2{border-radius:24px;border:1px solid var(--line)}
+}
+/* conversa em dois painéis na tela deitada: a foto inteira à esquerda, que não encolhe, e a conversa à direita */
+@media (min-width:1100px) and (orientation:landscape){
+  .scene.round{width:min(calc((100vh - 40px) * 9 / 16 + 540px),calc(100% - 80px));display:grid;grid-template-columns:calc((100vh - 40px) * 9 / 16) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .round .portrait,.round.answered .portrait{grid-column:1;grid-row:1 / 3;height:auto}
+  .round.answered .portrait img{object-position:center 18%}
+  .round.answered .portrait::after{height:60%}
+  .round.answered .tag{opacity:1;pointer-events:auto}
+  .round .chat{grid-column:2;grid-row:1;padding-top:28px;padding-inline:28px}
+  .round .foot{grid-column:2;grid-row:2;padding-inline:28px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -939,7 +988,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
     </div>
     <div class="exgrid one">
     <div class="ex first">
-      <div class="exfaces" aria-label="As 4 pessoas da simulação: Juliana, Bianca, Sandra, Roberto"><figure><img src="/simulador-objecoes/assets/s64.webp" alt=""><figcaption>Juliana</figcaption></figure><figure><img src="/simulador-objecoes/assets/s53.webp" alt=""><figcaption>Bianca</figcaption></figure><figure><img src="/simulador-objecoes/assets/s66.webp" alt=""><figcaption>Sandra</figcaption></figure><figure><img src="/simulador-objecoes/assets/s40.webp" alt=""><figcaption>Roberto</figcaption></figure></div>
+      <div class="exfaces" aria-label="As 4 pessoas da simulação: Juliana, Bianca, Sandra, Roberto"><figure><img src="/simulador-objecoes/assets/s64.webp" srcset="/simulador-objecoes/assets/s64.webp 240w, assets/p64.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Juliana</figcaption></figure><figure><img src="/simulador-objecoes/assets/s53.webp" srcset="/simulador-objecoes/assets/s53.webp 240w, assets/p53.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Bianca</figcaption></figure><figure><img src="/simulador-objecoes/assets/s66.webp" srcset="/simulador-objecoes/assets/s66.webp 240w, assets/p66.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Sandra</figcaption></figure><figure><img src="/simulador-objecoes/assets/s40.webp" srcset="/simulador-objecoes/assets/s40.webp 240w, assets/p40.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Roberto</figcaption></figure></div>
       <div class="exbody">
         <div class="exhead"><i><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chat"></use></svg></i><span>Simulação</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"></use></svg>3 min</em></div>
         <h2>Atenda 4 pessoas</h2>
@@ -3726,8 +3775,7 @@ ENTER.diagres = () => {
     ${conta}
     ${isWaitlist() ? '' : proofBlock()}
     ${isWaitlist() ? waitCard() : AB === 'B' ? vslCard() : waCard('resultado')}
-    ${S.fromHub ? '' : `<button class="link" data-go="ig" style="align-self:center">Continuar →</button>`}
-    ${homeBtn()}
+    ${S.fromHub ? homeBtn() : `<button class="link" data-go="ig" style="align-self:center">Continuar →</button>`}
     <button class="link" data-diag="refazer" style="align-self:center">Refazer o diagnóstico</button>`;
   wireCallback(); wireWaitlist();
   dock(sc, '.card.mnc .btn');
@@ -3827,7 +3875,6 @@ async function startRound(i) {
       <div class="topbar pad">
         ${BACK_BTN}
         <div class="pill"><span class="slots">${slotsHTML(i)}</span><span><span class="pw">${esc(capFirst(CLI()))} </span>${i + 1} de ${ROUNDS.length}</span></div>
-        <a class="pill igpill" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt="">${esc(CONFIG.igHandle)}</a>
       </div>
       <div class="tag pad">
         <div class="who"><strong>${esc(R.patient.name)}, ${R.patient.age} anos</strong><span>${esc(c.proc)}</span></div>
@@ -3962,7 +4009,7 @@ ENTER.result = () => {
   const cards = ROUNDS.map((R, i) => {
     const ok = S.answers[i]?.ok;
     return `<div class="gcard ${ok ? 'open' : 'lost'}" style="animation-delay:${i * 110}ms" title="${esc(R.card.title)}">
-      <img src="/simulador-objecoes/assets/${R.patient.thumb}.webp" alt="${esc(R.patient.name)}: ${esc(R.card.title)}">
+      <img src="/simulador-objecoes/assets/${R.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${R.patient.thumb}.webp 240w, assets/${R.patient.img}.webp 720w" sizes="(min-width:900px) 150px, 24vw" alt="${esc(R.patient.name)}: ${esc(R.card.title)}">
       <div class="lab"><b>${esc(R.patient.name)}</b>${esc(R.card.short)}</div></div>`;
   }).join('');
   const n = firstName();
@@ -4200,12 +4247,6 @@ function inviteText() {
   return `Fiz a simulação do ${O.phrase} da Nathálya Mello, especialista em vendas (${CONFIG.igHandle}), e ${how}. ${O.inviteBlurb} Duvido você acertar mais!` + (u ? `\n${u}` : `\nProcure no perfil ${CONFIG.igHandle}.`);
 }
 
-function ocardHTML(it) {
-  if (!it.id || !OBJECTIONS[it.id]) return `<div class="ocard off" aria-disabled="true"><q>${esc(it.label)}</q><small>${ICON('lock')}Em breve</small></div>`;
-  const d = S.done[it.id], score = d ? `${ICON('ok')}Feito · ${d.hit} de ${d.max}` : '';
-  if (it.id === O.id) return `<div class="ocard on"><q>${esc(it.label)}</q><small>${score}</small></div>`;
-  return `<a class="ocard go" href="${objHref(it.id)}" data-obj="${it.id}"><q>${esc(it.label)}</q><small>${d ? score + ' · fazer de novo' : 'Começar →'}</small></a>`;
-}
 const SITE = CONFIG.site || {};
 const ON_SITE = !IN_ARTIFACT && !!SITE.base;
 const qs = () => { try { return location.search; } catch (e) { return ''; } };
@@ -4251,7 +4292,7 @@ const dlGuide = (id, cls = '') => IN_ARTIFACT
   ? `<button class="dl${cls}" data-view="/simulador-objecoes/assets/guia1-${id}.webp">${ICON('down')}Abrir o guia</button>`
   : `<a class="dl${cls}" data-dl="${id}" href="/simulador-objecoes/assets/guia1-${id}.jpg" download="guia-${id}-nathalya-mello.jpg">${ICON('down')}Baixar o guia</a>`;
 // Volta para a tela inicial, no fim de cada caminho (tela final e diagnóstico).
-const homeBtn = () => `<button class="btn btn-ghost" data-hub>${ICON('back')}Voltar ao início</button>`;
+const homeBtn = () => `<button class="link" data-hub style="align-self:center">Voltar ao início</button>`;
 const faces = id => `<span class="faces" aria-hidden="true">${OBJECTIONS[id].rounds.map(r => `<img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" alt="" loading="lazy" decoding="async">`).join('')}</span>`;
 function hubCard(id) {
   const p = progOf(id);
@@ -4262,6 +4303,9 @@ function hubCard(id) {
            : `<span class="pr">Simulação · 3 min <span aria-hidden="true">→</span></span>`}
   </div>`;
 }
+// As mesmas 4 pessoas da imagem de compartilhar, para quem chega pelo link reconhecer a página.
+const CAST = ['44', '36', '79', '22'];
+const castHTML = () => `<div class="cast" aria-hidden="true">${CAST.map(k => `<img src="/simulador-objecoes/assets/s${k}.webp" ${['79'].includes(k) ? '' : `srcset="/simulador-objecoes/assets/s${k}.webp 240w, assets/p${k}.webp 720w" sizes="150px"`} alt="" loading="lazy" decoding="async">`).join('')}</div>`;
 const guideList = () => OBJ_LIST.filter(({ id }) => progOf(id).g1).map(({ id }) => `/simulador-objecoes/assets/guia1-${id}-sm.webp`);
 ENTER.hub = () => {
   S.fromHub = true;
@@ -4282,11 +4326,14 @@ ENTER.hub = () => {
   const sc = $('#s-hub');
   sc.innerHTML = `
     ${nathRow()}
-    <header class="stack">
+    <header class="stack hhead">
+      <div class="stack">
       <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}<em>${got.length > 1 ? 'Seus guias estão nos cartões.' : got.length ? 'Seu guia está no cartão da objeção.' : 'Escolha a próxima objeção.'}</em></h1>`
+      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}${got.length > 1 ? 'Seus guias estão <em>nos cartões.</em>' : got.length ? 'Seu guia está <em>no cartão da objeção.</em>' : 'Escolha a <em>próxima objeção.</em>'}</h1>`
              : `<h1 class="display">Como responder as objeções de pacientes <em>que travam a venda.</em></h1>
       <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>`}
+      </div>
+      ${castHTML()}
     </header>
     ${back ? porta : ''}
     <div class="stack" style="gap:14px">
@@ -4329,7 +4376,7 @@ ENTER.obj = () => {
   S.fromHub = false;
   const id = O.id, ph = O.phrase, p = progOf(id);
   const sc = $('#s-obj');
-  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('');
+  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${r.patient.thumb}.webp 240w, assets/${r.patient.img}.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('');
   sc.innerHTML = `
     <div class="navrow"><button class="backbtn" data-hub aria-label="Voltar para a tela inicial">${ICON('back')}</button>
       <button class="nathchip" data-bio aria-label="Sobre a Nathálya Mello"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><span><b>Nathálya Mello</b><small>Especialista em Vendas</small></span></button></div>
@@ -4426,11 +4473,11 @@ ${mncCard('final')}
     </div>
 ${missingCard()}
 
-    <div class="card">
+    <section class="stack" style="gap:12px" aria-label="Outras objeções">
       <p class="eyebrow">Outras objeções</p>
-      <h3>Treine a próxima</h3>
-      <div class="ogrid">${OBJ_LIST.map(ocardHTML).join('')}</div>
-    </div>
+      <h3 class="display" style="font-size:24px">Treine a próxima</h3>
+      <div class="hgrid">${OBJ_LIST.filter(o => o.id !== O.id && OBJECTIONS[o.id]).map(o => hubCard(o.id)).join('')}</div>
+    </section>
 
     ${nathHighlights()}
     ${homeBtn()}

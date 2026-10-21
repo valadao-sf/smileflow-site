@@ -37,11 +37,28 @@ python3 tools/simulador-objecoes/render_guides.py
 - Destaque por cor, não por itálico. Itálico só em fala (pacientes, Nath) e depoimentos.
 - Mudou texto de guia: `render_guides.py`. Mudou abertura de objeção: `render_og.py`.
 
+## Cores e botões
+
+- Paleta da marca: ameixa no fundo (`--ink`, `--stage`, `--plum`), papel (`--paper`) e rosa nos destaques de texto (`--wine-hi`). O vinho (`--wine`) fica nos detalhes: balões, selo e orçamento. Não entra em botão.
+- Um botão cheio por tela, em papel (`.btn-main`), só na ação principal. O resto é contorno (`.btn-ghost`, `.follow`, `.dl`) com a borda `--edge`, ou link de texto (`.link`). Os cartões usam `--line`.
+- Cor nova vira token no `:root`. Nada de cor solta no CSS.
+- Alvos de toque de 44 px. Link e pílula pequena ganham uma área invisível (`::after`) em vez de crescer no desenho.
+- Resultado e resultado do diagnóstico: quando o botão principal está fora da tela, uma cópia dele fica presa no rodapé (`dock()`). A cópia não tem `data-*` e só repassa o clique, então o evento conta uma vez.
+
+## Tamanhos de tela
+
+- Abaixo de 600 px: celular, coluna de até 480 px.
+- De 600 a 899 px com pelo menos 700 px de altura (tablet em pé): coluna de 600 px. Foto, vídeo e Instagram num quadro 9:16 calculado pela altura, sobre a própria foto desfocada.
+- 900 px ou mais (tablet deitado e computador): colunas de 640 px (leitura e formulário) e 960 px (início, objeção, guia, tela final e resultado do diagnóstico). O quadro 9:16 também é calculado pela altura. Botões com a largura do texto, mínimo de 280 px; em formulário e em grade, a largura toda.
+- A partir de 1100 px com a tela deitada, a conversa fica em dois painéis: a foto inteira à esquerda e a conversa à direita.
+- Fotos grandes: `p*.webp` (720×1280). As miniaturas `s*.webp` (240×427) entram por `srcset` onde a foto é pequena.
+
 ## Como o funil funciona
 
 - Cada objeção tem um exercício, a simulação com 4 pessoas, e um guia. Os cartões de treino (certo ou errado) e o segundo guia saíram em out/2026; links antigos com `?ex=flash` abrem a simulação.
 - Não existe mais a tela "Meus guias": o guia liberado aparece no cartão da objeção, na tela inicial e na tela da objeção, com o botão "Baixar o guia" (`assets/guia1-<id>.jpg`).
-- A tela final e o diagnóstico terminam com "Voltar ao início" (tela inicial).
+- A tela final termina com o link "Voltar ao início". O resultado do diagnóstico termina com um link só: "Continuar" quando a pessoa veio de uma objeção, "Voltar ao início" quando veio da tela inicial.
+- No pedido do guia, o topo do guia aparece nítido e some num degradê. É o mesmo trecho que a prévia do guia já mostra.
 - Nomes fixos nos textos: "simulação" (as 4 conversas), "diagnóstico" (as 7 perguntas), "guia", "Método Negociação Clínica (MNC)" por extenso na primeira vez em cada tela. O mesmo botão tem o mesmo nome em todas as telas ("Começar a simulação", "Ver onde minha venda escapa", "Enviar no WhatsApp", "Baixar o guia").
 
 ## Busca e assistentes de IA
