@@ -994,7 +994,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
       <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
       <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>
       </div>
-      <div class="cast" aria-hidden="true"><img src="/simulador-objecoes/assets/s44.webp" srcset="/simulador-objecoes/assets/s44.webp 240w, assets/p44.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s36.webp" srcset="/simulador-objecoes/assets/s36.webp 240w, assets/p36.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s79.webp" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s22.webp" srcset="/simulador-objecoes/assets/s22.webp 240w, assets/p22.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"></div>
+      <div class="cast" aria-hidden="true"><img src="/simulador-objecoes/assets/s44.webp" srcset="/simulador-objecoes/assets/s44.webp 240w, /simulador-objecoes/assets/p44.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s36.webp" srcset="/simulador-objecoes/assets/s36.webp 240w, /simulador-objecoes/assets/p36.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s79.webp" alt="" loading="lazy" decoding="async"><img src="/simulador-objecoes/assets/s22.webp" srcset="/simulador-objecoes/assets/s22.webp 240w, /simulador-objecoes/assets/p22.webp 720w" sizes="150px" alt="" loading="lazy" decoding="async"></div>
     </header>
     
     <div class="stack" style="gap:14px">
@@ -4032,7 +4032,7 @@ ENTER.result = () => {
   const cards = ROUNDS.map((R, i) => {
     const ok = S.answers[i]?.ok;
     return `<div class="gcard ${ok ? 'open' : 'lost'}" style="animation-delay:${i * 110}ms" title="${esc(R.card.title)}">
-      <img src="/simulador-objecoes/assets/${R.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${R.patient.thumb}.webp 240w, assets/${R.patient.img}.webp 720w" sizes="(min-width:900px) 150px, 24vw" alt="${esc(R.patient.name)}: ${esc(R.card.title)}">
+      <img src="/simulador-objecoes/assets/${R.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${R.patient.thumb}.webp 240w, /simulador-objecoes/assets/${R.patient.img}.webp 720w" sizes="(min-width:900px) 150px, 24vw" alt="${esc(R.patient.name)}: ${esc(R.card.title)}">
       <div class="lab"><b>${esc(R.patient.name)}</b>${esc(R.card.short)}</div></div>`;
   }).join('');
   const n = firstName();
@@ -4327,7 +4327,7 @@ function hubCard(id) {
 }
 // As mesmas 4 pessoas da imagem de compartilhar, para quem chega pelo link reconhecer a página.
 const CAST = ['44', '36', '79', '22'];
-const castHTML = () => `<div class="cast" aria-hidden="true">${CAST.map(k => `<img src="/simulador-objecoes/assets/s${k}.webp" ${['79'].includes(k) ? '' : `srcset="/simulador-objecoes/assets/s${k}.webp 240w, assets/p${k}.webp 720w" sizes="150px"`} alt="" loading="lazy" decoding="async">`).join('')}</div>`;
+const castHTML = () => `<div class="cast" aria-hidden="true">${CAST.map(k => `<img src="/simulador-objecoes/assets/s${k}.webp" ${['79'].includes(k) ? '' : `srcset="/simulador-objecoes/assets/s${k}.webp 240w, /simulador-objecoes/assets/p${k}.webp 720w" sizes="150px"`} alt="" loading="lazy" decoding="async">`).join('')}</div>`;
 const guideList = () => OBJ_LIST.filter(({ id }) => progOf(id).g1).map(({ id }) => `/simulador-objecoes/assets/guia1-${id}-sm.webp`);
 ENTER.hub = () => {
   S.fromHub = true;
@@ -4398,7 +4398,7 @@ ENTER.obj = () => {
   S.fromHub = false;
   const id = O.id, ph = O.phrase, p = progOf(id);
   const sc = $('#s-obj');
-  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${r.patient.thumb}.webp 240w, assets/${r.patient.img}.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('');
+  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${r.patient.thumb}.webp 240w, /simulador-objecoes/assets/${r.patient.img}.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('');
   sc.innerHTML = `
     <div class="navrow"><button class="backbtn" data-hub aria-label="Voltar para a tela inicial">${ICON('back')}</button>
       <button class="nathchip" data-bio aria-label="Sobre a Nathálya Mello"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><span><b>Nathálya Mello</b><small>Especialista em vendas</small></span></button></div>
