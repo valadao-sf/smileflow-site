@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,300..700&family=Manrope:wght@300;400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&display=swap">
 <style>
 /* Layout: uma coluna do tamanho de um celular, como o palco de uma consulta.
    Cada tela é uma cena: uma decisão por vez. Vídeos ocupam a tela inteira. */
@@ -18,8 +18,8 @@
   --wine-hi:#d6a3b2;    /* vinho claro, para texto sobre fundo escuro */
   --sand:#b8ada4;       /* texto secundário */
   --soft:#9a8fb0;       /* rótulos */
-  --display:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
-  --ui:'Manrope','Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+  --display:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;   /* versão de comparação: tudo em Inter */
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --ease:cubic-bezier(.2,.7,.2,1);
   color-scheme:dark;
 }
@@ -707,6 +707,14 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .mosaic .col{animation:none}
   .timer{display:none}
 }
+/* ---------- versão de comparação: só Inter ----------
+   Inter nos títulos fica melhor um pouco mais pesada e com letras mais juntas; o itálico rosa vira peso médio. */
+.display{font-weight:700;letter-spacing:-.028em;line-height:1.06}
+.display em{font-weight:500;letter-spacing:-.022em}
+.objs h1{font-style:italic;font-weight:500;letter-spacing:-.03em}
+.objs h1 small{font-style:normal;letter-spacing:0}
+.ex h2,.card h3,h3{letter-spacing:-.018em}
+q,.ocardx q,.ocard q{letter-spacing:-.012em}
 </style>
 
 <div id="app" lang="pt-BR">
@@ -1162,23 +1170,23 @@ const OBJECTIONS = {};
 function mapGuide(cfg) {
   return function ({ x, W, M, C, wrap, step }) {
     let y = M;
-    x.font = '800 24px Manrope, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
+    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
     y += 60;
-    x.font = '600 84px Fraunces, Georgia, serif'; x.fillStyle = C.plum; x.fillText(cfg.title[0], M, y);
+    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText(cfg.title[0], M, y);
     y += 96;
-    x.font = 'italic 400 84px Fraunces, Georgia, serif'; x.fillStyle = C.wine; x.fillText(cfg.title[1], M, y);
+    x.font = 'italic 500 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(cfg.title[1], M, y);
     y += 140;
     y = step(1, cfg.s1[0], y);
-    y = wrap(cfg.s1[1], '400 34px Manrope, sans-serif', C.ink, y, 46, M + 74) + 34;
+    y = wrap(cfg.s1[1], '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
     y = step(2, cfg.s2[0], y);
-    y = wrap(cfg.s2[1], 'italic 400 42px Fraunces, Georgia, serif', C.plum, y, 54, M + 74) + 34;
+    y = wrap(cfg.s2[1], 'italic 400 42px Inter, sans-serif', C.plum, y, 54, M + 74) + 34;
     y = step(3, cfg.s3, y);
     const lines = (t, font, maxW) => {
       x.font = font; const out = []; let line = '';
       for (const w of t.split(' ')) { const tt = line ? line + ' ' + w : w; if (x.measureText(tt).width > maxW && line) { out.push(line); line = w; } else line = tt; }
       if (line) out.push(line); return out;
     };
-    const L = M + 74, gap = 18, bw = (W - M - L - gap) / 2, QF = '400 29px Manrope, sans-serif';
+    const L = M + 74, gap = 18, bw = (W - M - L - gap) / 2, QF = '400 29px Inter, sans-serif';
     for (let r = 0; r < 2; r++) {
       const cells = [0, 1].map(c => ({ lab: cfg.boxes[r * 2 + c][0], ql: lines(cfg.boxes[r * 2 + c][1], QF, bw - 40) }));
       const bh = 28 + 30 + 14 + Math.max(...cells.map(c => c.ql.length)) * 39 + 22;
@@ -1186,7 +1194,7 @@ function mapGuide(cfg) {
         const bx = L + k * (bw + gap);
         x.beginPath(); if (x.roundRect) x.roundRect(bx, y, bw, bh, 18); else x.rect(bx, y, bw, bh);
         x.fillStyle = '#ece7ef'; x.fill();
-        x.font = '800 24px Manrope, sans-serif'; x.fillStyle = C.wine; x.fillText(c.lab.toUpperCase(), bx + 20, y + 28);
+        x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(c.lab.toUpperCase(), bx + 20, y + 28);
         x.font = QF; x.fillStyle = C.ink;
         c.ql.forEach((l, j) => x.fillText(l, bx + 20, y + 28 + 30 + 14 + j * 39));
       });
@@ -1194,7 +1202,7 @@ function mapGuide(cfg) {
     }
     y += 16;
     y = step(4, cfg.s4[0], y);
-    wrap(cfg.s4[1], '400 34px Manrope, sans-serif', C.ink, y, 46, M + 74);
+    wrap(cfg.s4[1], '400 34px Inter, sans-serif', C.ink, y, 46, M + 74);
   };
 }
 
@@ -1442,18 +1450,18 @@ return {
   band: ['Pare. Pergunte. Entenda.', 'Só depois, negocie.'],
   drawGuide({ x, W, M, C, wrap, step }) {
     let y = M;
-    x.font = '800 24px Manrope, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
+    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
     y += 60;
-    x.font = '600 84px Fraunces, Georgia, serif'; x.fillStyle = C.plum; x.fillText('Antes de responder', M, y);
+    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText('Antes de responder', M, y);
     y += 96;
-    x.font = 'italic 400 84px Fraunces, Georgia, serif'; x.fillStyle = C.wine; x.fillText('um “tá caro”', M, y);
+    x.font = 'italic 500 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText('um “tá caro”', M, y);
     y += 140;
     y = step(1, 'Pare', y);
-    y = wrap('“Tá caro” pode querer dizer muitas coisas. Não responda no impulso.', '400 34px Manrope, sans-serif', C.ink, y, 46, M + 74) + 34;
+    y = wrap('“Tá caro” pode querer dizer muitas coisas. Não responda no impulso.', '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
     y = step(2, 'Pergunte', y);
-    y = wrap('“Quando você fala que ficou caro, o que está pesando mais para você?”', 'italic 400 42px Fraunces, Georgia, serif', C.plum, y, 54, M + 74) + 34;
+    y = wrap('“Quando você fala que ficou caro, o que está pesando mais para você?”', 'italic 400 42px Inter, sans-serif', C.plum, y, 54, M + 74) + 34;
     y = step(3, 'Entenda o motivo', y);
-    x.font = '600 28px Manrope, sans-serif';
+    x.font = '600 28px Inter, sans-serif';
     let cx = M + 74;
     for (const chip of ['Valor total', 'Parcela', 'Época', 'Comparação', 'Falta de motivo']) {
       const w = x.measureText(chip).width + 40;
@@ -1465,10 +1473,10 @@ return {
     }
     y += 54 + 40;
     y = step(4, 'Só depois, negocie', y);
-    y = wrap('Desconto, parcela ou plano menor só depois de saber o motivo.', '400 34px Manrope, sans-serif', C.ink, y, 46, M + 74) + 34;
-    x.font = '800 24px Manrope, sans-serif'; x.fillStyle = C.soft; x.fillText('OUTRAS PERGUNTAS QUE AJUDAM', M, y); y += 46;
+    y = wrap('Desconto, parcela ou plano menor só depois de saber o motivo.', '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
+    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('OUTRAS PERGUNTAS QUE AJUDAM', M, y); y += 46;
     for (const q of ['O que você comparou além do preço?', 'O que pesou mais: o valor ou a época?', 'O que fez você marcar essa consulta?']) {
-      y = wrap('— ' + q, '400 32px Manrope, sans-serif', C.ink, y, 44) + 4;
+      y = wrap('— ' + q, '400 32px Inter, sans-serif', C.ink, y, 44) + 4;
     }
   },
   ig: { label: 'Tá caro', photo: 'assets/nath-3.webp' },
@@ -3991,7 +3999,7 @@ function renderGiftOpen() {
 
 async function fontsReady() {
   try {
-    await Promise.all(['600 84px Fraunces', 'italic 400 44px Fraunces', '800 24px Manrope', '400 34px Manrope', '600 30px Manrope']
+    await Promise.all(['700 84px Inter', 'italic 500 44px Inter', '800 24px Inter', '400 34px Inter', '600 30px Inter']
       .map(f => document.fonts.load(f)));
   } catch (e) {}
 }
@@ -4015,8 +4023,8 @@ async function drawGift() {
   };
   const step = (n, title, y) => {
     x.fillStyle = C.plum; x.beginPath(); x.arc(M + 26, y + 26, 26, 0, Math.PI * 2); x.fill();
-    x.font = '800 26px Manrope, sans-serif'; x.fillStyle = C.paper; x.textAlign = 'center'; x.fillText(String(n), M + 26, y + 12); x.textAlign = 'left';
-    x.font = '800 30px Manrope, sans-serif'; x.fillStyle = C.wine; x.fillText(title.toUpperCase(), M + 74, y + 10);
+    x.font = '800 26px Inter, sans-serif'; x.fillStyle = C.paper; x.textAlign = 'center'; x.fillText(String(n), M + 26, y + 12); x.textAlign = 'left';
+    x.font = '800 30px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(title.toUpperCase(), M + 74, y + 10);
     return y + 66;
   };
   O.drawGuide({ x, W, H, M, C, wrap, step });
@@ -4024,14 +4032,14 @@ async function drawGift() {
   x.fillStyle = C.plum; x.fillRect(0, bandY, W, bandH);
   const bandLine = (t, style, color, yy) => {
     let f = 54;
-    do { x.font = `${style} ${f}px Fraunces, Georgia, serif`; f -= 2; } while (x.measureText(t).width > W - 2 * M && f > 36);
+    do { x.font = `${style} ${f}px Inter, sans-serif`; f -= 2; } while (x.measureText(t).width > W - 2 * M && f > 36);
     x.fillStyle = color; x.fillText(t, M, yy);
   };
   bandLine(O.band[0], '600', C.paper, bandY + 44);
   bandLine(O.band[1], 'italic 400', '#d6a3b2', bandY + 118);
-  x.font = '600 30px Manrope, sans-serif'; x.fillStyle = C.ink;
+  x.font = '600 30px Inter, sans-serif'; x.fillStyle = C.ink;
   let sig = `Nathálya Mello · Especialista em Vendas · ${CONFIG.igHandle}`, fs = 30;
-  do { x.font = `600 ${fs}px Manrope, sans-serif`; fs--; } while (x.measureText(sig).width > W - 2 * M && fs > 20);
+  do { x.font = `600 ${fs}px Inter, sans-serif`; fs--; } while (x.measureText(sig).width > W - 2 * M && fs > 20);
   x.fillStyle = C.ink; x.fillText(sig, M, H - M - 30);
   return cv.toDataURL('image/png');
 }
