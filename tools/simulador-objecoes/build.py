@@ -55,8 +55,8 @@ DATA = local_pages(HERE, ['/engine.html'], lambda pg: pg.evaluate("""() => OBJ_L
 })"""))['/engine.html']
 
 ORG = {'@type': 'Organization', '@id': f'{ORIGIN}/#organizacao', 'name': 'SmileFlow', 'url': ORIGIN}
-NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathálya Mello', 'jobTitle': 'Especialista em Vendas',
-        'description': 'Sócia-fundadora e Diretora Comercial da SmileFlow', 'worksFor': {'@id': ORG['@id']},
+NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathálya Mello', 'jobTitle': 'Especialista em vendas',
+        'description': 'Sócia-fundadora e diretora comercial da SmileFlow', 'worksFor': {'@id': ORG['@id']},
         'image': f'{ORIGIN}{BASE}/assets/nath-avatar.webp', 'sameAs': [INSTAGRAM]}
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'

@@ -22,7 +22,7 @@ h1 em{font-style:normal;color:#d6a3b2}
 .r img{width:100%;height:290px;object-fit:cover;border-radius:16px;filter:saturate(.9)}
 .r img:nth-child(even){transform:translateY(60px)}
 </style></head><body><div class="l"><span class="chip"><i></i>CHIP</span><h1>H1</h1>
-<div class="by"><img src="assets/nath-avatar.webp"><div><b>Nathálya Mello</b><span>Especialista em Vendas · @nathmellop</span></div></div></div>
+<div class="by"><img src="assets/nath-avatar.webp"><div><b>Nathálya Mello</b><span>Especialista em vendas · @nathmellop</span></div></div></div>
 <div class="r">FACES</div></body></html>'''
 
 
@@ -41,7 +41,7 @@ with sync_playwright() as p:
     pg.goto(f'{base}/ta-caro.html'); pg.wait_for_timeout(1200)
     heroes = pg.evaluate("() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => ({ id, chip: OBJECTIONS[id].hero.chip, h1: OBJECTIONS[id].hero.h1 }))")
     pages = [{'id': 'hub', 'chip': '6 simulações grátis · 3 min cada · um guia para baixar',
-              'h1': 'Como responder as objeções <em>que travam a venda.</em>'}] + heroes
+              'h1': 'Como responder às objeções <em>que travam a venda.</em>'}] + heroes
     pg.close()
     pg = b.new_page(viewport={'width': 1200, 'height': 630})
     try:
