@@ -1175,7 +1175,7 @@ const CONFIG = {
       ]
     }
   },
-  ab: { vsl: 50 },         // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = ninguém; 50 = metade). ?ab=B força o B. Ligado em 21/out/2026; quem já tinha grupo salvo continua nele.
+  ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = desligado, todo mundo no A; 50 = metade). ?ab=B força o B. Desligado em 21/out/2026 até ter tráfego.
   site: { base: '' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
   // Vídeos: 'auto' usa o HLS do Panda no site e os MP4 locais (assets/v1.mp4…) dentro do artifact.
@@ -1221,8 +1221,10 @@ const AB = (() => {
   let v = '';
   try { v = (new URLSearchParams(location.search).get('ab') || '').toUpperCase(); } catch (e) {}
   if (v === 'A' || v === 'B') return v;
+  const pct = CONFIG.ab.vsl || 0;
+  if (pct <= 0 || pct >= 100) { try { localStorage.removeItem('nath_ab'); } catch (e) {} return pct >= 100 ? 'B' : 'A'; }   // teste desligado: um fluxo só, sem grupo salvo
   try { v = localStorage.getItem('nath_ab') || ''; } catch (e) {}
-  if (v !== 'A' && v !== 'B') { v = Math.random() * 100 < (CONFIG.ab.vsl || 0) ? 'B' : 'A'; try { localStorage.setItem('nath_ab', v); } catch (e) {} }
+  if (v !== 'A' && v !== 'B') { v = Math.random() * 100 < pct ? 'B' : 'A'; try { localStorage.setItem('nath_ab', v); } catch (e) {} }
   return v;
 })();
 
