@@ -40,8 +40,8 @@ with sync_playwright() as p:
     pg = b.new_page()
     pg.goto(f'{base}/ta-caro.html'); pg.wait_for_timeout(1200)
     heroes = pg.evaluate("() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => ({ id, chip: OBJECTIONS[id].hero.chip, h1: OBJECTIONS[id].hero.h1 }))")
-    pages = [{'id': 'hub', 'chip': '6 objeções · 3 minutos cada · um guia para baixar',
-              'h1': 'Exercícios rápidos para as objeções <em>que travam a venda.</em>'}] + heroes
+    pages = [{'id': 'hub', 'chip': '6 simulações grátis · 3 min cada · um guia para baixar',
+              'h1': 'Como responder as objeções <em>que travam a venda.</em>'}] + heroes
     pg.close()
     pg = b.new_page(viewport={'width': 1200, 'height': 630})
     try:
