@@ -1224,9 +1224,9 @@ const CONFIG = {
     // VSL do teste B. Enquanto não for gravado, aparece a foto da Nath com o roteiro em legenda.
     // Quando gravar, troque { photo, script } por { id, mp4, poster }.
     vsl: {
-      photo: '/simulador-objecoes/assets/vp-nath-2.webp',
+      id: '5e3b4db7-cf63-4b75-8f87-2f8b13d64f32', poster: '/simulador-objecoes/assets/vsl-poster.webp',
       title: 'Recado da Nath — “Manda o seu resultado para a minha equipe”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/vsl-poster.webp', script: [
         'Agora você sabe em qual parte a sua venda escapa.',
         'E eu quero te dizer uma coisa: isso não é falta de jeito. É falta de método.',
         'Quase todo mundo aprendeu a atender bem. Quase ninguém aprendeu a conduzir a conversa até o fechamento.',
@@ -1238,7 +1238,7 @@ const CONFIG = {
         'Quem responde é uma pessoa, não um robô. Ela olha o que você respondeu, entende o seu caso e te diz se o MNC é para você agora.',
         'E, se não for, ela te fala também.',
         'É só tocar no botão aqui embaixo. A mensagem já vai pronta.'
-      ],
+      ] },
       notes: [
         'Falar olhando para a câmera, como quem continua a conversa do resultado.',
         'Não citar preço: o preço é assunto da conversa no WhatsApp.',
@@ -1247,7 +1247,7 @@ const CONFIG = {
       ]
     }
   },
-  ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = ninguém; 50 = metade). ?ab=B força o B.
+  ab: { vsl: 50 },         // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = ninguém; 50 = metade). ?ab=B força o B. Ligado em 21/out/2026; quem já tinha grupo salvo continua nele.
   site: { base: '/simulador-objecoes' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
   // Vídeos: 'auto' usa o HLS do Panda no site e os MP4 locais (/simulador-objecoes/assets/v1.mp4…) dentro do artifact.
@@ -1719,9 +1719,9 @@ OBJECTIONS['vou-pensar'] = {
   modes: ['aceitar', 'pressionar', 'perguntar'], okMode: 'perguntar', okNote: 'você perguntou o que ficou em aberto',
   videos: {
     v1: {
-      photo: '/simulador-objecoes/assets/vp-nath-1.webp',
+      id: 'd5fefc7a-7c5d-4b00-b70c-dcd59ce34247', poster: '/simulador-objecoes/assets/vou-pensar-v1-poster.webp',
       title: 'Vídeo 1 — “O que sai da sua boca nos próximos cinco segundos?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/vou-pensar-v1-poster.webp', script: [
         'Quero te levar para um momento bem específico da consulta.',
         'Você apresentou o plano. A pessoa gostou. Fez perguntas. Você falou o valor.',
         'A conversa parece que está andando.',
@@ -1732,7 +1732,7 @@ OBJECTIONS['vou-pensar'] = {
         '**O que sai da sua boca nos próximos cinco segundos?**',
         'É isso que eu quero ver.',
         'Escolhe a opção que mais parece com você na vida real.'
-      ],
+      ] },
       notes: [
         'Entrar direto na cena; sem “olha só”, sem introdução didática.',
         'A fala da pessoa precisa soar real, não dramatizada.',
@@ -1993,9 +1993,9 @@ OBJECTIONS['marido'] = {
   modes: ['aceitar', 'contornar', 'perguntar'], okMode: 'perguntar', okNote: 'você perguntou qual era o papel da outra pessoa',
   videos: {
     v1: {
-      photo: '/simulador-objecoes/assets/vp-nath-2.webp',
+      id: 'afa262c9-4d38-4212-81a0-8c2938bdf4f8', poster: '/simulador-objecoes/assets/marido-v1-poster.webp',
       title: 'Vídeo 1 — “Quem mais participa dessa decisão?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/marido-v1-poster.webp', script: [
         'Imagina o fim da consulta.',
         'Você apresentou o plano. A pessoa gostou, fez perguntas, pareceu animada. Você falou o valor.',
         'Aí ela olha para você e fala:',
@@ -2005,7 +2005,7 @@ OBJECTIONS['marido'] = {
         '**Pensa no que você realmente faz quando a decisão depende de alguém que não está na sala.**',
         'Escolhe a opção que mais parece com você na vida real.',
         'Depois eu te mostro como eu conduziria essa conversa.'
-      ],
+      ] },
       notes: [
         'Entrar direto na cena; sem “olha só”, sem introdução didática.',
         'A fala da pessoa precisa soar real, não dramatizada. Pausa curta depois dela.',
@@ -2013,9 +2013,9 @@ OBJECTIONS['marido'] = {
       ]
     },
     v2: {
-      photo: '/simulador-objecoes/assets/vp-nath-1.webp',
+      id: 'b2d50a8f-1a10-4b18-a728-5408237b5efc', poster: '/simulador-objecoes/assets/marido-v2-poster.webp',
       title: 'Vídeo 2 — “Quem não estava na sala”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/marido-v2-poster.webp', script: [
         'Quando a pessoa fala que precisa conversar com o marido, eu não trato isso como desculpa.',
         'E também não finjo que a outra pessoa não existe.',
         'Conversar com ele pode ser importante mesmo. Em muita casa, decisão grande é tomada a dois.',
@@ -2029,7 +2029,7 @@ OBJECTIONS['marido'] = {
         'E eu não termino sem combinar o próximo passo:',
         '**‘Conversa com ele hoje. Amanhã às 14h eu te ligo e a gente vê o que ficou pendente. Combinado?’**',
         'Respeitar a outra pessoa não é entregar a negociação para ela. É combinar como ela vai participar da decisão.'
-      ],
+      ] },
       notes: [
         'Tom de conversa, não de aula.',
         '“Eu não trato isso como desculpa” precisa soar como opinião da Nath.',
@@ -2257,9 +2257,9 @@ OBJECTIONS['medo'] = {
   modes: ['minimizar', 'defender', 'perguntar'], okMode: 'perguntar', okNote: 'você perguntou de onde vinha o medo',
   videos: {
     v1: {
-      photo: '/simulador-objecoes/assets/vp-nath-1.webp',
+      id: '342b9a72-c1fa-4d5a-8a3f-77e623642e35', poster: '/simulador-objecoes/assets/medo-v1-poster.webp',
       title: 'Vídeo 1 — “O que você fala para quem tem medo?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/medo-v1-poster.webp', script: [
         'Imagina a cena.',
         'Você explicou o plano com calma. A pessoa gostou, entendeu tudo. Você falou o valor, e ela não reclamou.',
         'Aí ela respira fundo e fala:',
@@ -2268,7 +2268,7 @@ OBJECTIONS['medo'] = {
         'E agora?',
         '**O que sai da sua boca quando a pessoa diz que tem medo?**',
         'Não escolhe a resposta mais bonita. Escolhe a que mais parece com você na vida real.'
-      ],
+      ] },
       notes: [
         'Entrar direto na cena; sem introdução didática.',
         'Fala da pessoa em tom baixo, verdadeiro. Pausa curta depois dela.',
@@ -2276,9 +2276,9 @@ OBJECTIONS['medo'] = {
       ]
     },
     v2: {
-      photo: '/simulador-objecoes/assets/vp-nath-2.webp',
+      id: 'bda5ba14-4091-4815-a9db-e90402c16e7b', poster: '/simulador-objecoes/assets/medo-v2-poster.webp',
       title: 'Vídeo 2 — “De onde vem esse medo?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/medo-v2-poster.webp', script: [
         'Quando a pessoa fala que tem medo, a vontade é tranquilizar na hora.',
         '‘Que nada, não dói.’ ‘Fica tranquila, eu faço isso todo dia.’',
         'Eu entendo essa vontade. Mas isso não resolve.',
@@ -2292,7 +2292,7 @@ OBJECTIONS['medo'] = {
         'Cada medo pede uma resposta diferente.',
         'Só depois que eu entendo de onde vem o medo é que eu explico. Com calma, e com coisas concretas: como a gente vai fazer, o que ela vai sentir, quando a gente vai avaliar o resultado.',
         'Quando a pessoa tem medo, o ritmo é dela. Não é meu.'
-      ],
+      ] },
       notes: [
         'Tom acolhedor, um pouco mais lento que nos outros vídeos.',
         '‘Que nada, não dói’ e ‘eu faço isso todo dia’ não são vilãs; falar com naturalidade.',
@@ -2521,9 +2521,9 @@ OBJECTIONS['outra-clinica'] = {
   modes: ['defender', 'igualar', 'perguntar'], okMode: 'perguntar', okNote: 'você perguntou o que estava sendo comparado',
   videos: {
     v1: {
-      photo: '/simulador-objecoes/assets/vp-nath-2.webp',
+      id: '88e7a4d5-e9c9-402e-a3be-ab29845a8188', poster: '/simulador-objecoes/assets/outra-clinica-v1-poster.webp',
       title: 'Vídeo 1 — “Lá ficou mais barato”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/outra-clinica-v1-poster.webp', script: [
         'Imagina a cena.',
         'Você apresentou o plano. Explicou cada etapa. Falou o valor.',
         'E a pessoa responde:',
@@ -2532,7 +2532,7 @@ OBJECTIONS['outra-clinica'] = {
         '**O que sai da sua boca nessa hora?**',
         'Não escolhe a resposta mais bonita. Escolhe o que você faria de verdade, com a pessoa na sua frente mostrando um orçamento menor.',
         'Depois eu te mostro como eu conduziria essa conversa.'
-      ],
+      ] },
       notes: [
         'Entrar direto na cena; sem “olha só”, sem introdução didática.',
         'Fala da pessoa sem tom de ataque: ela só está comparando.',
@@ -2540,9 +2540,9 @@ OBJECTIONS['outra-clinica'] = {
       ]
     },
     v2: {
-      photo: '/simulador-objecoes/assets/vp-nath-1.webp',
+      id: 'da52c5da-4780-4b0b-b0e3-27284711e2f6', poster: '/simulador-objecoes/assets/outra-clinica-v2-poster.webp',
       title: 'Vídeo 2 — “O que está sendo comparado?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/outra-clinica-v2-poster.webp', script: [
         'Quando a pessoa fala que na outra clínica ficou mais barato, eu não começo defendendo o meu preço.',
         'Porque eu ainda nem sei se estamos comparando a mesma coisa.',
         'Pode ser outro plano. Outra quantidade de etapas. Outro material. Pode ter coisas incluídas aqui e não lá. E também pode ser exatamente o mesmo plano, com um preço menor.',
@@ -2555,7 +2555,7 @@ OBJECTIONS['outra-clinica'] = {
         'E, se for tudo igual mesmo, tudo bem. Aí a conversa é sobre o valor. E eu converso sobre ele com clareza.',
         'O que eu não faria é falar mal de ninguém, nem dar desconto no susto.',
         'Só dá para comparar preço de forma justa depois que a gente entende o que está sendo comprado em cada lugar.'
-      ],
+      ] },
       notes: [
         'Tom de conversa, não de aula.',
         '“Sem ironia. Sem tentar pegar a outra clínica no erro.” precisa soar sincero.',
@@ -2782,9 +2782,9 @@ OBJECTIONS['desconto'] = {
   modes: ['ceder', 'negar', 'perguntar'], okMode: 'perguntar', okNote: 'você perguntou o que estava pesando antes de decidir',
   videos: {
     v1: {
-      photo: '/simulador-objecoes/assets/vp-nath-1.webp',
+      id: '0bd17d8f-ea19-4289-9371-5b3d5aa61e5c', poster: '/simulador-objecoes/assets/desconto-v1-poster.webp',
       title: 'Vídeo 1 — “Consegue melhorar esse valor?”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/desconto-v1-poster.webp', script: [
         'Imagina a cena.',
         'Você apresentou o plano. A pessoa gostou. Você falou o valor.',
         'E ela responde:',
@@ -2793,7 +2793,7 @@ OBJECTIONS['desconto'] = {
         '**O que você costuma fazer quando a pessoa pede desconto?**',
         'Não pensa na resposta mais elegante. Escolhe a que mais parece com você na vida real.',
         'Depois eu te mostro o passo a passo que eu sigo antes de mexer no preço.'
-      ],
+      ] },
       notes: [
         'Entrar direto na cena; sem “olha só”, sem introdução didática.',
         'O pedido da pessoa é tranquilo, sem tom de briga.',
@@ -2801,9 +2801,9 @@ OBJECTIONS['desconto'] = {
       ]
     },
     v2: {
-      photo: '/simulador-objecoes/assets/vp-nath-2.webp',
+      id: '1698c160-ebe1-47d9-af6b-93c793839952', poster: '/simulador-objecoes/assets/desconto-v2-poster.webp',
       title: 'Vídeo 2 — “Antes do desconto, entenda o pedido”',
-      script: [
+      fallback: { photo: '/simulador-objecoes/assets/desconto-v2-poster.webp', script: [
         'Quando a pessoa pede desconto, eu não digo nem sim nem não antes de entender o que está acontecendo.',
         'Às vezes ela pede por hábito. Às vezes a entrada apertou. Às vezes o mês está apertado. Às vezes ela ainda não entendeu o plano. E às vezes existe uma troca justa, como pagar à vista.',
         'Se eu corto o preço na hora, perco a chance de descobrir o que está acontecendo de verdade.',
@@ -2815,7 +2815,7 @@ OBJECTIONS['desconto'] = {
         'Se a questão é a parcela, talvez eu resolva sem desconto. Se é o mês, talvez seja só a data. Se ela não entendeu o plano, eu explico.',
         'E, se o desconto fizer sentido, ele entra como uma decisão consciente. Não como medo de perder a venda.',
         'Desconto pode ser ferramenta. Só não pode ser a primeira resposta para uma pergunta que você ainda não entendeu.'
-      ],
+      ] },
       notes: [
         'Tom de conversa, não de aula.',
         'A lista de motivos do segundo parágrafo é falada com calma, quase contando nos dedos.',
@@ -3298,12 +3298,12 @@ function attachSource(v, m) {
   const mp4 = m.mp4;
   const hls = CONFIG.pandaHls + m.id + '/playlist.m3u8';
   const useHls = CONFIG.videoSource === 'panda' || (CONFIG.videoSource === 'auto' && !IN_ARTIFACT);
-  if (!useHls) { v.src = mp4; return; }
+  if (!useHls) { if (mp4) v.src = mp4; else videoFailed(v, m); return; }
   const canNative = !!v.canPlayType('application/vnd.apple.mpegurl');
   const tried = new Set();
   const fail = () => {
     if (v._gen !== gen) return;
-    if (IN_ARTIFACT || CONFIG.videoSource === 'mp4') { if (!v.src.endsWith('.mp4')) v.src = mp4; return; }
+    if ((IN_ARTIFACT || CONFIG.videoSource === 'mp4') && mp4) { if (!v.src.endsWith('.mp4')) v.src = mp4; return; }
     videoFailed(v, m);
   };
   // se um caminho falha, tenta o outro; só desiste quando os dois falharam
@@ -3731,7 +3731,7 @@ function vslCard() {
     <div class="card mnc">
       <p class="eyebrow">O próximo passo</p>
       <h3>Antes, um recado da Nath.</h3>
-      <p class="note">Ela explica, em 2 minutos, o que acontece quando você manda o seu resultado para a equipe.</p>
+      <p class="note">Ela explica, em pouco mais de 1 minuto, o que acontece quando você manda o seu resultado para a equipe.</p>
       <button class="btn btn-main" data-go="vsl">${ICON('sound')}Ver o recado da Nath</button>
       <a class="link" data-out="whatsapp" data-wa="resultado-b" href="${esc(waLink(diagWaText()))}" target="_blank" rel="noopener" style="align-self:center">Ir direto para o WhatsApp</a>
     </div>`;

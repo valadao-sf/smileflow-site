@@ -83,9 +83,14 @@ python3 tools/simulador-objecoes/render_guides.py
 | `mnc.about` | Até 3 linhas sobre o MNC (formato, duração, para quem) | O bloco não aparece |
 | `objHighlight` | Link do destaque "Objeções" no Instagram da Nath | Os botões abrem o perfil |
 | `mnc.vsl` | Quando o recado da Nath for gravado, trocar `{ photo, script }` por `{ id, mp4, poster }` | Mostra foto com legenda |
-| `ab.vsl` | % de pessoas que veem o recado antes do WhatsApp | 0 = ninguém |
+| `ab.vsl` | % de pessoas que veem o recado antes do WhatsApp (hoje 50) | 0 = ninguém |
 
 Os vídeos de cada objeção ficam em `OBJECTIONS[id].videos.v1/v2`. Sem `id` do Panda, o motor mostra o roteiro em legenda.
+
+- `id` é o id do player do Panda (o `v=` do embed), não o `video_id` da API. O HLS sai de `CONFIG.pandaHls + id + '/playlist.m3u8'`.
+- Com vídeo: `{ id, poster, title, fallback: { photo, script } }`. O roteiro fica como legenda sobre o pôster para quando o vídeo não carregar. Só o “tá caro” tem `mp4` local (para o artefato); sem `mp4`, o artefato mostra a legenda.
+- Gravados (21/out/2026): todos os V1 e V2, menos o V2 do “vou pensar”, que continua com foto e legenda. O recado do diagnóstico (`CONFIG.mnc.vsl`) também está gravado, e aparece para o grupo B do teste (`CONFIG.ab.vsl`, 50% desde 21/out/2026). O grupo fica salvo no navegador (`nath_ab`): quem chegou antes continua no A.
+- Pôsteres: `assets/<objeção>-v1-poster.webp` e `-v2-`, um quadro do começo de cada vídeo (540×952).
 
 ## Dados
 
