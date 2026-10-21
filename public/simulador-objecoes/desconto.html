@@ -89,6 +89,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .btn .arr{font-family:var(--display);font-size:20px;line-height:0}
 .btn svg{width:19px;height:19px;flex:none}
 .link{font:600 14px/1.4 var(--ui);color:var(--sand);text-decoration:underline;text-underline-offset:3px;background:none;border:0;cursor:pointer;padding:6px 0}
+.link.forget{align-self:flex-start;font-weight:500;font-size:13.5px;color:var(--soft);position:relative}
 .link:hover{color:var(--paper)}
 /* alvo de toque de 44 px sem mudar o desenho: uma área invisível por cima */
 .link,.follow,.gtlinks a{position:relative}
@@ -4329,7 +4330,8 @@ ENTER.hub = () => {
     <header class="stack hhead">
       <div class="stack">
       <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}${got.length > 1 ? 'Seus guias estão <em>nas objeções que você treinou.</em>' : got.length ? 'Seu guia está <em>na objeção que você treinou.</em>' : 'Escolha a <em>próxima objeção.</em>'}</h1>`
+      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}${got.length > 1 ? 'Seus guias estão <em>nas objeções que você treinou.</em>' : got.length ? 'Seu guia está <em>na objeção que você treinou.</em>' : 'Escolha a <em>próxima objeção.</em>'}</h1>
+      <button class="link forget" data-forget>Não é você? Começar do zero</button>`
              : `<h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
       <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>`}
       </div>
@@ -4350,8 +4352,20 @@ ENTER.hub = () => {
     </div>`;
   sc.scrollTop = 0;
   $$('#s-hub [data-obj]').forEach(bt => { bt.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); startObjection(bt.dataset.obj, bt.dataset.ex || ''); }; });
+  const fg = $('#s-hub [data-forget]'); if (fg) fg.onclick = forgetMe;
   paintMnc();
 };
+// "Não é você?": apaga deste navegador o perfil (nome e WhatsApp), os guias, o diagnóstico e a lista de espera,
+// para quem usa um aparelho emprestado. Ficam só o grupo do teste A/B, a origem da visita e a fila de envios pendentes.
+function forgetMe() {
+  track('profile_reset', { scene: S.scene });
+  [PERFIL_KEY, GUIAS_KEY, DG_KEY, V3_KEY, LISTA_KEY].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
+  Object.assign(S, { name: '', biz: '', role: '', area: '', other: '', phone: '', lead: false, v3: false, answers: [], quiz: [], done: {} });
+  Object.keys(PROG).forEach(k => delete PROG[k]);
+  Object.assign(DG, { i: 0, a: {}, done: false, from: '', r: 0 });
+  ENTER.hub();
+  const h = $('#s-hub h1'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+}
 const exGuide = id => {
   const on = progOf(id).g1;
   const tile = `<button class="exguide${on ? ' on' : ''}" ${on ? `data-view="/simulador-objecoes/assets/guia1-${id}.webp"` : `data-prev="${id}:g1"`}><span class="th"><img src="/simulador-objecoes/assets/guia1-${id}-sm.webp" alt=""></span>
