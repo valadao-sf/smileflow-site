@@ -4087,7 +4087,6 @@ function renderGiftOpen() {
     <div class="stack" style="gap:10px">
       <p class="okline">${okLine}</p>
       <h2 class="display" style="font-size:30px">Você liberou <em>o guia.</em></h2>
-      <p class="lede">Neste aparelho, ele também fica na página inicial do simulador, no ${esc(O.phrase)}, para baixar quando precisar.</p>
     </div>
     </div>
     <img class="gimg" id="giftimg" src="${giftURL}" alt="${esc(G.alt)}">
@@ -4354,7 +4353,7 @@ function openPreview(key) {
     <p class="eyebrow" style="color:var(--wine-hi)">${esc(capPhrase(ob.phrase))} · Guia</p>
     <h3 id="prev-title">${esc(title)}</h3>
     <div class="pimg"><img src="assets/guia1-${id}.webp" alt=""></div>
-    <p class="why">${ICON('ok')}<span>${esc(how)} Depois, ele fica na página inicial do simulador, junto desta objeção, para baixar.</span></p>
+    <p class="why">${ICON('ok')}<span>${esc(how)}</span></p>
     <button class="btn btn-main" data-obj="${id}" data-ex="sim">Começar a simulação <span class="arr">→</span></button>
     <button class="link" data-prev-close style="align-self:center">Agora não</button>`;
   $('#prev').hidden = false; $('#prev-box .btn').focus();
