@@ -103,8 +103,11 @@ TAGS = '''<script>window.sfTrack=window.sfTrack||function(){(window.sfTrack.q=wi
 
 
 def asset_abs(s):
-    # 'assets/x' → '/simulador-objecoes/assets/x' em atributos, strings e template strings
-    return re.sub(r'''(?<=["'`(])assets/''', BASE + '/assets/', s)
+    # 'assets/x' → '/simulador-objecoes/assets/x' em atributos, strings e template strings,
+    # e também depois da vírgula de um srcset ("…240w, assets/p44.webp 720w"): na tela inicial
+    # (/simulador-objecoes, sem barra no fim) um caminho relativo vira /assets/… e dá 404.
+    s = re.sub(r'''(?<=["'`(])assets/''', BASE + '/assets/', s)
+    return re.sub(r'(?<=w, )assets/', BASE + '/assets/', s)
 
 
 def sub1(s, a, b):
@@ -159,7 +162,7 @@ for fname, oid, title, desc, graph in PAGES:
 </body>
 </html>
 '''
-    assert "'assets/" not in doc and '"assets/' not in doc and '`assets/' not in doc, fname
+    assert "'assets/" not in doc and '"assets/' not in doc and '`assets/' not in doc and 'w, assets/' not in doc, fname
     open(os.path.join(dest, fname + '.html'), 'w', encoding='utf-8').write(doc)
 
 # 3. A primeira tela já montada no HTML
