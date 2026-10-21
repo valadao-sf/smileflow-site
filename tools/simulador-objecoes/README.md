@@ -11,13 +11,13 @@ Não edite `public/simulador-objecoes/*.html` à mão: esses arquivos são gerad
 | --- | --- |
 | `engine.html` | O motor: telas, conteúdo das 6 objeções, diagnóstico, lista de espera, eventos. A configuração fica no objeto `CONFIG`, no começo do script. |
 | `build.py` | Gera as 7 páginas (`index` = tela inicial e uma por objeção) em `public/simulador-objecoes/`, com título, descrição, dados estruturados, imagem de compartilhamento, GA4 e pixel. Depois abre cada página num navegador e grava no HTML a primeira tela já montada. Precisa de Playwright com Chromium. |
-| `render_guides.py` | Gera de novo as imagens dos guias (`guia1-*` e `mitos-*`, com as versões `-sm`) quando o texto deles muda. |
-| `mitos.html` | Texto e desenho do Guia 2 (mitos e verdades) de cada objeção. |
+| `render_guides.py` | Gera de novo a imagem do guia de cada objeção (`guia1-*`: `.webp`, `-sm.webp` e o `.jpg` do botão Baixar) quando o texto dele muda. |
+| `mitos.html` | Guia de mitos e verdades dos antigos cartões de treino. Saiu do funil em out/2026; fica só como referência. |
 
 ## Editar e publicar
 
 ```sh
-# 1. edite tools/simulador-objecoes/engine.html (ou mitos.html)
+# 1. edite tools/simulador-objecoes/engine.html
 python3 tools/simulador-objecoes/build.py   # precisa de Playwright com Chromium
 # 2. só se mudou texto de guia:
 python3 tools/simulador-objecoes/render_guides.py
@@ -25,6 +25,12 @@ python3 tools/simulador-objecoes/render_guides.py
 ```
 
 `?teste=1` marca todos os eventos como teste: o n8n guarda, mas não avisa a equipe.
+
+## Como o funil funciona
+
+- Cada objeção tem um exercício, a simulação com 4 pessoas, e um guia. Os cartões de treino (certo ou errado) e o segundo guia saíram em out/2026; links antigos com `?ex=flash` abrem a simulação.
+- Não existe mais a tela "Meus guias": o guia liberado aparece no cartão da objeção, na tela inicial e na tela da objeção, com o botão "Baixar o guia" (`assets/guia1-<id>.jpg`).
+- A tela final e o diagnóstico terminam com "Voltar ao início" (tela inicial).
 
 ## Busca e assistentes de IA
 

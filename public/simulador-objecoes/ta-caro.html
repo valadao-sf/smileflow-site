@@ -236,6 +236,16 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .ocardx{display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-height:128px;box-sizing:border-box;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--stage);color:var(--paper);text-align:left;cursor:pointer;font:inherit}
 .ocardx,.ocard.go{text-decoration:none}
 .ocardx:hover{border-color:var(--soft)}
+/* o cartão inteiro leva para a objeção (link esticado); o botão de baixar fica por cima */
+.ocardx{position:relative}
+.ocardx .ocx{color:inherit;text-decoration:none}
+.ocardx .ocx::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.ocardx .ocx:focus-visible{outline:none}
+.ocardx:has(.ocx:focus-visible){outline:2px solid var(--wine-hi);outline-offset:2px}
+.dl{position:relative;z-index:1;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 14px;border-radius:999px;border:1px solid var(--wine-hi);background:transparent;color:var(--paper);font:700 13px/1 var(--ui);text-decoration:none;cursor:pointer;align-self:flex-start}
+.dl:hover{background:rgba(214,163,178,.12)}
+.dl svg{width:16px;height:16px;flex:none}
+.dl.wide{align-self:stretch;min-height:44px}
 .ocardx:focus-visible{outline:2px solid var(--wine-hi);outline-offset:2px}
 .ocardx q{quotes:none;font:italic 400 21px/1.15 var(--display);text-wrap:balance}
 .ocardx .pr{display:flex;align-items:center;gap:7px;font:700 12px/1.2 var(--ui);color:var(--soft);white-space:nowrap}
@@ -684,6 +694,11 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .objs h1{font-size:58px}
   .objs > .stack .lede{font-size:17px}
   .exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+  /* um exercício só: fotos à esquerda, texto, guia e botão à direita */
+  .exgrid.one{display:block}
+  .exgrid.one .ex{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:28px;row-gap:14px;align-content:center;padding:16px}
+  .exgrid.one .exfaces{grid-column:1;grid-row:1 / span 5;align-self:center}
+  .exgrid.one .ex > :not(.exfaces){grid-column:2}
   .gsecs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px}
   .scene.hub .card.mnc:has(.hv3){display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px;row-gap:6px}
   .scene.hub .card.mnc:has(.hv3) .hv3{grid-row:1 / span 2}
@@ -800,7 +815,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   <section class="scene round" id="s-r3" hidden></section>
 
   <!-- CERTO OU ERRADO -->
-  <section class="scene quiz pad" id="s-quiz" hidden></section>
 
   <!-- RESULTADO -->
   <section class="scene result pad" id="s-result" hidden></section>
@@ -869,7 +883,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
       <h1><small>O que responder quando o paciente diz</small> “Tá caro”</h1>
       <p class="lede">A pessoa gostou do tratamento. Até ouvir o preço. Em 3 minutos, você atende 4 pessoas que dizem “tá caro” e descobre onde a sua resposta trava a venda.</p>
     </div>
-    <div class="exgrid">
+    <div class="exgrid one">
     <div class="ex first">
       <div class="exfaces" aria-label="As 4 pessoas da simulação: Renata, Camila, Patrícia, Marcos"><figure><img src="/simulador-objecoes/assets/s44.webp" alt=""><figcaption>Renata</figcaption></figure><figure><img src="/simulador-objecoes/assets/s47.webp" alt=""><figcaption>Camila</figcaption></figure><figure><img src="/simulador-objecoes/assets/s31.webp" alt=""><figcaption>Patrícia</figcaption></figure><figure><img src="/simulador-objecoes/assets/s25.webp" alt=""><figcaption>Marcos</figcaption></figure></div>
       <div class="exbody">
@@ -878,21 +892,8 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
         <p>Cada pessoa tem um motivo. Você responde e a Nath explica.</p>
       </div>
       <button class="exguide" data-prev="ta-caro:g1"><span class="th"><img src="/simulador-objecoes/assets/guia1-ta-caro-sm.webp" alt=""></span>
-    <span class="t"><small>Você ganha o Guia 1</small><b>Antes de responder um “tá caro”</b></span><span class="go" aria-hidden="true">→</span></button>
+    <span class="t"><small>Você ganha o guia</small><b>Antes de responder um “tá caro”</b></span><span class="go" aria-hidden="true">→</span></button>
       <button class="btn btn-main" data-sim="">Começar a simulação <span class="arr">→</span></button>
-    </div>
-    <div class="ex">
-      <div class="exdeck" aria-hidden="true"><span class="c c3"></span><span class="c c2"></span>
-        <div class="c1"><div class="ctop"><span>Essa frase está…</span><b>1 de 5</b></div><q>“Tá caro” pode querer dizer coisas diferentes para cada pessoa.</q>
-          <div class="ce"><span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-no"></use></svg>Errada</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ok"></use></svg>Certa</span></div></div></div>
-      <div class="exbody">
-        <div class="exhead"><i><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cards"></use></svg></i><span>Cartões de treino</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"></use></svg>2 min</em></div>
-        <h2>Certo ou errado em 5 cartões</h2>
-        <p>Frases que todo mundo já ouviu. Você decide e a Nath explica.</p>
-      </div>
-      <button class="exguide" data-prev="ta-caro:g2"><span class="th"><img src="/simulador-objecoes/assets/mitos-ta-caro-sm.webp" alt=""></span>
-    <span class="t"><small>Você ganha o Guia 2</small><b>Mitos e verdades do “tá caro”</b></span><span class="go" aria-hidden="true">→</span></button>
-      <button class="btn btn-ghost" data-flash="">Começar os cartões de treino <span class="arr">→</span></button>
     </div>
     </div>
     
@@ -920,7 +921,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 
   <!-- TELA INICIAL E MEUS GUIAS (montadas pelo script) -->
   <section class="scene hub pad" id="s-hub" hidden></section>
-  <section class="scene guias pad" id="s-guias" hidden></section>
   <div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Guia">
     <img id="viewer-img" alt="">
     <p>Para salvar no celular, toque na imagem e segure o dedo.</p>
@@ -1008,6 +1008,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8.5v7M8.5 12h7"/></g></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0-12-4.5 4.5M12 3l4.5 4.5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
 </svg>
 
@@ -2939,7 +2940,7 @@ setObjection((() => {
 })());
 
 const FLOW = ['hero','name','v1','r0','v2','r1','r2','r3','result','gift','v3','ig','final'];
-// Os cartões de treino (certo ou errado) são um exercício à parte: quiz → regra → gift com o Guia 2.
+// Cada objeção tem um exercício (a simulação com 4 pessoas) e um guia. Os cartões de treino saíram em out/2026.
 
 /* =====================================================================
    ESTADO
@@ -2976,7 +2977,7 @@ function markGuide(id, kind, extra = {}) {
   PROG[id] = { ...(PROG[id] || {}), [kind]: Date.now(), ...extra };
   STORE.set(GUIAS_KEY, PROG);
 }
-const progOf = id => { const p = PROG[id] || {}; return { g1: !!p.g1, g2: !!p.g2, n: (p.g1 ? 1 : 0) + (p.g2 ? 1 : 0) }; };
+const progOf = id => { const p = PROG[id] || {}; return { g1: !!p.g1, hit: p.hit, max: p.max }; };
 
 /* =====================================================================
    NAVEGAÇÃO ENTRE CENAS
@@ -3031,7 +3032,6 @@ function back() {
   if (!$('#bio').hidden) { closeBio(); return true; }
   track('back', { from: s });
   if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
-  if (s === 'quiz' && quizBack()) return true;
   if (s === 'diag' && DG.i > 0) { DG.i--; renderDiag(-1); return true; }
   const h = S.hist.pop();
   if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
@@ -3052,7 +3052,7 @@ addEventListener('popstate', () => {
 document.addEventListener('click', e => {
   if (e.target.closest('[data-back]')) { e.preventDefault(); back(); return; }
   const dgb = e.target.closest('[data-diag]'); if (dgb) { e.preventDefault(); startDiag(dgb.dataset.diag); return; }
-  if (e.target.closest('[data-flash]')) { e.preventDefault(); startFlash(); return; }
+  if (e.target.closest('[data-flash]')) { e.preventDefault(); startSim(); return; }
   if (e.target.closest('[data-sim]')) { e.preventDefault(); startSim(); return; }
   const g = e.target.closest('[data-go]');
   if (g) { e.preventDefault(); if (g.dataset.kind) S.kind = g.dataset.kind; go(g.dataset.go); }
@@ -3660,7 +3660,8 @@ ENTER.diagres = () => {
     ${conta}
     ${isWaitlist() ? '' : proofBlock()}
     ${isWaitlist() ? waitCard() : AB === 'B' ? vslCard() : waCard('resultado')}
-    <button class="link" data-go="${S.fromHub ? 'hub' : S.kind === 'g2' ? 'final' : 'ig'}" style="align-self:center">${S.fromHub ? 'Voltar para as objeções' : 'Continuar no treino'}</button>
+    ${S.fromHub ? '' : `<button class="link" data-go="ig" style="align-self:center">Continuar no treino</button>`}
+    ${homeBtn()}
     <button class="link" data-diag="refazer" style="align-self:center">Refazer o diagnóstico</button>`;
   wireCallback(); wireWaitlist();
 };
@@ -3867,76 +3868,6 @@ async function showAnswer(i, instant) {
 }
 
 /* =====================================================================
-   CERTO OU ERRADO
-   ===================================================================== */
-let qIdx = 0, ruleShown = false;
-ENTER.quiz = () => {
-  if (S.quiz.length === QUIZ.length) { qIdx = QUIZ.length - 1; showRule(); }
-  else { qIdx = 0; S.quiz = []; renderQuiz(); }
-};
-function quizBack() {
-  if (ruleShown) { qIdx = QUIZ.length - 1; S.quiz.length = qIdx; renderQuiz(-1); return true; }
-  if (qIdx > 0) { qIdx--; S.quiz.length = qIdx; renderQuiz(-1); return true; }
-  return false;
-}
-function renderQuiz() {
-  const q = QUIZ[qIdx];
-  ruleShown = false;
-  $('#s-quiz').scrollTop = 0;
-  $('#s-quiz').innerHTML = `
-    <header class="qhead">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow">Cartões de treino · certo ou errado</p></div>
-      <div class="qdots">${QUIZ.map((_, j) => `<span class="${j < qIdx ? (S.quiz[j] ? 'hit' : 'miss') : j === qIdx ? 'now' : ''}"></span>`).join('')}</div>
-      <p class="lede">Cartão ${qIdx + 1} de ${QUIZ.length}. Leia a frase e diga se ela está certa ou errada.</p>
-    </header>
-    <div class="qcard" id="qcard"><small>Essa frase está…</small><p>${esc(q.t)}</p></div>
-    <div class="qbtns" id="qbtns">
-      <button class="btn qopt" data-q="0">${ICON('no')}Errada</button>
-      <button class="btn qopt" data-q="1">${ICON('ok')}Certa</button>
-    </div>
-    <div id="qafter"></div>`;
-  $('#qbtns').onclick = e => { const b = e.target.closest('[data-q]'); if (b) answerQuiz(b.dataset.q === '1'); };
-}
-function answerQuiz(choice) {
-  const q = QUIZ[qIdx], hit = choice === q.a;
-  S.quiz[qIdx] = hit;
-  track('quiz', { q: qIdx + 1, hit });
-  $('#qbtns').remove();
-  $('#qcard').insertAdjacentHTML('beforeend', `<span class="qstamp ${hit ? 'ok' : 'no'}">${ICON(hit ? 'ok' : 'no')}${hit ? 'Você acertou' : 'Você errou'}</span>`);
-  $$('.qdots span')[qIdx].className = hit ? 'hit' : 'miss';
-  const last = qIdx === QUIZ.length - 1;
-  $('#qafter').innerHTML = `
-    <div class="qanswer">
-      <b>A frase está ${q.a ? 'certa' : 'errada'}.</b>
-      <div class="nath"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><div><small>O que a Nath diz</small>${q.why.map(p => `<p>${esc(p)}</p>`).join('')}</div></div>
-      <button class="btn btn-main" id="qnext" style="margin-top:8px">${last ? 'Continuar' : 'Próxima frase'} <span class="arr">→</span></button>
-    </div>`;
-  $('#qnext').onclick = () => { if (last) showRule(); else { qIdx++; renderQuiz(); $('#s-quiz').scrollTop = 0; } };
-}
-function showRule() {
-  track('quiz_done', { hits: S.quiz.filter(Boolean).length });
-  const steps = O.rule.steps;
-  ruleShown = true;
-  $('#s-quiz').innerHTML = `
-    <div class="navrow">${BACK_BTN}</div>
-    <div class="rule">
-      <p class="eyebrow">A ordem certa</p>
-      <ol>${steps.map((s, k) => `<li style="animation-delay:${k * 260}ms"><span>${k + 1}</span>${s}</li>`).join('')}</ol>
-      <div class="nath" style="margin-top:20px;animation-delay:1.2s">
-        <img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt="">
-        <div><small>O que a Nath diz</small>${O.rule.text.map(p => `<p>${esc(p)}</p>`).join('')}</div>
-      </div>
-    </div>
-    <button class="btn btn-main" id="rule-next" style="animation:rise .5s 1.5s var(--ease) both">Liberar o Guia 2 <span class="arr">→</span></button>`;
-  $('#rule-next').onclick = () => {
-    S.flash = { hit: S.quiz.filter(Boolean).length, max: QUIZ.length };
-    track('flash_done', { hits: S.flash.hit });
-    S.kind = 'g2'; go('gift');
-  };
-  $('#s-quiz').scrollTop = 0;
-}
-
-/* =====================================================================
    RESULTADO
    ===================================================================== */
 function computeProfile() {
@@ -3997,58 +3928,42 @@ function maskPhone(v) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 let giftURL = '';
-const GIFT2 = () => ({
-  lede: `Mitos e verdades do ${O.phrase}: as 5 frases dos cartões numa página só.`,
-  alt: `Guia mitos e verdades do ${O.phrase}`,
-  text: [`Mitos e verdades do ${O.phrase}`, '', ...QUIZ.map(q => `${q.a ? '✔ Verdade' : '✘ Mito'}: ${q.t}`)]
-});
-const giftInfo = () => S.kind === 'g2' ? GIFT2() : O.gift;
-// depois do presente: o V3 na primeira vez; depois, Instagram (simulação) ou final (flashcards)
+const giftInfo = () => O.gift;
 // Depois do guia vem a porta do MNC (vídeo e diagnóstico). O Instagram fica para depois da oferta, para ninguém sair do funil antes dela.
 const afterGift = () => (v3Seen() ? 'final' : 'v3');
-function startFlash() { track('flash_start'); S.fromHub = false; S.quiz = []; S.afterName = 'quiz'; S.nameMode = ''; go(S.biz ? 'quiz' : 'name'); }
+// Links antigos com ?ex=flash (os cartões de treino saíram) vão para a simulação.
+function startFlash() { startSim(); }
 function startSim() { track('sim_start'); S.fromHub = false; S.answers = []; S.afterName = 'v1'; S.nameMode = ''; go(S.biz ? 'v1' : 'name'); }
 // o que ainda falta nesta objeção
 function missingCard() {
-  const pg = progOf(O.id), didFlash = S.flash || pg.g2, didSim = S.answers.length || pg.g1;
-  if (!didFlash) return `
-    <div class="card">
-      <p class="eyebrow">Ainda falta neste treino</p>
-      <h3>Os 5 cartões de treino de certo ou errado</h3>
-      <p class="note">Leva uns 2 minutos e libera o Guia 2: mitos e verdades do ${esc(O.phrase)}.</p>
-      <button class="btn btn-ghost" data-flash>Fazer os cartões de treino <span class="arr">→</span></button>
-    </div>`;
-  if (!didSim) return `
+  const didSim = S.answers.length || progOf(O.id).g1;
+  return didSim ? '' : `
     <div class="card">
       <p class="eyebrow">Ainda falta neste treino</p>
       <h3>A simulação com 4 ${esc(CLIS())}</h3>
-      <p class="note">Você atende 4 ${esc(CLIS())} que dizem ${esc(O.phrase)} e libera o Guia 1.</p>
+      <p class="note">Você atende 4 ${esc(CLIS())} que dizem ${esc(O.phrase)} e libera o guia.</p>
       <button class="btn btn-ghost" data-sim>Fazer a simulação <span class="arr">→</span></button>
     </div>`;
-  return '';
 }
 ENTER.gift = async () => {
-  const key = O.id + ':' + S.kind;
-  if (!(key in GIFTS)) {
-    if (S.kind === 'g2') GIFTS[key] = `/simulador-objecoes/assets/mitos-${O.id}.webp`;
-    else { try { GIFTS[key] = await drawGift(); } catch (e) { GIFTS[key] = ''; } }
-  }
+  const key = O.id + ':g1';
+  if (!(key in GIFTS)) { try { GIFTS[key] = await drawGift(); } catch (e) { GIFTS[key] = ''; } }
   giftURL = GIFTS[key];
   const G = giftInfo();
   if (S.lead) {
-    const k = O.id + ':' + S.kind;
+    const k = O.id + ':g1';
     if (!SENT_GUIDES.has(k)) {
       SENT_GUIDES.add(k);
       const P = computeProfile();
       postLead({ type: 'guia', first_contact: false, name: S.name, phone: S.phone || '', objection: O.id, ...profileFields(),
-                 exercise: S.kind === 'g2' ? 'flashcards' : 'simulacao', patients: P.open, flash: S.flash, ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id });
+                 exercise: 'simulacao', patients: P.open, ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id });
     }
     return renderGiftOpen();
   }
   track('gift_view', { kind: S.kind });
   $('#s-gift').innerHTML = `
     <header class="stack">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow">${S.kind === 'g2' ? 'Guia 2 · seu presente' : 'Seu presente'}</p></div>
+      <div class="navrow">${BACK_BTN}<p class="eyebrow">Seu presente</p></div>
       <h2 class="display">Um guia rápido para salvar no celular</h2>
       <p class="lede">${esc(G.lede)} Deixe seu WhatsApp para liberar o guia.</p>
     </header>
@@ -4080,7 +3995,7 @@ async function submitLead(e) {
   const P = computeProfile();
   const payload = {
     name, phone: '55' + digits, consent: true, consent_text: ($('#ld-ok')?.closest('label')?.textContent || '').trim(), objection: O.id, ...profileFields(), example_area: S.area,
-    profile: P.key, patients: P.open, quiz: P.quiz, score: P.hit, max: P.max, exercise: S.kind === 'g2' ? 'flashcards' : 'simulacao', flash: S.flash,
+    profile: P.key, patients: P.open, quiz: P.quiz, score: P.hit, max: P.max, exercise: 'simulacao',
     answers: S.answers.map(a => a && a.mode), utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id
   };
   const eid = uuid();
@@ -4096,13 +4011,11 @@ async function submitLead(e) {
 const SENT_GUIDES = new Set();
 function renderGiftOpen() {
   const n = firstName(), G = giftInfo();
-  if (S.kind === 'g2') markGuide(O.id, 'g2', S.flash ? { fhit: S.flash.hit, fmax: S.flash.max } : {});
-  else { const P = computeProfile(); markGuide(O.id, 'g1', { hit: P.open, max: ROUNDS.length }); S.done[O.id] = { hit: P.open, max: ROUNDS.length }; }
-  track('guide_open', { kind: S.kind });
-  const g2 = S.kind === 'g2', P1 = computeProfile();
-  const okLine = g2 ? (S.flash ? `Você acertou ${S.flash.hit} dos ${S.flash.max} cartões` : '')
-                    : `Você descobriu o motivo real em ${P1.open} de ${ROUNDS.length} conversas`;
-  const gTitle = g2 ? `Mitos e verdades do ${O.phrase}` : guideTitle(O.id);
+  const P1 = computeProfile();
+  markGuide(O.id, 'g1', { hit: P1.open, max: ROUNDS.length }); S.done[O.id] = { hit: P1.open, max: ROUNDS.length };
+  track('guide_open', { kind: 'g1' });
+  const okLine = `Você descobriu o motivo real em ${P1.open} de ${ROUNDS.length} conversas`;
+  const gTitle = guideTitle(O.id);
   const porta = !v3Seen() ? `
     <div class="porta">
       <div class="who"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0" style="flex:1;min-width:0"><b>Nathálya Mello</b><span>Especialista em Vendas</span></div><a class="follow" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener">${esc(CONFIG.igHandle)}</a></div>
@@ -4112,11 +4025,11 @@ function renderGiftOpen() {
     </div>` : mncCard('guia');
   $('#s-gift').innerHTML = `
     <div class="gtop">
-    <div class="navrow">${BACK_BTN}<p class="eyebrow">${g2 ? 'Cartões de treino concluídos' : 'Simulação concluída'}</p></div>
+    <div class="navrow">${BACK_BTN}<p class="eyebrow">Simulação concluída</p></div>
     <div class="stack" style="gap:10px">
       ${okLine ? `<p class="okline">${ICON('ok')}${okLine}</p>` : ''}
-      <h2 class="display" style="font-size:30px">Você liberou <em>${g2 ? 'um guia novo.' : 'o Guia 1.'}</em></h2>
-      <p class="lede">O guia “${esc(gTitle)}” fica guardado em Meus guias, para abrir quando precisar.</p>
+      <h2 class="display" style="font-size:30px">Você liberou <em>o guia.</em></h2>
+      <p class="lede">O guia “${esc(gTitle)}” também fica no cartão desta objeção, na tela inicial, para baixar quando precisar.</p>
     </div>
     </div>
     <img class="gimg" id="giftimg" src="${giftURL}" alt="${esc(G.alt)}">
@@ -4125,9 +4038,8 @@ function renderGiftOpen() {
     ${porta}
     <div class="row2" id="gift-row">
       <a class="btn btn-ghost" id="gift-wa" target="_blank" rel="noopener">${ICON('wa')}Enviar guia</a>
-      <a class="btn btn-ghost" id="gift-dl" download="${g2 ? `mitos-${O.id}.webp` : `guia-${O.id}.png`}">Baixar imagem</a>
+      <a class="btn btn-ghost" id="gift-dl" download="guia-${O.id}-nathalya-mello.png">${ICON('down')}Baixar o guia</a>
     </div>
-    <button class="link" data-go="guias" style="align-self:center;font-weight:700">Ver meus guias →</button>
     ${missingCard()}
     </div>`;
   $('#s-gift').scrollTop = 0;
@@ -4208,7 +4120,7 @@ ENTER.ig = () => {
 const shareUrl = () => CONFIG.publicUrl || (IN_ARTIFACT ? '' : location.origin + location.pathname);
 function inviteText() {
   const P = computeProfile(), u = shareUrl();
-  const how = S.answers.length ? `descobri o motivo real em ${P.open} de ${ROUNDS.length} conversas` : S.flash ? `acertei ${S.flash.hit} dos ${S.flash.max} cartões de certo ou errado` : 'treinei';
+  const how = S.answers.length ? `descobri o motivo real em ${P.open} de ${ROUNDS.length} conversas` : 'treinei';
   return `Fiz o teste do ${O.phrase} da Nathálya Mello, especialista em vendas (${CONFIG.igHandle}), e ${how}. ${O.inviteBlurb} Duvido você acertar mais!` + (u ? `\n${u}` : `\nProcure no perfil ${CONFIG.igHandle}.`);
 }
 
@@ -4227,7 +4139,7 @@ function startObjection(id, ex = '') {
   if (ON_SITE) { location.href = withEx(SITE.base + '/' + id + qs(), ex); return; }
   useObjection(id);
   S.answers = []; S.quiz = []; S.flash = null; S.kind = 'g1'; S.fromHub = false;
-  if (ex === 'flash') startFlash(); else if (ex === 'sim') startSim(); else go('obj');
+  if (ex === 'sim' || ex === 'flash') startSim(); else go('obj');
 }
 function goHub() {
   track('hub_open', { from: S.scene });
@@ -4256,35 +4168,24 @@ const askQ = o => o.q || `O que responder quando o paciente ${o.ask} ${o.phrase}
 // Link de verdade para cada objeção (os robôs seguem o href; o clique continua pelo startObjection).
 const objHref = id => ON_SITE ? `${SITE.base}/${id}` : `?obj=${id}`;
 const guideTitle = id => String((OBJECTIONS[id].gift.text || [''])[0]).replace(/:\s*$/, '');
+// Baixar o guia de uma objeção. No artefato o download não funciona: lá o botão abre o guia.
+const dlGuide = (id, cls = '') => IN_ARTIFACT
+  ? `<button class="dl${cls}" data-view="/simulador-objecoes/assets/guia1-${id}.webp">${ICON('down')}Abrir o guia</button>`
+  : `<a class="dl${cls}" data-dl="${id}" href="/simulador-objecoes/assets/guia1-${id}.jpg" download="guia-${id}-nathalya-mello.jpg">${ICON('down')}Baixar o guia</a>`;
+// Volta para a tela inicial, no fim de cada caminho (tela final e diagnóstico).
+const homeBtn = () => `<button class="btn btn-ghost" data-hub>${ICON('back')}Voltar ao início</button>`;
 function hubCard(id) {
   const p = progOf(id);
-  return `<a class="ocardx${p.n === 2 ? ' done' : p.n ? ' half' : ''}" href="${objHref(id)}" data-obj="${id}">
-    <q>${esc(capPhrase(OBJECTIONS[id].phrase))}</q>
-    <span class="pr"><span class="bar" aria-hidden="true"><i class="${p.g1 ? 'on' : ''}"></i><i class="${p.g2 ? 'on' : ''}"></i></span>${p.n}/2 concluídos</span></a>`;
+  return `<div class="ocardx${p.g1 ? ' done' : ''}">
+    <a class="ocx" href="${objHref(id)}" data-obj="${id}"><q>${esc(capPhrase(OBJECTIONS[id].phrase))}</q></a>
+    ${p.g1 ? `<span class="pr">${ICON('ok')}Guia liberado</span>${dlGuide(id)}`
+           : `<span class="pr">Simulação · 3 min <span aria-hidden="true">→</span></span>`}
+  </div>`;
 }
-function guideList() {
-  const out = [];
-  OBJ_LIST.forEach(({ id }) => { const p = progOf(id); if (p.g1) out.push(`/simulador-objecoes/assets/guia1-${id}-sm.webp`); if (p.g2) out.push(`/simulador-objecoes/assets/mitos-${id}-sm.webp`); });
-  return out;
-}
+const guideList = () => OBJ_LIST.filter(({ id }) => progOf(id).g1).map(({ id }) => `/simulador-objecoes/assets/guia1-${id}-sm.webp`);
 ENTER.hub = () => {
   S.fromHub = true;
   const n = firstName(), got = guideList(), back = got.length > 0 || !!S.name;
-  const half = OBJ_LIST.map(o => o.id).find(id => progOf(id).n === 1);
-  const cont = half ? (() => {
-    const p = progOf(half), ph = OBJECTIONS[half].phrase, flash = p.g1;
-    return `<button class="hcont" data-obj="${half}" data-ex="${flash ? 'flash' : 'sim'}" style="text-align:left;cursor:pointer;font:inherit;color:var(--paper)">
-      <span class="eyebrow" style="color:var(--wine-hi)">Continue de onde parou</span>
-      <q>${esc(capPhrase(ph))}</q>
-      <span class="note" style="color:#d9cfe0">${flash ? `Falta o exercício dos cartões de treino: 5 cartões, uns 2 minutos. Ele libera o guia Mitos e verdades do ${esc(ph)}.` : `Falta a simulação com 4 ${CLIS()}, uns 3 minutos. Ela libera o Guia 1 do ${esc(ph)}.`}</span>
-      <span class="btn btn-main">${flash ? 'Fazer os cartões de treino' : 'Fazer a simulação'} <span class="arr">→</span></span></button>`;
-  })() : '';
-  const strip = got.length ? `
-    <button class="hguias" data-go="guias">
-      <span class="t"><span class="eyebrow">Meus guias</span><b style="font-size:13px;color:var(--sand)">${got.length} de 12 liberados</b></span>
-      <span class="hstrip">${got.slice(0, 3).map(src => `<img src="${src}" alt="" loading="lazy">`).join('')}<span>Ver todos →</span></span>
-      <span class="note">Abra antes de responder alguém.</span>
-    </button>` : '';
   const porta = DG.done || (back && v3Seen()) ? mncCard('hub') : `
     <div class="card mnc">
       <div class="hv3">
@@ -4303,25 +4204,18 @@ ENTER.hub = () => {
     ${nathRow()}
     <header class="stack">
       <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}<em>${got.length ? 'Seus guias estão aqui.' : 'Escolha a próxima objeção.'}</em></h1>`
+      ${back ? `<h1 class="display">${n ? `Oi, ${esc(n)}. ` : ''}<em>${got.length ? 'Seus guias estão nos cartões.' : 'Escolha a próxima objeção.'}</em></h1>`
              : `<h1 class="display">Exercícios rápidos para as objeções de pacientes <em>que travam a venda.</em></h1>
-      <p class="lede">Escolha uma objeção e faça um exercício de 2 ou 3 minutos. No fim, você libera um guia de uma página para consultar antes da próxima conversa.</p>`}
+      <p class="lede">Escolha uma objeção e faça uma simulação de 3 minutos. No fim, você libera um guia de uma página para consultar antes da próxima conversa.</p>`}
     </header>
-    ${cont}
-    ${strip}
     ${back ? porta : ''}
     <div class="stack" style="gap:14px">
       <p class="eyebrow">Objeções</p>
       ${back ? '' : `<h2 class="display" style="font-size:24px">Qual frase mais trava você?</h2>
-      <p class="note" style="margin-top:-4px">Cada objeção tem 2 guias para liberar.</p>`}
+      <p class="note" style="margin-top:-4px">Cada objeção libera um guia para baixar.</p>`}
       <div class="hgrid">${OBJ_LIST.map(o => hubCard(o.id)).join('')}</div>
     </div>
     ${back ? '' : porta}
-    <div class="stack" style="gap:10px">
-      <p class="eyebrow">Outras ferramentas</p>
-      <div class="hsoon"><i>${ICON('plus')}</i><div style="flex:1;min-width:0"><b>Novas ferramentas da Nath</b><small>Cada uma libera um guia novo em Meus guias.</small></div><em>Em breve</em></div>
-      ${back ? '' : `<a class="link" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener" style="align-self:center">Siga a Nath para saber quando saírem</a>`}
-    </div>
     <div class="hfoot">
       <div class="igcard">
         <div class="byline"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0"><strong>Nathálya Mello</strong><span>Especialista em Vendas</span><span class="sub">Sócia-fundadora e Diretora Comercial da SmileFlow</span></div></div>
@@ -4332,13 +4226,11 @@ ENTER.hub = () => {
   $$('#s-hub [data-obj]').forEach(bt => { bt.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); startObjection(bt.dataset.obj, bt.dataset.ex || ''); }; });
   paintMnc();
 };
-const exGuide = (id, kind) => {
-  const on = progOf(id)[kind];
-  const img = kind === 'g1' ? `/simulador-objecoes/assets/guia1-${id}-sm.webp` : `/simulador-objecoes/assets/mitos-${id}-sm.webp`;
-  const title = kind === 'g1' ? guideTitle(id) : `Mitos e verdades do ${OBJECTIONS[id].phrase}`;
-  const full = kind === 'g1' ? `/simulador-objecoes/assets/guia1-${id}.webp` : `/simulador-objecoes/assets/mitos-${id}.webp`;
-  return `<button class="exguide${on ? ' on' : ''}" ${on ? `data-view="${full}"` : `data-prev="${id}:${kind}"`}><span class="th"><img src="${img}" alt=""></span>
-    <span class="t"><small>${on ? `${ICON('ok')}Seu guia · abrir` : 'Você ganha o Guia ' + (kind === 'g1' ? 1 : 2)}</small><b>${esc(title)}</b></span><span class="go" aria-hidden="true">→</span></button>`;
+const exGuide = id => {
+  const on = progOf(id).g1;
+  const tile = `<button class="exguide${on ? ' on' : ''}" ${on ? `data-view="/simulador-objecoes/assets/guia1-${id}.webp"` : `data-prev="${id}:g1"`}><span class="th"><img src="/simulador-objecoes/assets/guia1-${id}-sm.webp" alt=""></span>
+    <span class="t"><small>${on ? `${ICON('ok')}Seu guia · abrir` : 'Você ganha o guia'}</small><b>${esc(guideTitle(id))}</b></span><span class="go" aria-hidden="true">→</span></button>`;
+  return on ? tile + dlGuide(id, ' wide') : tile;
 };
 // Link do destaque "Objeções" no Instagram da Nath (o mesmo para todas as objeções).
 const objHighlight = () => CONFIG.objHighlight || CONFIG.instagram;
@@ -4367,7 +4259,7 @@ ENTER.obj = () => {
       <h1><small>${esc(askLead())}</small> ${esc(cap)}</h1>
       <p class="lede">${esc(opening)} Em 3 minutos, você atende ${ROUNDS.length} ${esc(CLIS())} que dizem ${esc(ph)} e descobre onde a sua resposta trava a venda.</p>
     </div>
-    <div class="exgrid">
+    <div class="exgrid one">
     <div class="ex first">
       <div class="exfaces" aria-label="As ${ROUNDS.length} pessoas da simulação: ${esc(ROUNDS.map(r => r.patient.name).join(', '))}">${faces}</div>
       <div class="exbody">
@@ -4375,20 +4267,8 @@ ENTER.obj = () => {
         <h2>Atenda ${ROUNDS.length} ${esc(CLIS())}</h2>
         <p>Cada pessoa tem um motivo. Você responde e a Nath explica.</p>
       </div>
-      ${exGuide(id, 'g1')}
+      ${exGuide(id)}
       <button class="btn btn-main" data-sim>${p.g1 ? 'Fazer a simulação de novo' : 'Começar a simulação'} <span class="arr">→</span></button>
-    </div>
-    <div class="ex">
-      <div class="exdeck" aria-hidden="true"><span class="c c3"></span><span class="c c2"></span>
-        <div class="c1"><div class="ctop"><span>Essa frase está…</span><b>1 de ${QUIZ.length}</b></div><q>${esc(QUIZ.map(q => q.t).sort((a, b) => a.length - b.length)[0])}</q>
-          <div class="ce"><span>${ICON('no')}Errada</span><span>${ICON('ok')}Certa</span></div></div></div>
-      <div class="exbody">
-        <div class="exhead"><i>${ICON('cards')}</i><span>Cartões de treino</span><em>${ICON('clock')}2 min</em></div>
-        <h2>Certo ou errado em ${QUIZ.length} cartões</h2>
-        <p>Frases que todo mundo já ouviu. Você decide e a Nath explica.</p>
-      </div>
-      ${exGuide(id, 'g2')}
-      <button class="btn btn-ghost" data-flash>${p.g2 ? 'Fazer os cartões de novo' : 'Começar os cartões de treino'} <span class="arr">→</span></button>
     </div>
     </div>
     ${guideText(O)}
@@ -4405,51 +4285,26 @@ const guideText = o => `
         <nav class="gtlinks" aria-label="Outras objeções"><p class="eyebrow">Outras objeções</p>${OBJ_LIST.filter(x => x.id !== o.id && OBJECTIONS[x.id]).map(x => `<a href="${objHref(x.id)}" data-obj="${x.id}">${esc(capPhrase(OBJECTIONS[x.id].phrase))}</a>`).join('')}</nav>
       </div>
     </details>`;
-ENTER.guias = () => {
-  const got = guideList().length, sc = $('#s-guias');
-  sc.innerHTML = `
-    <header class="stack">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow">Meus guias</p></div>
-      <h2 class="display">Seus guias rápidos</h2>
-      <p class="lede">Abra antes de responder alguém. Para salvar no celular, abra o guia, toque na imagem e segure o dedo.</p>
-      <p class="body" style="margin:0;color:var(--wine-hi);font-weight:700;font-size:13px">${got} de 12 guias liberados</p>
-    </header>
-    ${nathRow(' nathrow')}
-    <div class="gsecs">${OBJ_LIST.map(({ id }) => {
-      const p = progOf(id), ph = capPhrase(OBJECTIONS[id].phrase);
-      const t1 = p.g1 ? `<button class="gtile" data-view="/simulador-objecoes/assets/guia1-${id}.webp"><span class="im"><img src="/simulador-objecoes/assets/guia1-${id}-sm.webp" alt="${esc(OBJECTIONS[id].gift.alt)}" loading="lazy"><span class="tag">${ICON('ok')}Seu guia</span></span><b>Guia 1 · ${esc(guideTitle(id))}</b><small>Abrir →</small></button>`
-                      : `<button class="gtile locked" data-prev="${id}:g1"><span class="im"><img src="/simulador-objecoes/assets/guia1-${id}-sm.webp" alt="" loading="lazy"><span class="tag">Ganhe na simulação</span></span><b>Guia 1 · ${esc(guideTitle(id))}</b><small>Ver o que tem →</small></button>`;
-      const t2 = p.g2 ? `<button class="gtile" data-view="/simulador-objecoes/assets/mitos-${id}.webp"><span class="im"><img src="/simulador-objecoes/assets/mitos-${id}-sm.webp" alt="Guia mitos e verdades do ${esc(OBJECTIONS[id].phrase)}" loading="lazy"><span class="tag">${ICON('ok')}Seu guia</span></span><b>Guia 2 · Mitos e verdades</b><small>Abrir →</small></button>`
-                      : `<button class="gtile locked" data-prev="${id}:g2"><span class="im"><img src="/simulador-objecoes/assets/mitos-${id}-sm.webp" alt="" loading="lazy"><span class="tag">Ganhe nos cartões de treino</span></span><b>Guia 2 · Mitos e verdades</b><small>Ver o que tem →</small></button>`;
-      return `<div class="gsec"><h3>${esc(ph)}</h3><div class="gtiles">${t1}${t2}</div></div>`;
-    }).join('')}</div>
-    <div class="igcard" style="margin-top:4px">
-      <div class="byline"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0"><strong>Nathálya Mello</strong><span>Especialista em Vendas</span><span class="sub">Sócia-fundadora e Diretora Comercial da SmileFlow</span></div></div>
-      <a class="follow" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener">Seguir</a>
-    </div>`;
-  sc.scrollTop = 0;
-};
 function openPreview(key) {
   const [id, kind] = key.split(':'), ob = OBJECTIONS[id]; if (!ob) return;
-  const g1 = kind === 'g1', title = g1 ? guideTitle(id) : `Mitos e verdades do ${ob.phrase}`;
-  const how = g1 ? `Você leva este guia ao terminar a simulação: 4 ${CLIS()} que dizem ${ob.phrase}, uns 3 minutos.`
-                 : `Você leva este guia ao terminar os 5 cartões de treino de certo ou errado sobre o ${ob.phrase}, uns 2 minutos.`;
+  const title = guideTitle(id);
+  const how = `Você leva este guia ao terminar a simulação: 4 ${CLIS()} que dizem ${ob.phrase}, uns 3 minutos.`;
   $('#prev-box').innerHTML = `
     <button class="x" data-prev-close aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg></button>
-    <p class="eyebrow" style="color:var(--wine-hi)">${esc(capPhrase(ob.phrase))} · Guia ${g1 ? 1 : 2}</p>
+    <p class="eyebrow" style="color:var(--wine-hi)">${esc(capPhrase(ob.phrase))} · Guia</p>
     <h3 id="prev-title">${esc(title)}</h3>
-    <div class="pimg"><img src="/simulador-objecoes/assets/${g1 ? 'guia1' : 'mitos'}-${id}.webp" alt=""></div>
-    <p class="why">${ICON('ok')}<span>${esc(how)} Ele fica guardado em Meus guias.</span></p>
-    <button class="btn btn-main" data-obj="${id}" data-ex="${g1 ? 'sim' : 'flash'}">${g1 ? 'Fazer a simulação' : 'Fazer os cartões de treino'} <span class="arr">→</span></button>
+    <div class="pimg"><img src="/simulador-objecoes/assets/guia1-${id}.webp" alt=""></div>
+    <p class="why">${ICON('ok')}<span>${esc(how)} Depois, ele fica no cartão da objeção para baixar.</span></p>
+    <button class="btn btn-main" data-obj="${id}" data-ex="sim">Fazer a simulação <span class="arr">→</span></button>
     <button class="link" data-prev-close style="align-self:center">Agora não</button>`;
   $('#prev').hidden = false; $('#prev-box .btn').focus();
-  track('guide_preview', { obj: id, kind });
+  track('guide_preview', { obj: id, kind: 'g1' });
 }
 const closePreview = () => { $('#prev').hidden = true; };
 $('#prev').addEventListener('click', e => {
   if (e.target.id === 'prev' || e.target.closest('[data-prev-close]')) { closePreview(); return; }
   const ob = e.target.closest('button[data-obj]');
-  if (ob) { e.stopPropagation(); closePreview(); if (ob.dataset.obj === O.id && !(ON_SITE && CONFIG.start === 'hub')) { if (ob.dataset.ex === 'flash') startFlash(); else startSim(); } else startObjection(ob.dataset.obj, ob.dataset.ex); }
+  if (ob) { e.stopPropagation(); closePreview(); if (ob.dataset.obj === O.id && !(ON_SITE && CONFIG.start === 'hub')) startSim(); else startObjection(ob.dataset.obj, ob.dataset.ex); }
 });
 function openViewer(src) {
   const v = $('#viewer'); $('#viewer-img').src = src; v.hidden = false; track('guide_view', { src });
@@ -4472,6 +4327,7 @@ document.addEventListener('click', e => {
   const pv = e.target.closest('[data-prev]'); if (pv) { e.preventDefault(); openPreview(pv.dataset.prev); return; }
   const vw = e.target.closest('[data-view]'); if (vw) { e.preventDefault(); openViewer(vw.dataset.view); return; }
   if (e.target.closest('[data-hub]')) { e.preventDefault(); goHub(); }
+  const dl = e.target.closest('[data-dl]'); if (dl) track('guide_download', { obj: dl.dataset.dl, where: S.scene });
 });
 ENTER.final = () => {
   const P = computeProfile(), n = firstName();
@@ -4484,7 +4340,7 @@ ENTER.final = () => {
     <div class="fpair">
     <div class="card">
       <h3>Quem da sua equipe acerta mais?</h3>
-      <p class="note">${S.answers.length ? `${P.open} de ${ROUNDS.length} ${CLIS()} ${P.open === 1 ? 'contou' : 'contaram'} o motivo real para você.` : S.flash ? `Você acertou ${S.flash.hit} dos ${S.flash.max} cartões.` : ''} Mande o teste para alguém da equipe e compare os resultados.</p>
+      <p class="note">${S.answers.length ? `${P.open} de ${ROUNDS.length} ${CLIS()} ${P.open === 1 ? 'contou' : 'contaram'} o motivo real para você.` : ''} Mande o teste para alguém da equipe e compare os resultados.</p>
       <a class="btn btn-main" id="btn-invite" target="_blank" rel="noopener">${ICON('wa')}Desafiar no WhatsApp</a>
       ${shareUrl() ? `<div class="copyrow"><input class="input" id="share-url" readonly value="${esc(shareUrl())}" aria-label="Link do teste"><button class="btn btn-ghost" id="btn-copy">Copiar link</button></div>` : ''}
     </div>
@@ -4497,10 +4353,10 @@ ${missingCard()}
       <p class="eyebrow">Outras objeções</p>
       <h3>Treine a próxima</h3>
       <div class="ogrid">${OBJ_LIST.map(ocardHTML).join('')}</div>
-      <button class="link" data-hub style="align-self:flex-start">Ver todas as objeções e os meus guias →</button>
     </div>
 
     ${nathHighlights()}
+    ${homeBtn()}
     <button class="link" id="btn-replay" style="align-self:center">Fazer o teste de novo</button>`;
 
   $('#btn-invite').href = 'https://wa.me/?text=' + encodeURIComponent(inviteText());
@@ -4551,8 +4407,7 @@ paintMnc();
   if (CONFIG.start !== 'hub' && CONFIG.start !== 'obj' && ex !== 'flash' && ex !== 'sim') return;
   $('#s-hero').hidden = true; S.scene = '';
   if (CONFIG.start === 'hub') go('hub');
-  else if (ex === 'flash') startFlash();
-  else if (ex === 'sim') startSim();
+  else if (ex === 'sim' || ex === 'flash') startSim();
   else go('obj');
 })();
 window.claude?.hot?.snapshot?.(() => ({ scene: S.scene, obj: O.id, name: S.name, biz: S.biz, role: S.role, area: S.area, other: S.other, answers: S.answers, quiz: S.quiz, lead: S.lead, done: S.done, v3: S.v3, kind: S.kind, flash: S.flash }));
