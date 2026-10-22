@@ -9,7 +9,8 @@ const ALL = (c) => ({ ...c, googleAds: { id: "AW-1", labels: { diagnostico_concl
 const events = (g, name) => g.gtagCalls().filter((a) => a[0] === "event" && (!name || a[1] === name));
 
 test("ID vazio não carrega; ID preenchido carrega", () => {
-  const off = load();
+  const NONE = (c) => ({ ...c, googleAds: { id: "", labels: {} }, clarity: { projectId: "" } });
+  const off = load({ config: NONE });
   assert.deepEqual(Object.keys(off.w.sfTrack.vendors).sort(), ["ga4", "meta"]);
   assert.ok(!off.calls.scripts.some((s) => /tiktok|bat\.bing|clarity|licdn|pinimg|kwai/.test(s)));
   const on = load({ config: ALL });
