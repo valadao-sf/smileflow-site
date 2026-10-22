@@ -446,35 +446,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hsoon small{display:block;font-size:13px;color:var(--sand)}
 .hsoon em{flex:none;padding:5px 8px;border-radius:6px;border:1px solid var(--soft);font:800 10px/1 var(--ui);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:#d9cfe0}
 /* ---------- DIAGNÓSTICO (perguntas → resultado → WhatsApp) ---------- */
-.diag,.diagres{gap:18px;padding-block:20px 18px}
-.dprog{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.dprog i{height:4px;border-radius:4px;background:var(--line)}
-.dprog i.on{background:var(--wine-hi)}
-.dpart{display:flex;gap:6px;flex-wrap:wrap}
-.dpart span{padding:5px 8px;border-radius:6px;border:1px solid transparent;font:800 11px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
-.dpart span.on{background:var(--wine-hi);border-color:var(--wine-hi);color:var(--plum)}
-.dq{margin:0;font:600 clamp(23px,6.6vw,27px)/1.14 var(--display);text-wrap:balance}
-.dopts{display:flex;flex-direction:column;gap:10px}
-.dopt{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 16px;border-radius:14px;background:var(--stage);border:1px solid var(--line);color:var(--paper);font:600 15px/1.35 var(--ui);text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
-@media (hover:hover){.dopt:hover{border-color:var(--soft)}}
-.dopt i{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--soft)}
-.dopt.sel{border-color:var(--wine-hi);background:var(--plum)}
-.dopt.sel i{background:var(--wine-hi);border-color:var(--wine-hi)}
-.dfoot{margin-top:auto;text-align:center;font-size:12.5px;color:var(--soft)}
-.dmeter{display:flex;flex-direction:column;gap:14px}
-.drow{display:flex;flex-direction:column;gap:6px}
-.drow .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-size:15px}
-.drow .t small{font:700 12.5px var(--ui);color:var(--sand)}
-.drow .bar{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.drow .bar i{height:6px;border-radius:6px;background:var(--line)}
-.drow .bar i.on{background:var(--sand)}
-.drow p{margin:0;font-size:13.5px;line-height:1.45;color:var(--sand)}
-.drow.weak{padding:12px;margin:0 -12px;border-radius:12px;background:var(--plum);border:1px solid var(--wine-hi)}
-.drow.weak .bar i.on{background:var(--wine-hi)}
-.drow.weak .t small{color:var(--wine-hi)}
-.drow.weak p{color:#d9cfe0}
-.dbig{margin:0;font:600 34px/1.05 var(--display)}
-.dbig small{font:700 15px var(--ui);color:var(--sand)}
 .cbform{display:flex;flex-direction:column;gap:12px}
 #s-vsl .vcap,#s-v3 .vcap{bottom:calc(208px + env(safe-area-inset-bottom,0px))}
 #s-vsl.ended::after{height:56%;background:linear-gradient(to top,rgba(10,7,12,.95) 45%,rgba(10,7,12,0))}
@@ -725,23 +696,16 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   #amb{display:block;position:absolute;inset:-60px;z-index:0;background:var(--ink) center/cover no-repeat;filter:blur(42px) saturate(1.15) brightness(.42);transform:scale(1.08);opacity:0;transition:opacity .45s ease}
   #amb.on{opacity:1}
   .scene.pad{--col:640px;padding-left:max(40px,calc((100% - var(--col)) / 2));padding-right:max(40px,calc((100% - var(--col)) / 2));padding-top:32px}
-  .scene.hub,.scene.objs,.scene.guias,.scene.final,.scene.gift,.scene.diagres{--col:960px}
+  .scene.hub,.scene.objs,.scene.guias,.scene.final,.scene.gift{--col:960px}
   .scene.name .formfoot{margin-top:28px}
   /* formulários no meio da altura, com o voltar no lugar de sempre */
   .scene.name .nbody{justify-content:safe center}
-  .scene.diag > header + .stack{margin-top:auto}
-  .scene.diag > .dopts{margin-bottom:auto}
   /* botões da largura do texto, com mínimo de 280 px; em formulário e em grade, a largura toda */
   .scene.pad .btn{width:auto;min-width:280px;align-self:flex-start}
-  .scene.pad .row2 .btn,.scene.pad .exgrid .btn,.scene.pad .fpair .btn,.scene.pad form .btn,.scene.name .btn,.scene.diagres .card.mnc .btn{width:100%;min-width:0;align-self:stretch}
+  .scene.pad .row2 .btn,.scene.pad .exgrid .btn,.scene.pad .fpair .btn,.scene.pad form .btn,.scene.name .btn{width:100%;min-width:0;align-self:stretch}
   .scene.pad .copyrow .btn{width:auto;min-width:0;align-self:auto}
   .dock .btn{right:auto;min-width:280px}
   /* resultado do diagnóstico: o próximo passo numa coluna à direita, preso enquanto se rola */
-  .scene.diagres{display:grid;grid-template-columns:minmax(0,1fr) 380px;column-gap:40px;row-gap:16px;align-content:start}
-  .scene.diagres > *{grid-column:1}
-  .scene.diagres > header{grid-column:1 / -1}
-  .scene.diagres > .card.mnc{grid-column:2;grid-row:2 / span 8;align-self:start;position:sticky;top:0;margin:0}
-  .scene.diagres > .link{justify-self:center}
   .scene.round,.scene.vfull,.scene.story,.scene.hero{left:0;right:0;width:min(calc((100vh - 40px) * 9 / 16),100%);margin-inline:auto;top:20px;bottom:20px;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(246,244,242,.08)}
   h2.display{font-size:36px}
   .hub h1{font-size:46px;max-width:14em}
@@ -1007,12 +971,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
     <div class="vbottom pad">
       <div class="vlinks"><button class="link vagain" style="color:var(--paper)">Ver o vídeo de novo</button><button class="link vscript" style="color:var(--paper)" hidden>Ler o roteiro</button></div>
       <p class="vcap" aria-live="polite"></p>
-      <div class="mnccta">
-        <h3>Em qual parte a sua venda escapa?</h3>
-        <p>Ler, comandar ou fechar: descubra em 7 perguntas rápidas.</p>
-        <button class="btn btn-main" data-diag="video">Ver onde minha venda escapa <span class="arr">→</span></button>
-        <span class="price">Diagnóstico grátis · 2 minutos</span>
-      </div>
+      <div class="mnccta" id="v3-cta"></div>
       <button class="link" id="v3-skip" data-go="final" style="color:var(--paper)">Agora não</button>
     </div>
   </section>
@@ -1102,8 +1061,6 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
   </div>
 
   <!-- DIAGNÓSTICO: perguntas e resultado (montados pelo script) -->
-  <section class="scene diag pad" id="s-diag" hidden></section>
-  <section class="scene diagres pad" id="s-diagres" hidden></section>
 
   <!-- VSL do teste B: recado da Nath entre o resultado e o WhatsApp -->
   <section class="scene vfull" id="s-vsl" data-vkey="vsl" hidden>
@@ -1131,7 +1088,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
         <a class="btn btn-main" data-out="whatsapp" data-wa="vsl" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><use href="#i-wa"/></svg>Enviar no WhatsApp</a>
         <span class="price">A mensagem já vai pronta, com o seu resultado.</span>
       </div>
-      <button class="link" data-go="diagres" style="color:var(--paper)">Voltar para o meu resultado</button>
+      <button class="link" data-go="final" style="color:var(--paper)">Voltar</button>
     </div>
   </section>
 
@@ -1196,7 +1153,7 @@ const CONFIG = {
   objHighlight: '',       // link do destaque “Objeções” (instagram.com/stories/highlights/ID/); vazio = perfil
   publicUrl: 'https://smileflow.com.br/simulador-objecoes/vou-pensar',           // endereço público deste teste, para ir no texto de compartilhar
   leadWebhook: 'https://n8n.smileflow.me/webhook/simulador-objecoes', // n8n: contatos, diagnósticos e cliques (workflow “SmileFlow | Simulador de objeções”)
-  // Porta para o MNC: V3 (vídeo final universal) → 7 perguntas → resultado → WhatsApp da equipe.
+  // Porta para o MNC: V3 (vídeo final universal) → WhatsApp da equipe (fora da saúde: lista de espera).
   whatsapp: '5527997801809', // número da equipe da Nath, só dígitos com DDI e DDD, ex.: '5527999999999'
   mnc: {
     // O que é o MNC, em até 3 linhas curtas (formato, duração, para quem). Só aparece quando preenchido.
@@ -1303,10 +1260,10 @@ const AB = (() => {
 // Nome de cada evento na camada única de medição (smileflow.com.br/_sf/track.js, fonte em tracking/).
 // A camada decide o evento de cada plataforma: conversão padrão só para saude_estetica; o resto vira evento personalizado.
 const SF_EVENTS = {
-  diag_done: 'diagnostico_concluido',   // conversão principal (com WhatsApp)
+  // conversões: guia liberado, pedido de contato e clique no WhatsApp da equipe (o diagnóstico saiu em 21/out/2026)
   lead: 'guia_liberado', callback: 'pedido_contato', wa_click: 'clique_whatsapp', waitlist: 'lista_espera',
   // o meio do funil, para ver onde as pessoas param
-  diag_start: 'diagnostico_iniciado', sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
+  sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto'
 };
 function sfEvent(ev, d) {
@@ -3139,7 +3096,6 @@ function back() {
   if (!$('#bio').hidden) { closeBio(); return true; }
   track('back', { from: s });
   if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
-  if (s === 'diag' && DG.i > 0) { DG.i--; renderDiag(-1); return true; }
   const h = S.hist.pop();
   if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
   const i = FLOW.indexOf(s);
@@ -3158,7 +3114,6 @@ addEventListener('popstate', () => {
 });
 document.addEventListener('click', e => {
   if (e.target.closest('[data-back]')) { e.preventDefault(); back(); return; }
-  const dgb = e.target.closest('[data-diag]'); if (dgb) { e.preventDefault(); startDiag(dgb.dataset.diag); return; }
   if (e.target.closest('[data-flash]')) { e.preventDefault(); startSim(); return; }
   if (e.target.closest('[data-sim]')) { e.preventDefault(); startSim(); return; }
   const g = e.target.closest('[data-go]');
@@ -3186,7 +3141,7 @@ let nStep = 0;
 const nameSteps = () => S.nameMode === 'role' ? ['role']
   : ['name', 'biz', 'other', ...(S.nameMode === 'full' || S.nameMode === 'edit-role' ? ['role'] : [])];
 const editing = () => S.nameMode === 'edit' || S.nameMode === 'edit-role';
-const nameEyebrow = () => (editing() ? 'Seus dados' : S.afterName === 'diag' ? 'Antes do diagnóstico' : 'Antes de começar');
+const nameEyebrow = () => (editing() ? 'Seus dados' : 'Antes de começar');
 function setBiz(id) {
   if (S.biz !== id) S.other = '';
   S.biz = id;
@@ -3493,90 +3448,50 @@ $$('.vfull').forEach(sc => {
 /* ---------- porta para o MNC ---------- */
 const V3_KEY = 'nath_mnc_v3';
 const v3Seen = () => { if (S.v3) return true; try { return localStorage.getItem(V3_KEY) === '1'; } catch (e) { return false; } };
-/* ---------- diagnóstico: 7 perguntas, resultado e WhatsApp ---------- */
-// Nas perguntas e no resultado, quem compra é sempre "a pessoa": serve para qualquer área e não marca gênero.
-const PW = () => ({ a: 'a pessoa', A: 'A pessoa', ela: 'ela' });
-const DIAG = [
-  { k: 'ler', part: 'Ler', q: () => `${PW().A} pergunta o preço logo no começo. O que você faz?`,
-    o: () => [['Falo o valor', 0], [VOC().explica, 1], [`Pergunto antes o que ${PW().a} quer resolver`, 2]] },
-  { k: 'comandar', part: 'Comandar', q: () => VOC().qPlano,
-    o: () => [['Recomendo um caminho e explico por quê', 2], ['Mostro o mais completo e já ofereço um mais barato', 1], [`Mostro as opções e deixo ${PW().a} escolher`, 0]] },
-  { k: 'fechar', part: 'Fechar', q: () => `${PW().A} diz “vou pensar”. O que você faz?`,
-    o: () => [['Pergunto ali mesmo o que ficou em aberto', 2], ['Combino de mandar mensagem depois', 1], [`Deixo ${PW().a} pensar`, 0]] },
-  { k: 'aval', part: 'Seus números', q: () => VOC().qAval,
-    o: () => [['Até 20', 15], ['De 21 a 50', 35], ['De 51 a 100', 75], ['Mais de 100', 120]] },
-  { k: 'taxa', part: 'Seus números', q: () => VOC().qTaxa,
-    o: () => [['Até 2', 0.15], ['3 ou 4', 0.35], ['5 ou 6', 0.55], ['7 ou mais', 0.75], ['Não sei', null]] },
-  { k: 'ticket', part: 'Seus números', q: () => VOC().qTicket,
-    o: () => [['Até R$ 2 mil', 1500], ['De R$ 2 mil a R$ 5 mil', 3500], ['De R$ 5 mil a R$ 15 mil', 9000], ['Mais de R$ 15 mil', 20000]] },
-  { k: 'quando', part: 'Por último', q: () => 'Quando você quer melhorar as suas vendas?',
-    o: () => [['Agora, ainda este mês', 'agora'], ['Nos próximos 3 meses', '3 meses'], ['Ainda não sei, só estou conhecendo', 'conhecendo']] }
-];
-const PHASE = {
-  ler: { h: 'Sua venda escapa na hora de <em>ler a pessoa.</em>', t: 'ler a pessoa',
-         p: () => `Você responde antes de entender o que ${PW().a} quer resolver. Aí o preço chega sem contexto, e qualquer valor parece alto.` },
-  comandar: { h: 'Sua venda escapa na hora de <em>comandar o plano.</em>', t: 'comandar o plano',
-         p: () => `Você entende ${PW().a}, mas entrega as opções e deixa a escolha com ${PW().ela}. Sem uma recomendação clara, ${PW().ela} sai para pensar.` },
-  fechar: { h: 'Sua venda escapa na hora de <em>fechar.</em>', t: 'fechar',
-         p: () => 'Você conduz bem até o valor. Quando vem a dúvida ou o silêncio, a conversa sai da sua mão e vira mensagem depois.' },
-  consistencia: { h: 'Você já conduz <em>as 3 partes.</em>', t: 'fazer isso sempre',
-         p: () => 'O que costuma faltar nesse ponto é fazer isso sempre, em toda conversa e com toda a equipe, e não só quando dá tempo.' }
-};
-const PART_NOTE = {
-  ler: ['Você deixa o preço para depois de entender a pessoa.', 'Você explica, mas ainda responde antes de perguntar.', 'O preço chega antes de você saber o que importa.'],
-  comandar: ['Você recomenda um caminho e diz por quê.', 'Você recomenda, mas já abre espaço para o mais barato.', 'A escolha fica com a pessoa, sozinha.'],
-  fechar: ['Você descobre o que ficou em aberto, ali mesmo.', 'No “vou pensar”, você deixa para resolver por mensagem.', 'No “vou pensar”, a conversa acaba ali.']
-};
-const DG_KEY = 'nath_diag';
-const DG = { i: 0, a: {}, done: false, from: '', r: 0 };
-try { const saved = JSON.parse(localStorage.getItem(DG_KEY) || 'null'); if (saved && saved.a) { DG.a = saved.a; DG.done = true; } } catch (e) {}
-const opts = q => q.o();
-const dval = k => { const o = opts(DIAG.find(d => d.k === k)), x = DG.a[k]; return x == null || !o[x] ? null : o[x][1]; };
-const dlabel = k => { const o = opts(DIAG.find(d => d.k === k)), x = DG.a[k]; return x == null || !o[x] ? '' : o[x][0]; };
-function diagResult() {
-  const parts = ['ler', 'comandar', 'fechar'].map(k => ({ k, v: dval(k) ?? 0 }));
-  const min = Math.min(...parts.map(p => p.v));
-  const phase = min === 2 ? 'consistencia' : parts.find(p => p.v === min).k;
-  const aval = dval('aval'), taxa = dval('taxa'), ticket = dval('ticket');
-  let conta = null;
-  if (aval && taxa != null && ticket) {
-    const up = taxa >= 0.75 ? 1 : 2, trat = Math.max(1, Math.round(aval * up / 10));
-    conta = { up, trat, money: trat * ticket };
-  }
-  return { parts, phase, conta, quando: dval('quando') };
-}
-const money = v => (v >= 1000 ? `R$ ${Math.round(v / 1000).toLocaleString('pt-BR')} mil` : `R$ ${v}`);
-function diagWaText() {
-  const R = diagResult(), n = firstName();
+/* ---------- próximo passo: WhatsApp da equipe (fora da saúde: lista de espera) ---------- */
+// O diagnóstico do fim do funil saiu em 21/out/2026. Do vídeo da Nath e das telas de guia e final, a pessoa vai direto
+// para o WhatsApp da equipe, com a mensagem pronta: quem ela é e como foi a simulação.
+const DG_KEY = 'nath_diag';   // só para apagar o resultado do diagnóstico antigo que ficou salvo no navegador
+try { localStorage.removeItem(DG_KEY); } catch (e) {}
+function contactWaText() {
+  const n = firstName();
   const biz = BIZ.find(b => b.id === S.biz), role = ROLES.find(r => r.id === S.role);
   const rw = role ? (typeof role.wa === 'function' ? role.wa() : role.wa) : '';
   const out = [n ? `Oi! Meu nome é ${n}.` : 'Oi!'];
   // A mensagem usa as palavras da pessoa, do jeito que ela escreveu: "O que eu faço: vendo seguros de vida."
   const own0 = (S.other || '').trim().replace(/[.!]+$/, '');
-  const own = /^[A-Z\u00C0-\u00DA][a-z\u00E0-\u00FA]/.test(own0) ? own0.charAt(0).toLowerCase() + own0.slice(1) : own0;
+  const own = /^[A-ZÀ-Ú][a-zà-ú]/.test(own0) ? own0.charAt(0).toLowerCase() + own0.slice(1) : own0;
   if (biz) out.push(own ? `O que eu faço: ${own}.` : `Trabalho com ${biz.label.toLowerCase()}.`);
   if (rw) out.push(rw);
-  out.push(R.phase === 'consistencia'
-    ? `Fiz a simulação do ${O.phrase} da Nath, e o diagnóstico mostrou que já conduzo as 3 partes, mas quero fazer isso sempre.`
-    : `Fiz a simulação do ${O.phrase} da Nath, e o diagnóstico mostrou que a minha venda escapa na hora de ${PHASE[R.phase].t}.`);
-  if (dlabel('aval')) out.push(`Fazemos ${dlabel('aval').toLowerCase()} ${VOC().avals} por mês` + (dval('taxa') == null ? ` e ainda não medimos ${VOC().qt} fecham.` : ` e fechamos ${dlabel('taxa').toLowerCase()} de cada 10.`));
-  const q = R.quando;
-  if (q === 'agora') out.push('Quero melhorar isso ainda este mês e entender como o MNC pode me ajudar.');
-  else if (q === '3 meses') out.push('Penso em melhorar isso nos próximos 3 meses e quero entender como o MNC pode me ajudar.');
-  else if (q === 'conhecendo') out.push('Por enquanto, estou conhecendo e quero entender como o MNC pode me ajudar.');
-  else out.push('Quero entender como o MNC pode me ajudar.');
+  // O resultado da simulação desta objeção: o desta visita ou o que ficou salvo com o guia.
+  const done = S.answers.length ? { hit: computeProfile().open, max: ROUNDS.length } : S.done[O.id];
+  if (done) out.push(done.hit ? `Fiz a simulação do ${O.phrase} da Nath e descobri o motivo real em ${done.hit} de ${done.max} conversas.`
+                              : `Fiz a simulação do ${O.phrase} da Nath e não descobri o motivo real em nenhuma das ${done.max} conversas.`);
+  else out.push(`Vi a simulação do ${O.phrase} da Nath.`);
+  out.push('Quero entender como o MNC pode me ajudar.');
   return out.join(' ') + `\n\n(código ${AB}-${O.id})`;
 }
 const waLink = text => (CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}` : 'https://wa.me/') + '?text=' + encodeURIComponent(text);
 function paintMnc() {
-  if (!DG.done) return;
-  const href = waLink(diagWaText());
+  const href = waLink(contactWaText());
+  const v = $('#v3-cta');
+  if (v) v.innerHTML = !isWaitlist() ? `
+        <h3>Fale com a equipe da Nath.</h3>
+        <p>Conte como são as suas conversas de venda.</p>
+        <a class="btn btn-main" data-out="whatsapp" data-wa="video" href="#" target="_blank" rel="noopener">${ICON('wa')}Falar no WhatsApp</a>
+        <span class="price">A mensagem já vai pronta. Quem responde é uma pessoa da equipe.</span>`
+    : onList() ? `
+        <h3>Você está na lista.</h3>
+        <p>Se sair uma versão do MNC para a sua área, a equipe da Nath avisa você primeiro.</p>`
+    : `
+        <h3>O MNC é feito para clínicas.</h3>
+        <p>Entre na lista e saiba primeiro se sair uma versão para a sua área.</p>
+        <button class="btn btn-main" data-go="final">Entrar na lista <span class="arr">→</span></button>`;
   $$('a[data-wa]').forEach(a => { a.href = href; });
+  ['#s-gift', '#s-final'].forEach(id => { const root = $(id); if (root) { wireCallback(root); wireWaitlist(root); } });
 }
-function diagPayload(type, extra = {}) {
-  const R = diagResult();
+function contactPayload(type, extra = {}) {
   return { type, name: S.name || '', phone: S.phone || '', objection: O.id, ...profileFields(),
-           answers: Object.fromEntries(DIAG.map(d => [d.k, dlabel(d.k)])), phase: R.phase, conta: R.conta, quando: R.quando,
            ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id, ...extra };
 }
 // Envia um evento ao n8n. Vai como texto simples (sem pré-checagem de CORS) e por beacon,
@@ -3598,7 +3513,7 @@ function sendBody(id, body) {
 function flushOutbox() { if (CONFIG.leadWebhook) outbox().forEach(x => sendBody(x.id, x.body)); }
 function postLead(payload, id = uuid()) {
   if (!CONFIG.leadWebhook) return Promise.resolve(false);
-  const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.3.1', audience_type: 'lead',
+  const body = JSON.stringify({ event_id: id, form_id: 'simulador_objecoes_v1', form_version: '1.4.0', audience_type: 'lead',
                                 is_test: IS_TEST, page: location.pathname, attribution: sfAttribution(), ...payload });
   STORE.set(OUTBOX_KEY, [...outbox(), { id, body, at: Date.now() }]);
   return sendBody(id, body);
@@ -3608,54 +3523,6 @@ addEventListener('online', flushOutbox);
 addEventListener('pagehide', () => {
   try { outbox().forEach(x => navigator.sendBeacon && navigator.sendBeacon(CONFIG.leadWebhook, new Blob([x.body], { type: 'text/plain;charset=UTF-8' }))); } catch (e) {}
 });
-function startDiag(where) {
-  track('diag_start', { where });
-  DG.i = 0; DG.a = {}; DG.done = false; DG.from = where;
-  if (!S.biz || !S.role) { S.afterName = 'diag'; S.nameMode = S.biz ? 'role' : 'full'; go('name'); return; }
-  go('diag');
-}
-function renderDiag(dir = 1) {
-  const q = DIAG[DG.i], cur = DG.a[q.k], my = ++DG.r;   // cada tela nova invalida o avanço que ainda estava esperando
-  const sc = $('#s-diag');
-  sc.scrollTop = 0;
-  sc.innerHTML = `
-    <header class="stack" style="gap:14px">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow" style="flex:1">Diagnóstico da sua venda</p><p class="eyebrow">${DG.i + 1} de ${DIAG.length}</p></div>
-      <div class="dprog" aria-hidden="true">${DIAG.map((_, j) => `<i class="${j <= DG.i ? 'on' : ''}"></i>`).join('')}</div>
-    </header>
-    <div class="stack" style="gap:12px">
-      ${DG.i < 3 ? `<div class="dpart">${['Ler', 'Comandar', 'Fechar'].map(p => `<span class="${p === q.part ? 'on' : ''}">${p}</span>`).join('')}</div>` : `<p class="eyebrow">${q.part}</p>`}
-      <h2 class="dq">${esc(q.q())}</h2>
-      ${DG.i === 0 ? '<p class="note">Responda com o que você faz de verdade, não com o que seria o certo.</p>' : ''}
-    </div>
-    <div class="dopts" role="list">${opts(q).map((o, j) => `<button class="dopt${cur === j ? ' sel' : ''}" data-opt="${j}" role="listitem"><i></i>${esc(o[0])}</button>`).join('')}</div>
-    <p class="dfoot">Suas respostas montam o seu resultado e vão para a equipe da Nath.</p>`;
-  if (!REDUCED) $('.stack:nth-of-type(2)', sc)?.animate([{ opacity: 0, transform: `translateX(${dir * 18}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out' });
-  $('.dopts', sc).onclick = async e => {
-    const b = e.target.closest('[data-opt]'); if (!b || DG.lock === my) return;
-    DG.lock = my;
-    DG.a[q.k] = +b.dataset.opt;
-    $$('.dopt', sc).forEach(x => x.classList.toggle('sel', x === b));
-    track('diag_answer', { q: q.k, a: opts(q)[+b.dataset.opt][0] });
-    await wait(260);
-    if (DG.r !== my || S.scene !== 'diag') return;
-    const miss = DIAG.findIndex(d => DG.a[d.k] == null);
-    if (DG.i < DIAG.length - 1) { DG.i++; renderDiag(1); }
-    else if (miss >= 0) { DG.i = miss; renderDiag(-1); }
-    else finishDiag();
-  };
-}
-ENTER.diag = () => { if (DG.i >= DIAG.length) DG.i = DIAG.length - 1; renderDiag(1); };
-function finishDiag() {
-  DG.done = true;
-  try { localStorage.setItem(DG_KEY, JSON.stringify({ a: DG.a, ts: Date.now() })); } catch (e) {}
-  const R = diagResult();
-  const eid = uuid();
-  track('diag_done', { phase: R.phase, quando: R.quando, where: DG.from, event_id: eid });
-  postLead(diagPayload('diagnostico'), eid);
-  paintMnc();
-  go('diagres');
-}
 const privacyLink = () => CONFIG.privacyUrl ? `<a class="link privacy" href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener" data-out="privacidade">Como usamos os seus dados</a>` : '';
 const mncAbout = () => (CONFIG.mnc.about || []).length ? `<ul class="mncabout">${CONFIG.mnc.about.map(t => `<li>${ICON('ok')}<span>${esc(t)}</span></li>`).join('')}</ul>` : '';
 const proofBlock = () => (CONFIG.proof || []).length ? `
@@ -3664,11 +3531,11 @@ function waCard(where) {
   return `
     <div class="card mnc">
       <p class="eyebrow">O próximo passo</p>
-      <h3>Mande o seu resultado para a equipe da Nath.</h3>
-      <p class="note">A equipe olha as suas respostas, entende ${VOC().sua} e mostra o que mudar primeiro. Se o Método Negociação Clínica (MNC) fizer sentido para você agora, a equipe explica como ele funciona.</p>
+      <h3>Fale com a equipe da Nath.</h3>
+      <p class="note">Conte como são as suas conversas de venda ${VOC().na}. Se o Método Negociação Clínica (MNC) fizer sentido para você agora, a equipe explica como ele funciona.</p>
       ${mncAbout()}
-      <a class="btn btn-main" data-out="whatsapp" data-wa="${where}" href="${esc(waLink(diagWaText()))}" target="_blank" rel="noopener">${ICON('wa')}Enviar no WhatsApp</a>
-      <p class="small">A mensagem já vai pronta, com o seu resultado.</p>
+      <a class="btn btn-main" data-out="whatsapp" data-wa="${where}" href="${esc(waLink(contactWaText()))}" target="_blank" rel="noopener">${ICON('wa')}Falar no WhatsApp</a>
+      <p class="small">A mensagem já vai pronta. Quem responde é uma pessoa da equipe.</p>
       ${CONFIG.leadWebhook ? '<button class="link" id="cb-open" style="align-self:center">Prefiro que a equipe me chame</button><div id="cb-box"></div>' : ''}
     </div>`;
 }
@@ -3705,80 +3572,34 @@ function waitCard() {
       </form>
     </div>`;
 }
-function wireWaitlist() {
-  const f = $('#wl-form'); if (!f) return;
-  const ph = $('#wl-phone'); if (ph) ph.addEventListener('input', () => { ph.value = maskPhone(ph.value); });
+function wireWaitlist(root = document) {
+  const f = $('#wl-form', root); if (!f) return;
+  const ph = $('#wl-phone', root); if (ph) ph.oninput = () => { ph.value = maskPhone(ph.value); };
   f.onsubmit = e => {
     e.preventDefault();
-    const err = $('#wl-err');
+    const err = $('#wl-err', root);
     let nm = S.name, dg = S.phone ? S.phone.slice(2) : '';
     if (!S.phone) {
-      nm = $('#wl-name').value.trim(); dg = $('#wl-phone').value.replace(/\D/g, '');
+      nm = $('#wl-name', root).value.trim(); dg = $('#wl-phone', root).value.replace(/\D/g, '');
       if (nm.length < 2) { err.textContent = 'Escreva o seu nome.'; return; }
       if (!phoneOk(dg)) { err.textContent = PHONE_ERR; return; }
     }
-    if (!$('#wl-ok').checked) { err.textContent = 'Marque a caixa para a equipe poder avisar você.'; return; }
+    if (!$('#wl-ok', root).checked) { err.textContent = 'Marque a caixa para a equipe poder avisar você.'; return; }
     S.name = nm;
     S.phone = '55' + dg;
     savePerfil();
     const eid = uuid();
     track('waitlist', { event_id: eid });
-    postLead(diagPayload('lista_espera', { consent: true, consent_text: LISTA_CONSENT }), eid);
+    postLead(contactPayload('lista_espera', { consent: true, consent_text: LISTA_CONSENT }), eid);
     STORE.set(LISTA_KEY, { ts: Date.now(), area: myArea() });
-    $('#wl').outerHTML = waitCard();
+    $('#wl', root).outerHTML = waitCard();
+    paintMnc();
   };
 }
-function vslCard() {
-  return `
-    <div class="card mnc">
-      <p class="eyebrow">O próximo passo</p>
-      <h3>Antes, um recado da Nath.</h3>
-      <p class="note">Ela explica, em pouco mais de 1 minuto, o que acontece quando você manda o seu resultado para a equipe.</p>
-      <button class="btn btn-main" data-go="vsl">${ICON('sound')}Ver o recado da Nath</button>
-      <a class="link" data-out="whatsapp" data-wa="resultado-b" href="${esc(waLink(diagWaText()))}" target="_blank" rel="noopener" style="align-self:center">Ir direto para o WhatsApp</a>
-    </div>`;
-}
-ENTER.diagres = () => {
-  const R = diagResult(), n = firstName(), sc = $('#s-diagres');
-  const rows = R.parts.map((p, j) => {
-    const weak = R.phase === p.k, lvl = p.v === 2 ? 'Forte' : p.v === 1 ? 'Pode melhorar' : 'Também escapa';
-    return `<div class="drow${weak ? ' weak' : ''}">
-      <div class="t">${j + 1}. ${['Ler', 'Comandar', 'Fechar'][j]}<small>${weak ? 'Onde escapa' : lvl}</small></div>
-      <div class="bar" aria-hidden="true">${[0, 1, 2].map(x => `<i class="${x <= p.v ? 'on' : ''}"></i>`).join('')}</div>
-      <p>${esc(PART_NOTE[p.k][2 - p.v])}</p></div>`;
-  }).join('');
-  const conta = R.conta ? `
-    <div class="card">
-      <p class="eyebrow">A conta, com as suas respostas</p>
-      <p class="dbig">+${R.conta.trat} ${R.conta.trat === 1 ? VOC().um : VOC().varios} <small>por mês</small></p>
-      <p class="note">Vocês fazem ${esc(dlabel('aval').toLowerCase())} ${VOC().avals} por mês e fecham ${esc(dlabel('taxa').toLowerCase())} de cada 10. Se fechassem ${R.conta.up} a mais em cada 10, seriam cerca de ${R.conta.trat} ${R.conta.trat === 1 ? VOC().um : VOC().varios} a mais. ${VOC().medio} R$ ${dval('ticket').toLocaleString('pt-BR')}, isso dá perto de <b style="color:var(--paper)">${money(R.conta.money)} por mês.</b></p>
-      <p class="small" style="text-align:left">Conta simples, feita com o meio de cada faixa que você marcou.</p>
-    </div>` : `
-    <div class="card">
-      <p class="eyebrow">A conta</p>
-      <p class="note">${VOC().naoMede} ${isWaitlist() ? 'Esse é o primeiro número para começar a medir' : 'Esse é o primeiro ponto que a equipe vai olhar com você'}: sem ele, não dá para saber quanto está escapando.</p>
-    </div>`;
-  sc.scrollTop = 0;
-  sc.innerHTML = `
-    <header class="stack">
-      <div class="navrow">${BACK_BTN}<p class="eyebrow">Seu diagnóstico</p></div>
-      ${n ? `<p class="body" style="color:var(--wine-hi);font-weight:700;margin:0">Pronto, ${esc(n)}.</p>` : ''}
-      <h2 class="display">${PHASE[R.phase].h}</h2>
-      <p class="lede">${esc(PHASE[R.phase].p())}</p>
-    </header>
-    <div class="card"><p class="eyebrow">As 3 partes da venda</p><div class="dmeter">${rows}</div></div>
-    ${conta}
-    ${isWaitlist() ? '' : proofBlock()}
-    ${isWaitlist() ? waitCard() : AB === 'B' ? vslCard() : waCard('resultado')}
-    ${S.fromHub ? homeBtn() : `<button class="link" data-go="ig" style="align-self:center">Continuar →</button>`}
-    <button class="link" data-diag="refazer" style="align-self:center">Refazer o diagnóstico</button>`;
-  wireCallback(); wireWaitlist();
-  dock(sc, '.card.mnc .btn');
-};
-function wireCallback() {
-  const open = $('#cb-open'); if (!open) return;
+function wireCallback(root = document) {
+  const open = $('#cb-open', root); if (!open) return;
   open.onclick = () => {
-    const box = $('#cb-box'); open.remove();
+    const box = $('#cb-box', root); open.remove();
     if (S.phone) return sendCallback(box);
     box.innerHTML = `
       <form class="cbform" id="cb-form" novalidate>
@@ -3789,13 +3610,13 @@ function wireCallback() {
         <p class="err" id="cb-err" aria-live="polite"></p>
         <button class="btn btn-main" type="submit">Pedir para a equipe me chamar</button>
       </form>`;
-    const ph = $('#cb-phone'); ph.addEventListener('input', () => { ph.value = maskPhone(ph.value); });
-    $('#cb-form').onsubmit = e => {
+    const ph = $('#cb-phone', box); ph.addEventListener('input', () => { ph.value = maskPhone(ph.value); });
+    $('#cb-form', box).onsubmit = e => {
       e.preventDefault();
-      const nm = $('#cb-name').value.trim(), dg = $('#cb-phone').value.replace(/\D/g, ''), err = $('#cb-err');
+      const nm = $('#cb-name', box).value.trim(), dg = $('#cb-phone', box).value.replace(/\D/g, ''), err = $('#cb-err', box);
       if (nm.length < 2) { err.textContent = 'Escreva o seu nome.'; return; }
       if (!phoneOk(dg)) { err.textContent = PHONE_ERR; return; }
-      if (!$('#cb-ok').checked) { err.textContent = 'Marque a caixa para a equipe poder chamar você.'; return; }
+      if (!$('#cb-ok', box).checked) { err.textContent = 'Marque a caixa para a equipe poder chamar você.'; return; }
       S.name = nm;
       S.phone = '55' + dg;
       savePerfil();
@@ -3805,36 +3626,13 @@ function wireCallback() {
 }
 function sendCallback(box) {
   const eid = uuid();
-  track('callback', { phase: diagResult().phase, event_id: eid });
-  postLead(diagPayload('callback', { consent: true, consent_text: 'Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp.' }), eid);
+  track('callback', { event_id: eid });
+  postLead(contactPayload('callback', { consent: true, consent_text: 'Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp.' }), eid);
   const d = S.phone.slice(2);
   box.innerHTML = `<p class="note" style="text-align:center">Pronto. A equipe da Nath vai chamar você no WhatsApp ${esc(maskPhone(d))}.</p>`;
 }
-const mncCard = where => DG.done ? (() => {
-  const R = diagResult();
-  if (isWaitlist()) return `
-    <div class="card mnc">
-      <p class="eyebrow">Seu diagnóstico</p>
-      <h3>${PHASE[R.phase].h}</h3>
-      <p class="note">${onList() ? 'Você está na lista do MNC para a sua área. Se sair uma versão para ela, a equipe da Nath avisa você primeiro.' : 'O Método Negociação Clínica (MNC) é feito para clínicas. Entre na lista e saiba primeiro se sair uma versão para a sua área.'}</p>
-      <button class="btn btn-main" data-go="diagres">${onList() ? 'Ver o meu diagnóstico' : 'Entrar na lista'} <span class="arr">→</span></button>
-    </div>`;
-  return `
-    <div class="card mnc">
-      <p class="eyebrow">Seu diagnóstico</p>
-      <h3>${PHASE[R.phase].h}</h3>
-      <p class="note">Mande o seu resultado para a equipe da Nath. A equipe mostra o que mudar primeiro ${VOC().na}.</p>
-      <a class="btn btn-main" data-out="whatsapp" data-wa="${where}" href="${esc(waLink(diagWaText()))}" target="_blank" rel="noopener">${ICON('wa')}Enviar no WhatsApp</a>
-      <button class="link" data-go="diagres" style="align-self:center">Ver o meu diagnóstico</button>
-    </div>`;
-})() : `
-    <div class="card mnc">
-      <p class="eyebrow">Diagnóstico grátis · 2 min</p>
-      <h3>Em qual parte a sua venda escapa?</h3>
-      <p class="note">Responda 7 perguntas rápidas e veja em que parte a sua venda escapa: na hora de ler a pessoa, de comandar o plano ou de fechar.</p>
-      <button class="btn btn-main" data-diag="${where}">Ver onde minha venda escapa</button>
-      <button class="link" data-go="v3" style="align-self:center">${v3Seen() ? 'Ver o vídeo da Nath de novo' : 'Ver o vídeo da Nath'}</button>
-    </div>`;
+// O próximo passo, no guia e na tela final: WhatsApp da equipe ou, fora da saúde, a lista de espera.
+const mncCard = where => (isWaitlist() ? waitCard() : waCard(where));
 {
   const enter = ENTER.v3;
   ENTER.v3 = d => { S.v3 = true; try { localStorage.setItem(V3_KEY, '1'); } catch (e) {} $('#v3-skip').dataset.go = S.fromHub ? 'hub' : 'final'; paintMnc(); enter(d); };
@@ -4347,7 +4145,6 @@ function forgetMe() {
   [PERFIL_KEY, GUIAS_KEY, DG_KEY, V3_KEY, LISTA_KEY].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
   Object.assign(S, { name: '', biz: '', role: '', area: '', other: '', phone: '', lead: false, v3: false, answers: [], quiz: [], done: {} });
   Object.keys(PROG).forEach(k => delete PROG[k]);
-  Object.assign(DG, { i: 0, a: {}, done: false, from: '', r: 0 });
   S.afterName = ''; S.nameMode = '';
   if (S.scene === 'hub') ENTER.hub(); else go('hub', -1);
   setTimeout(() => { const h = $('#s-hub h1'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }, REDUCED ? 0 : 480);
@@ -4509,8 +4306,10 @@ document.addEventListener('click', e => {
   const a = e.target.closest('[data-out]');
   if (!a) return;
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
-  if (a.dataset.wa && DG.done) a.href = waLink(diagWaText());
-  if (a.dataset.wa) { const eid = uuid(); track('wa_click', { where: a.dataset.wa, phase: DG.done ? diagResult().phase : '', event_id: eid }); postLead(diagPayload('whatsapp', { where: a.dataset.wa }), eid); }
+  if (a.dataset.wa) {
+    a.href = waLink(contactWaText());
+    const eid = uuid(); track('wa_click', { where: a.dataset.wa, event_id: eid }); postLead(contactPayload('whatsapp', { where: a.dataset.wa }), eid);
+  }
 });
 
 /* =====================================================================
