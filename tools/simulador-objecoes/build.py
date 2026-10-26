@@ -8,7 +8,7 @@
 # 2. escreve as 7 páginas;
 # 3. abre cada página num navegador e grava no HTML a primeira tela já montada (tela inicial ou tela da objeção).
 #    Assim, robôs que não rodam JavaScript (ChatGPT, Claude, Perplexity) leem o mesmo texto que a pessoa vê.
-import os, re, json, html, threading, functools, http.server
+import os, re, json, html, threading, functools, http.server, subprocess, datetime
 from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -16,6 +16,15 @@ OUT = os.path.join(HERE, '..', '..', 'public')
 BASE = '/simulador-objecoes'
 ORIGIN = 'https://www.smileflow.com.br'
 INSTAGRAM = 'https://www.instagram.com/nathmellop/'
+TIKTOK = 'https://www.tiktok.com/@nathmellop'
+PANDA_EMBED = 'https://player-vz-d1cffb40-f54.tv.pandavideo.com.br/embed/?v='
+# Datas reais: publicação = primeiro commit do motor; atualização = o dia em que as páginas foram geradas.
+UPDATED = datetime.date.today().isoformat()
+try:
+    PUBLISHED = subprocess.run(['git', 'log', '--diff-filter=A', '--format=%cs', '--', 'engine.html'], cwd=os.path.dirname(os.path.abspath(__file__)),
+                               capture_output=True, text=True).stdout.split()[-1]
+except Exception:
+    PUBLISHED = UPDATED
 eng = open(os.path.join(HERE, 'engine.html'), encoding='utf-8').read()
 cut = eng.index('<div id="app"')
 head_src, body_src = eng[:cut], eng[cut:]
@@ -51,13 +60,16 @@ def local_pages(directory, paths, fn):
 # 1. Texto de cada objeção, direto do motor
 DATA = local_pages(HERE, ['/engine.html'], lambda pg: pg.evaluate("""() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => {
   const o = OBJECTIONS[id];
-  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: (o.rounds || []).length };
+  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: (o.rounds || []).length,
+           faq: aeoFaq(o), video: aeoVideo(o), guide: o.gift.text };
 })"""))['/engine.html']
 
 ORG = {'@type': 'Organization', '@id': f'{ORIGIN}/#organizacao', 'name': 'SmileFlow', 'url': ORIGIN}
 NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathálya Mello', 'jobTitle': 'Especialista em vendas',
         'description': 'Sócia-fundadora e diretora comercial da SmileFlow', 'worksFor': {'@id': ORG['@id']},
-        'image': f'{ORIGIN}{BASE}/assets/nath-avatar.webp', 'sameAs': [INSTAGRAM]}
+        'image': f'{ORIGIN}{BASE}/assets/nath-avatar.webp', 'sameAs': [INSTAGRAM, TIKTOK],
+        'knowsAbout': ['Vendas em clínicas de saúde e estética', 'Objeções de pacientes', 'Negociação de orçamentos',
+                       'Treinamento de equipes comerciais']}
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'
 HUB_TITLE = 'Como responder objeções de pacientes | Simulador grátis'
@@ -77,7 +89,8 @@ PAGES.append(('index', 'hub', HUB_TITLE, HUB_DESC, [ORG, NATH,
      'inLanguage': 'pt-BR', 'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']},
      'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-hub.jpg', 'breadcrumb': {'@id': HUB_URL + '#trilha'},
      'mainEntity': {'@type': 'ItemList', 'itemListElement': [
-         {'@type': 'ListItem', 'position': i + 1, 'url': f'{HUB_URL}/{d["id"]}', 'name': d['q']} for i, d in enumerate(DATA)]}},
+         {'@type': 'ListItem', 'position': i + 1, 'url': f'{HUB_URL}/{d["id"]}', 'name': d['q'], 'description': d['snippet']} for i, d in enumerate(DATA)]},
+     'datePublished': PUBLISHED, 'dateModified': UPDATED},
     crumbs(HUB_URL, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL)])]))
 for d in DATA:
     url = f'{HUB_URL}/{d["id"]}'
@@ -89,10 +102,14 @@ for d in DATA:
         {'@type': 'WebPage', '@id': url + '#pagina', 'url': url, 'name': title, 'headline': d['q'], 'description': desc,
          'inLanguage': 'pt-BR', 'isPartOf': {'@id': HUB_URL + '#pagina'}, 'author': {'@id': NATH['@id']},
          'publisher': {'@id': ORG['@id']}, 'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-{d["id"]}.jpg',
-         'breadcrumb': {'@id': url + '#trilha'}},
-        # Só a pergunta e a resposta que aparecem na tela (o "Resposta curta" da tela da objeção).
-        {'@type': 'FAQPage', '@id': url + '#perguntas', 'mainEntity': [{'@type': 'Question', 'name': d['q'],
-         'acceptedAnswer': {'@type': 'Answer', 'text': ' '.join(d['text'])}}]},
+         'breadcrumb': {'@id': url + '#trilha'}, 'datePublished': PUBLISHED, 'dateModified': UPDATED},
+        # As perguntas e respostas que aparecem na página: a da objeção ("O que a Nath diz") e uma por conversa (seção das conversas).
+        {'@type': 'FAQPage', '@id': url + '#perguntas', 'mainEntity': [{'@type': 'Question', 'name': f['q'],
+         'acceptedAnswer': {'@type': 'Answer', 'text': f['a']}} for f in d['faq']]},
+        *([{'@type': 'VideoObject', '@id': url + '#video', 'name': f'Nathálya Mello: {d["video"]["title"]}',
+            'description': d['snippet'], 'thumbnailUrl': f'{ORIGIN}{BASE}/{d["video"]["poster"]}', 'uploadDate': PUBLISHED,
+            'embedUrl': PANDA_EMBED + d['video']['id'], 'inLanguage': 'pt-BR', 'transcript': ' '.join(d['video']['script']),
+            'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']}}] if d['video'] else []),
         crumbs(url, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL), (d['phrase'].strip('“”').capitalize(), url)])]))
 BY_ID = {d['id']: d for d in DATA}
 
@@ -125,7 +142,8 @@ for fname, oid, title, desc, graph in PAGES:
     assert b2 != body or cfg_obj == 'ta-caro'; body = b2
     for a, bb in [("  site: { base: '' },", f"  site: {{ base: '{BASE}' }},"),
                   ("  start: 'obj',", f"  start: '{'hub' if oid == 'hub' else 'obj'}',"),
-                  ("  publicUrl: '',", f"  publicUrl: '{ORIGIN}{BASE}{'' if oid == 'hub' else '/' + oid}',")]:
+                  ("  publicUrl: '',", f"  publicUrl: '{ORIGIN}{BASE}{'' if oid == 'hub' else '/' + oid}',"),
+                  ("  updated: '',", f"  updated: '{UPDATED}',")]:
         body = sub1(body, a, bb)
     url = f'{ORIGIN}{BASE}' + ('' if oid == 'hub' else '/' + oid)
     og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg'   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
