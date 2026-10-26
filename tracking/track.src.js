@@ -193,7 +193,7 @@
     diagnostico_concluido: { needsWhatsapp: true, ga4: 'generate_lead', ga4p: { lead_type: 'diagnostico' }, meta: 'Lead', tiktok: 'SubmitForm', uet: 'submit_lead_form', pinterest: 'lead', kwai: 'EVENT_FORM_SUBMIT', primary: true },
     guia_liberado: { ga4: 'sign_up', ga4p: { method: 'guia' }, meta: 'CompleteRegistration', tiktok: 'CompleteRegistration', uet: 'sign_up', pinterest: 'signup', kwai: 'EVENT_COMPLETE_REGISTRATION' },
     pedido_contato: { ga4: 'pedido_contato', meta: 'Contact', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' },
-    clique_whatsapp: { ga4: 'clique_whatsapp', meta: 'Lead', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' }
+    clique_whatsapp: { ga4: 'clique_whatsapp', meta: 'Lead', metaAlways: true, tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' }
   };
   var VIDEO_EVENTS = {
     video_start: { ga4: 'video_start', meta: 'vsl_play' },
@@ -239,7 +239,9 @@
     if (IS_TEST) return eventId;
     var custom = !!conv;   // conversões fora do público viram evento personalizado; eventos de funil só vão para GA4 e Meta (personalizado)
     var metaParams = name === 'clique_whatsapp' && standard ? Object.assign({}, base, { lead_type: params.where === 'vsl' || params.where === 'funil' ? 'whatsapp_vsl' : 'whatsapp_simulador' }) : base;
-    try { if (loaded.meta && w.fbq) standard ? w.fbq('track', conv.meta, metaParams, { eventID: eventId }) : w.fbq('trackCustom', name, metaParams, { eventID: eventId }); } catch (e) {}
+    var metaStandard = standard || !!(conv && conv.metaAlways);
+    if (name === 'clique_whatsapp') metaParams = Object.assign({}, base, { lead_type: params.where === 'vsl' || params.where === 'funil' ? 'whatsapp_vsl' : 'whatsapp_simulador' });
+    try { if (loaded.meta && w.fbq) metaStandard ? w.fbq('track', conv.meta, metaParams, { eventID: eventId }) : w.fbq('trackCustom', name, metaParams, { eventID: eventId }); } catch (e) {}
     if (!custom && !standard) return eventId;
     try { if (loaded.tiktok && w.ttq) w.ttq.track(standard ? conv.tiktok : name, Object.assign({}, p, money, { content_name: name }), { event_id: eventId }); } catch (e) {}
     try { if (loaded.microsoftUet && w.uetq) w.uetq.push('event', standard ? conv.uet : name, Object.assign({ event_category: standard ? 'conversao' : 'fora_publico', event_label: name }, value != null ? { revenue_value: value, currency: CFG.currency } : {})); } catch (e) {}

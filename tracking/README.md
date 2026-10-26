@@ -48,13 +48,13 @@ Assim os anúncios não aprendem a buscar o público errado.
 | `diagnostico_concluido` com `has_whatsapp: true` | **Principal** | `generate_lead` (`lead_type=diagnostico`, `value`) | `Lead` | `SubmitForm` | label `diagnostico_concluido` | `submit_lead_form` |
 | `guia_liberado` | Secundária | `sign_up` (`method=guia`) | `CompleteRegistration` | `CompleteRegistration` | label `guia_liberado` | `sign_up` |
 | `pedido_contato` | Secundária | `pedido_contato` | `Contact` | `Contact` | label `pedido_contato` | `contact` |
-| `clique_whatsapp` | Secundária | `clique_whatsapp` | `Contact` | `Contact` | label `clique_whatsapp` | `contact` |
+| `clique_whatsapp` | Secundária | `clique_whatsapp` | `Lead` | `Contact` | label `clique_whatsapp` | `contact` |
 | `diagnostico_concluido` sem WhatsApp | Funil | `diagnostico_concluido` | personalizado | personalizado | — | personalizado |
 | `lista_espera` (fora da saúde) | Funil | `lista_espera` | personalizado | personalizado | — | personalizado |
 | Funil: `perfil_preenchido`, `simulacao_iniciada`, `resultado_simulacao`, `pedido_whatsapp_visto`, `guia_aberto`, `flashcards_iniciados`, `cartoes_concluidos`, `diagnostico_iniciado`, `lp_view`… | — | mesmo nome | personalizado | — | — | — |
 
-No simulador MNC, `clique_whatsapp` continua com esse nome no GA4 e usa `Lead` da Meta somente
-para `saude_estetica`, com `lead_type=whatsapp_vsl` ou `whatsapp_simulador`. Vídeos VSL audíveis
+No simulador MNC, `clique_whatsapp` continua com esse nome no GA4; todo clique envia `Lead` à Meta,
+com `lead_type=whatsapp_vsl` ou `whatsapp_simulador`, mesmo sem área selecionada. Vídeos VSL audíveis
 enviam `video_start`, `video_progress` (25/50/75) e `video_complete` ao GA4, e `vsl_play`,
 `vsl_25`, `vsl_50`, `vsl_75` e `vsl_100` como eventos personalizados da Meta.
 

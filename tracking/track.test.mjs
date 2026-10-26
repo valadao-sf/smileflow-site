@@ -41,14 +41,14 @@ test("diagnóstico com WhatsApp de saúde e estética vira a conversão padrão 
   assert.equal(g.calls.pintrk[0][1], "lead");
 });
 
-test("quem não é de saude_estetica nunca vira Lead/Contact padrão em plataforma nenhuma", () => {
+test("fora de saude_estetica, só o clique no WhatsApp vira Lead padrão da Meta", () => {
   for (const seg of ["fora_saude", "saude_outra", ""]) {
     const g = load({ config: ALL });
     for (const [n, extra] of [["diagnostico_concluido", { has_whatsapp: true }], ["guia_liberado", {}], ["pedido_contato", {}], ["clique_whatsapp", {}]])
       g.w.sfTrack(n, { segment_group: seg, ...extra });
     const STD = ["Lead", "Contact", "CompleteRegistration", "SubmitForm", "generate_lead", "sign_up", "submit_lead_form", "contact", "lead", "signup"];
-    assert.equal(g.calls.fbq.filter((c) => c[0] === "track").length, 0, seg);
-    assert.ok(g.calls.fbq.every((c) => c[0] === "trackCustom"));
+    assert.equal(g.calls.fbq.filter((c) => c[0] === "track" && c[1] === "Lead").length, 1, seg);
+    assert.equal(g.calls.fbq.filter((c) => c[0] === "trackCustom" && c[1] !== "PageView").length, 3, seg);
     assert.ok(!g.calls.ttq.some((c) => STD.includes(c[0])), seg);
     assert.ok(!g.calls.uetq.some((c) => STD.includes(c[1])), seg);
     assert.ok(!events(g).some((c) => STD.includes(c[1]) || c[1] === "conversion"), seg);
@@ -74,7 +74,7 @@ test("botão do funil é evento personalizado, não conversão padrão", () => {
   assert.equal(g.calls.fbq.filter((c) => c[0] === "track").length, 0);
 });
 
-test("secundárias: guia, pedido de contato e WhatsApp; o clique vira Lead só na saúde", () => {
+test("secundárias: guia, pedido de contato e WhatsApp; clique sempre é Lead na Meta", () => {
   const g = load({ config: ALL });
   g.w.sfTrack("guia_liberado", { segment_group: "saude_estetica" }, { eventId: "g" });
   g.w.sfTrack("pedido_contato", { segment_group: "saude_estetica" }, { eventId: "c" });
@@ -87,9 +87,26 @@ test("secundárias: guia, pedido de contato e WhatsApp; o clique vira Lead só n
   assert.equal(events(g, "generate_lead").length, 0, "clique não vira generate_lead");
   const outside = load({ config: ALL });
   outside.w.sfTrack("clique_whatsapp", { segment_group: "fora_saude", where: "funil" }, { eventId: "outside-wa" });
-  assert.deepEqual(outside.calls.fbq[0].slice(0, 2), ["trackCustom", "clique_whatsapp"]);
-  assert.ok(!("lead_type" in outside.calls.fbq[0][2]));
+  assert.deepEqual(outside.calls.fbq[0].slice(0, 2), ["track", "Lead"]);
+  assert.equal(outside.calls.fbq[0][2].lead_type, "whatsapp_vsl");
+  assert.equal(outside.calls.fbq[0][3].eventID, "outside-wa");
+  assert.deepEqual(outside.calls.ttq.map((c) => c[0]), ["clique_whatsapp"]);
+  assert.equal(events(outside, "conversion").length, 0);
   assert.equal(events(outside, "generate_lead").length, 0);
+});
+
+test("clique no WhatsApp envia Lead Meta com eventID em qualquer segment_group, sem padrão nas outras plataformas", () => {
+  for (const [segment_group, eventId] of [["saude_estetica", "wa-health"], ["comercio", "wa-other"], [undefined, "wa-empty"]]) {
+    const g = load({ config: ALL });
+    g.w.sfTrack("clique_whatsapp", { ...(segment_group ? { segment_group } : {}), where: "simulador" }, { eventId });
+    const leads = g.calls.fbq.filter((c) => c[0] === "track" && c[1] === "Lead");
+    assert.equal(leads.length, 1, eventId);
+    assert.equal(leads[0][3].eventID, eventId);
+    assert.equal(leads[0][2].lead_type, "whatsapp_simulador");
+    assert.equal(g.calls.ttq.filter((c) => c[0] === "Contact").length, segment_group === "saude_estetica" ? 1 : 0);
+    assert.equal(g.calls.uetq.filter((c) => c[1] === "contact").length, segment_group === "saude_estetica" ? 1 : 0);
+    assert.equal(events(g, "conversion").length, segment_group === "saude_estetica" ? 1 : 0);
+  }
 });
 
 test("?teste=1: plataformas não carregam nem recebem chamadas; vale para a sessão", () => {
