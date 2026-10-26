@@ -64,26 +64,62 @@ test("diagnóstico sem WhatsApp não é a conversão principal", () => {
   assert.equal(g.calls.fbq[0][0], "trackCustom");
 });
 
-test("secundárias: guia, pedido de contato e WhatsApp", () => {
+test("secundárias: guia, pedido de contato e WhatsApp; o clique vira Lead só na saúde", () => {
   const g = load({ config: ALL });
   g.w.sfTrack("guia_liberado", { segment_group: "saude_estetica" }, { eventId: "g" });
   g.w.sfTrack("pedido_contato", { segment_group: "saude_estetica" }, { eventId: "c" });
   g.w.sfTrack("clique_whatsapp", { segment_group: "saude_estetica" }, { eventId: "w" });
-  assert.deepEqual(g.calls.fbq.map((c) => c[1]), ["CompleteRegistration", "Contact", "Contact"]);
+  assert.deepEqual(g.calls.fbq.map((c) => c[1]), ["CompleteRegistration", "Contact", "Lead"]);
+  assert.equal(g.calls.fbq[2][2].lead_type, "whatsapp_simulador");
   assert.deepEqual(g.calls.ttq.map((c) => c[0]), ["CompleteRegistration", "Contact", "Contact"]);
   assert.deepEqual(events(g).filter((c) => c[1] !== "conversion").map((c) => c[1]), ["sign_up", "pedido_contato", "clique_whatsapp"]);
   assert.deepEqual(events(g, "conversion").map((c) => c[2].send_to), ["AW-1/LBL_GUIA", "AW-1/LBL_CB", "AW-1/LBL_WA"]);
+  assert.equal(events(g, "generate_lead").length, 0, "clique não vira generate_lead");
+  const outside = load({ config: ALL });
+  outside.w.sfTrack("clique_whatsapp", { segment_group: "fora_saude", where: "funil" }, { eventId: "outside-wa" });
+  assert.deepEqual(outside.calls.fbq[0].slice(0, 2), ["trackCustom", "clique_whatsapp"]);
+  assert.ok(!("lead_type" in outside.calls.fbq[0][2]));
+  assert.equal(events(outside, "generate_lead").length, 0);
 });
 
-test("?teste=1: GA4 com debug_mode; anúncios não disparam; vale para a sessão", () => {
+test("?teste=1: plataformas não carregam nem recebem chamadas; vale para a sessão", () => {
   const g = load({ url: "https://smileflow.com.br/simulador-objecoes/ta-caro?teste=1", config: ALL });
   assert.equal(g.w.sfTrack.isTest, true);
   g.w.sfTrack("diagnostico_concluido", { segment_group: "saude_estetica", has_whatsapp: true });
-  const ga = events(g, "generate_lead"); assert.equal(ga.length, 1); assert.equal(ga[0][2].debug_mode, true);
-  assert.ok(g.gtagCalls().some((a) => a[0] === "config" && a[2] && a[2].debug_mode === true));
+  assert.equal(g.gtagCalls().length, 0);
+  assert.equal(g.calls.scripts.length, 0);
   assert.equal(g.calls.fbq.length + g.calls.ttq.length + g.calls.uetq.length + events(g, "conversion").length, 0);
   const next = load({ url: "https://smileflow.com.br/", storage: { session: { sf_test: "1" } } });
   assert.equal(next.w.sfTrack.isTest, true);
+});
+
+test("vídeos VSL: marcos GA4 e Meta uma vez cada, sem conversões de outras plataformas", () => {
+  const g = load({ config: ALL });
+  for (const [id, name, params] of [
+    ["play", "video_start", {}], ["25", "video_progress", { video_percent: 25 }],
+    ["50", "video_progress", { video_percent: 50 }], ["75", "video_progress", { video_percent: 75 }],
+    ["100", "video_end", { video_percent: 100 }],
+  ]) {
+    const p = { objecao: "ta-caro", video_id: "754d121e-67ae-4542-b3c5-6aca5ad01298", ab: "B", segment_group: "saude_estetica", ...params };
+    g.w.sfTrack(name, p, { eventId: "v-" + id });
+    g.w.sfTrack(name, p, { eventId: "v-" + id });
+  }
+  const ga = g.gtagCalls().filter((a) => a[0] === "event");
+  assert.deepEqual(ga.map((a) => a[1]), ["video_start", "video_progress", "video_progress", "video_progress", "video_complete"]);
+  assert.deepEqual(ga.slice(1, 4).map((a) => a[2].video_percent), [25, 50, 75]);
+  assert.deepEqual(g.calls.fbq.map((a) => [a[0], a[1], a[3].eventID]), [
+    ["trackCustom", "vsl_play", "v-play"], ["trackCustom", "vsl_25", "v-25"], ["trackCustom", "vsl_50", "v-50"],
+    ["trackCustom", "vsl_75", "v-75"], ["trackCustom", "vsl_100", "v-100"],
+  ]);
+  assert.equal(g.calls.ttq.length + g.calls.uetq.length + events(g, "conversion").length, 0);
+});
+
+test("OpenAI pixel não carrega com ou sem ID enquanto o endereço não estiver definido", () => {
+  for (const pixelId of ["", "OPENAI_TEST_PIXEL"]) {
+    const g = load({ config: (c) => ({ ...ALL(c), openai: { pixelId } }) });
+    assert.ok(!g.w.sfTrack.vendors.openai);
+    assert.ok(!g.calls.scripts.some((s) => /openai/i.test(s)));
+  }
 });
 
 test("origem: primeiro e último toque, click IDs, referrer e canal", () => {
