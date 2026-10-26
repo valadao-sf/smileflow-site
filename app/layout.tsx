@@ -6,7 +6,7 @@ import { SF_TRACK_SRC, SF_TRACK_STUB } from "@/lib/tracking";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://smileflow.com.br"),
+  metadataBase: new URL("https://www.smileflow.com.br"),
   title: "SmileFlow",
   description: "Conteúdo e ferramentas para conduzir conversas de negociação clínica.",
   icons: { icon: "https://smileflow-marketing.vercel.app/favicon.ico" },

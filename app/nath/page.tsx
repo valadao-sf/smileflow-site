@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Tem uma pergunta, uma conversa que você quer que eu veja ou um caso em que queria minha opinião? Me manda.",
   alternates: {
-    canonical: "https://smileflow.com.br/nath",
+    canonical: "https://www.smileflow.com.br/nath",
   },
   robots: {
     index: false,

@@ -28,7 +28,7 @@ export default function QuandoAchamCaroPage() {
       inLanguage: "pt-BR",
       about: "Como conduzir a conversa quando uma paciente diz que o tratamento está caro",
       author: { "@type": "Person", name: "Nathálya Mello" },
-      publisher: { "@type": "Organization", name: "SmileFlow", url: "https://smileflow.com.br" },
+      publisher: { "@type": "Organization", name: "SmileFlow", url: "https://www.smileflow.com.br" },
     },
     {
       "@context": "https://schema.org",
