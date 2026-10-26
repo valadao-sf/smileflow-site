@@ -1447,44 +1447,8 @@ const firstName = () => (S.name || '').trim().split(/\s+/)[0] || '';
 const OBJECTIONS = {};
 
 // Guia em mapa (vou pensar, outra pessoa): título, 2 passos, 4 caixas com perguntas e o passo final.
-function mapGuide(cfg) {
-  return function ({ x, W, M, C, wrap, step }) {
-    let y = M;
-    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
-    y += 60;
-    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText(cfg.title[0], M, y);
-    y += 96;
-    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(cfg.title[1], M, y);
-    y += 140;
-    y = step(1, cfg.s1[0], y);
-    y = wrap(cfg.s1[1], '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
-    y = step(2, cfg.s2[0], y);
-    y = wrap(cfg.s2[1], 'italic 400 42px Inter, sans-serif', C.plum, y, 54, M + 74) + 34;
-    y = step(3, cfg.s3, y);
-    const lines = (t, font, maxW) => {
-      x.font = font; const out = []; let line = '';
-      for (const w of t.split(' ')) { const tt = line ? line + ' ' + w : w; if (x.measureText(tt).width > maxW && line) { out.push(line); line = w; } else line = tt; }
-      if (line) out.push(line); return out;
-    };
-    const L = M + 74, gap = 18, bw = (W - M - L - gap) / 2, QF = '400 29px Inter, sans-serif';
-    for (let r = 0; r < 2; r++) {
-      const cells = [0, 1].map(c => ({ lab: cfg.boxes[r * 2 + c][0], ql: lines(cfg.boxes[r * 2 + c][1], QF, bw - 40) }));
-      const bh = 28 + 30 + 14 + Math.max(...cells.map(c => c.ql.length)) * 39 + 22;
-      cells.forEach((c, k) => {
-        const bx = L + k * (bw + gap);
-        x.beginPath(); if (x.roundRect) x.roundRect(bx, y, bw, bh, 18); else x.rect(bx, y, bw, bh);
-        x.fillStyle = '#ece7ef'; x.fill();
-        x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(c.lab.toUpperCase(), bx + 20, y + 28);
-        x.font = QF; x.fillStyle = C.ink;
-        c.ql.forEach((l, j) => x.fillText(l, bx + 20, y + 28 + 30 + 14 + j * 39));
-      });
-      y += bh + gap;
-    }
-    y += 16;
-    y = step(4, cfg.s4[0], y);
-    wrap(cfg.s4[1], '400 34px Inter, sans-serif', C.ink, y, 46, M + 74);
-  };
-}
+// O conteúdo de cada guia. Quem desenha é o drawGift(), igual para todas as objeções.
+function mapGuide(cfg) { return { spec: cfg }; }
 
 /* ---------------------------------------------------------------------
    OBJEÇÃO 1 — “TÁ CARO”
@@ -1716,37 +1680,15 @@ return {
            '4. Negocie só se o motivo pedir.']
   },
   band: ['Primeiro, pergunte o que pesou.', 'Depois, negocie só se precisar.'],
-  drawGuide({ x, W, M, C, wrap, step }) {
-    let y = M;
-    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, y);
-    y += 60;
-    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.plum; x.fillText('Antes de responder', M, y);
-    y += 96;
-    x.font = '700 84px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText('um “tá caro”', M, y);
-    y += 140;
-    y = step(1, 'Não negocie ainda', y);
-    y = wrap('“Tá caro” pode querer dizer muitas coisas. Desconto ou parcela agora é um palpite.', '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
-    y = step(2, 'Pergunte o que pesou', y);
-    y = wrap('“Quando você fala que ficou caro, o que está pesando mais para você?”', 'italic 400 42px Inter, sans-serif', C.plum, y, 54, M + 74) + 34;
-    y = step(3, 'Identifique o motivo', y);
-    x.font = '600 28px Inter, sans-serif';
-    let cx = M + 74;
-    for (const chip of ['Valor total', 'Parcela', 'Momento', 'Comparação', 'Falta de motivo']) {
-      const w = x.measureText(chip).width + 40;
-      if (cx + w > W - M) { cx = M + 74; y += 70; }
-      x.strokeStyle = C.plum; x.lineWidth = 2;
-      x.beginPath(); x.roundRect ? x.roundRect(cx, y, w, 54, 27) : x.rect(cx, y, w, 54); x.stroke();
-      x.fillStyle = C.plum; x.fillText(chip, cx + 20, y + 12);
-      cx += w + 12;
-    }
-    y += 54 + 40;
-    y = step(4, 'Negocie só se precisar', y);
-    y = wrap('Desconto, parcela ou plano menor só depois de saber o motivo.', '400 34px Inter, sans-serif', C.ink, y, 46, M + 74) + 34;
-    x.font = '800 24px Inter, sans-serif'; x.fillStyle = C.soft; x.fillText('OUTRAS PERGUNTAS QUE AJUDAM', M, y); y += 46;
-    for (const q of ['O que você comparou além do preço?', 'O que pesou mais: o valor ou o momento?', 'O que fez você marcar essa consulta?']) {
-      y = wrap('— ' + q, '400 32px Inter, sans-serif', C.ink, y, 44) + 4;
-    }
-  },
+  drawGuide: mapGuide({
+    title: ['Antes de responder', 'um “tá caro”'],
+    s1: ['Não negocie ainda', '“Tá caro” pode querer dizer muitas coisas. Desconto ou parcela agora é um palpite.'],
+    s2: ['Pergunte o que pesou', '“Quando você fala que ficou caro, o que está pesando mais para você?”'],
+    s3: 'Identifique o motivo',
+    chips: ['Valor total', 'Parcela', 'Momento', 'Comparação', 'Falta de motivo'],
+    s4: ['Negocie só se precisar', 'Desconto, parcela ou plano menor só depois de saber o motivo.'],
+    more: ['Outras perguntas que ajudam', ['O que você comparou além do preço?', 'O que pesou mais: o valor ou o momento?', 'O que fez você marcar essa consulta?']]
+  }),
   ig: { label: 'Tá caro', photo: 'assets/vp-nath-2.webp' },
   inviteBlurb: 'Quatro pessoas dizem que o tratamento está caro e você escolhe o que responder.'
 };
@@ -4076,44 +4018,107 @@ async function fontsReady() {
       .map(f => document.fonts.load(f)));
   } catch (e) {}
 }
+// O guia (1080×1920, formato de story): cabeçalho escuro com o rosto, o nome e o @ da Nath e o título;
+// os 4 passos num cartão claro (encolhe sozinho se o texto for maior); faixa com a regra e o convite para seguir.
+const loadImg = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
 async function drawGift() {
   await fontsReady();
-  const W = 1080, H = 1920, M = 96, cv = document.createElement('canvas');
+  const W = 1080, H = 1920, M = 84, cv = document.createElement('canvas');
   cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
-  const C = { paper: '#f6f4f2', plum: '#2a1f3d', wine: '#7a4a5a', ink: '#1e1e24', soft: '#6b5f82' };
-  x.fillStyle = C.paper; x.fillRect(0, 0, W, H);
+  const C = { paper: '#f6f4f2', plum: '#2a1f3d', ink: '#1e1e24', wine: '#7a4a5a', pink: '#d6a3b2', soft: '#6b5f82', tint: '#ece5f0', night: '#120d17' };
+  const G = O.drawGuide.spec, face = await loadImg('assets/nath-avatar.webp');
+  const F = (w, px, it) => `${it ? 'italic ' : ''}${w} ${px}px Inter, sans-serif`;
+  const rr = (c, X, Y, w, h, r) => { c.beginPath(); if (c.roundRect) c.roundRect(X, Y, w, h, r); else c.rect(X, Y, w, h); };
+  const lines = (c, t, font, maxW) => { c.font = font; const out = []; let l = '';
+    for (const w of String(t).split(' ')) { const tt = l ? l + ' ' + w : w; if (c.measureText(tt).width > maxW && l) { out.push(l); l = w; } else l = tt; }
+    if (l) out.push(l); return out; };
+  const fit = (c, t, w, px, min, maxW) => { let f = px; do { c.font = F(w, f); f -= 2; } while (c.measureText(t).width > maxW && f > min); return f + 2; };
+  const igGlyph = (c, X, Y, s, col) => { c.save(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = s * .1;
+    rr(c, X, Y, s, s, s * .3); c.stroke(); c.beginPath(); c.arc(X + s / 2, Y + s / 2, s * .23, 0, Math.PI * 2); c.stroke();
+    c.beginPath(); c.arc(X + s * .76, Y + s * .24, s * .06, 0, Math.PI * 2); c.fill(); c.restore(); };
+  const avatar = (c, X, Y, r) => { c.save(); c.beginPath(); c.arc(X + r, Y + r, r + 6, 0, Math.PI * 2); c.fillStyle = C.pink; c.fill();
+    c.beginPath(); c.arc(X + r, Y + r, r, 0, Math.PI * 2); c.clip();
+    if (face) { const k = Math.max(2 * r / face.width, 2 * r / face.height); c.drawImage(face, X + r - face.width * k / 2, Y + r - face.height * k / 2, face.width * k, face.height * k); }
+    else { c.fillStyle = C.wine; c.fillRect(X, Y, 2 * r, 2 * r); }
+    c.restore(); };
   x.textBaseline = 'top';
-  const wrap = (text, font, color, y, lh, left = M) => {
-    x.font = font; x.fillStyle = color;
-    const maxW = W - left - M; let line = '';
-    for (const w of text.split(' ')) {
-      const t = line ? line + ' ' + w : w;
-      if (x.measureText(t).width > maxW && line) { x.fillText(line, left, y); y += lh; line = w; } else line = t;
+
+  // ---- fundo e cabeçalho
+  x.fillStyle = C.night; x.fillRect(0, 0, W, H);
+  const HEAD = 600;
+  const gr = x.createLinearGradient(0, 0, W, HEAD); gr.addColorStop(0, '#3a2a4f'); gr.addColorStop(1, C.night);
+  x.fillStyle = gr; x.fillRect(0, 0, W, HEAD);
+  x.fillStyle = 'rgba(214,163,178,.10)'; x.beginPath(); x.arc(W - 40, 40, 300, 0, Math.PI * 2); x.fill();
+  avatar(x, M, 72, 62);
+  x.font = F(800, 38); x.fillStyle = C.paper; x.fillText('Nathálya Mello', M + 150, 86);
+  igGlyph(x, M + 150, 140, 34, C.pink);
+  x.font = F(600, 32); x.fillStyle = C.pink; x.fillText(CONFIG.igHandle, M + 196, 140);
+  x.font = F(800, 23); x.fillStyle = C.pink; x.fillText('GUIA RÁPIDO · MÉTODO NEGOCIAÇÃO CLÍNICA', M, 270);
+  const tf = Math.min(fit(x, G.title[0], 800, 92, 60, W - 2 * M), fit(x, G.title[1], 800, 92, 60, W - 2 * M));
+  x.font = F(800, tf); x.fillStyle = C.paper; x.fillText(G.title[0], M, 316);
+  x.fillStyle = C.pink; x.fillText(G.title[1], M, 316 + tf * 1.12);
+
+  // ---- passos num cartão claro; se não couber, a letra diminui (a largura fica)
+  const BAND = 370, top = 316 + tf * 2.24 + 44, room = H - BAND - top - 36, CW = W - 64;
+  const draft = document.createElement('canvas'); draft.width = CW; draft.height = 2600;
+  const d = draft.getContext('2d'); d.textBaseline = 'top';
+  const body = z => {
+    d.clearRect(0, 0, CW, 2600);
+    const n = v => Math.round(v * z), P = n(60), L = P + n(84), R = CW - P;
+    let y = P;
+    const step = (num, title) => {
+      d.fillStyle = C.wine; d.beginPath(); d.arc(P + n(28), y + n(28), n(28), 0, Math.PI * 2); d.fill();
+      d.font = F(800, n(28)); d.fillStyle = C.paper; d.textAlign = 'center'; d.fillText(String(num), P + n(28), y + n(13)); d.textAlign = 'left';
+      d.font = F(800, n(29)); d.fillStyle = C.plum; d.fillText(String(title).toUpperCase(), L, y + n(13)); y += n(70);
+    };
+    const text = (t, font, col, lh) => { lines(d, t, font, R - L).forEach(l => { d.font = font; d.fillStyle = col; d.fillText(l, L, y); y += lh; }); };
+    step(1, G.s1[0]); text(G.s1[1], F(400, n(34)), C.ink, n(46)); y += n(34);
+    step(2, G.s2[0]);
+    { const qf = F(600, n(40), 1), ql = lines(d, G.s2[1], qf, R - L - n(56)), bh = ql.length * n(54) + n(50);
+      rr(d, L, y, R - L, bh, n(22)); d.fillStyle = C.tint; d.fill(); d.fillStyle = C.wine; d.fillRect(L, y + n(18), n(8), bh - n(36));
+      ql.forEach((l, j) => { d.font = qf; d.fillStyle = C.plum; d.fillText(l, L + n(36), y + n(25) + j * n(54)); }); y += bh + n(34); }
+    step(3, G.s3);
+    if (G.boxes) {
+      const gap = n(16), bw = (R - L - gap) / 2, QF = F(400, n(29));
+      for (let r = 0; r < 2; r++) {
+        const cells = [0, 1].map(c => ({ lab: G.boxes[r * 2 + c][0], ql: lines(d, G.boxes[r * 2 + c][1], QF, bw - n(40)) }));
+        const bh = n(70) + Math.max(...cells.map(c => c.ql.length)) * n(39) + n(20);
+        cells.forEach((c, k) => { const bx = L + k * (bw + gap);
+          rr(d, bx, y, bw, bh, n(18)); d.fillStyle = C.tint; d.fill();
+          d.font = F(800, n(23)); d.fillStyle = C.wine; d.fillText(c.lab.toUpperCase(), bx + n(20), y + n(24));
+          d.font = QF; d.fillStyle = C.ink; c.ql.forEach((l, j) => d.fillText(l, bx + n(20), y + n(64) + j * n(39))); });
+        y += bh + gap;
+      }
+      y += n(18);
+    } else if (G.chips) {
+      let cx = L;
+      for (const chip of G.chips) { d.font = F(600, n(30)); const w = d.measureText(chip).width + n(44);
+        if (cx + w > R) { cx = L; y += n(68); }
+        rr(d, cx, y, w, n(56), n(28)); d.fillStyle = C.tint; d.fill(); d.font = F(600, n(30)); d.fillStyle = C.plum; d.fillText(chip, cx + n(22), y + n(12)); cx += w + n(12); }
+      y += n(56) + n(38);
     }
-    if (line) { x.fillText(line, left, y); y += lh; }
-    return y;
+    step(4, G.s4[0]); text(G.s4[1], F(400, n(34)), C.ink, n(46));
+    if (G.more) { y += n(32); d.font = F(800, n(24)); d.fillStyle = C.soft; d.fillText(G.more[0].toUpperCase(), L, y); y += n(42);
+      G.more[1].forEach(q => text('— ' + q, F(400, n(31)), C.ink, n(43))); }
+    return y + P - n(12);
   };
-  const step = (n, title, y) => {
-    x.fillStyle = C.plum; x.beginPath(); x.arc(M + 26, y + 26, 26, 0, Math.PI * 2); x.fill();
-    x.font = '800 26px Inter, sans-serif'; x.fillStyle = C.paper; x.textAlign = 'center'; x.fillText(String(n), M + 26, y + 12); x.textAlign = 'left';
-    x.font = '800 30px Inter, sans-serif'; x.fillStyle = C.wine; x.fillText(title.toUpperCase(), M + 74, y + 10);
-    return y + 66;
-  };
-  O.drawGuide({ x, W, H, M, C, wrap, step });
-  const bandH = 220, bandY = H - M - 64 - bandH;
-  x.fillStyle = C.plum; x.fillRect(0, bandY, W, bandH);
-  const bandLine = (t, style, color, yy) => {
-    let f = 54;
-    do { x.font = `${style} ${f}px Inter, sans-serif`; f -= 2; } while (x.measureText(t).width > W - 2 * M && f > 36);
-    x.fillStyle = color; x.fillText(t, M, yy);
-  };
-  bandLine(O.band[0], '600', C.paper, bandY + 44);
-  bandLine(O.band[1], '600', '#d6a3b2', bandY + 118);
-  x.font = '600 30px Inter, sans-serif'; x.fillStyle = C.ink;
-  let sig = `Nathálya Mello · Especialista em vendas · ${CONFIG.igHandle}`, fs = 30;
-  do { x.font = `600 ${fs}px Inter, sans-serif`; fs--; } while (x.measureText(sig).width > W - 2 * M && fs > 20);
-  x.fillStyle = C.ink; x.fillText(sig, M, H - M - 30);
+  let z = 1, ch = body(z);
+  while (ch > room && z > 0.62) { z -= 0.02; ch = body(z); }
+  const cy = top + Math.max(0, (room - ch) / 2);
+  x.save(); x.shadowColor = 'rgba(0,0,0,.45)'; x.shadowBlur = 50; x.shadowOffsetY = 16;
+  rr(x, 32, cy, CW, ch, 36); x.fillStyle = C.paper; x.fill(); x.restore();
+  x.drawImage(draft, 0, 0, CW, ch, 32, cy, CW, ch);
+
+  // ---- faixa: a regra e o convite para seguir
+  const bY = H - BAND; x.fillStyle = C.night; x.fillRect(0, bY, W, BAND);
+  x.fillStyle = C.paper; x.font = F(700, fit(x, O.band[0], 700, 54, 36, W - 2 * M)); x.fillText(O.band[0], M, bY + 34);
+  x.fillStyle = C.pink; x.font = F(700, fit(x, O.band[1], 700, 54, 36, W - 2 * M)); x.fillText(O.band[1], M, bY + 104);
+  x.fillStyle = 'rgba(246,244,242,.14)'; x.fillRect(M, bY + 196, W - 2 * M, 2);
+  avatar(x, M, bY + 226, 46);
+  x.font = F(600, 28); x.fillStyle = 'rgba(246,244,242,.72)'; x.fillText('Mais conversas como estas no meu Instagram', M + 120, bY + 228);
+  igGlyph(x, M + 120, bY + 276, 34, C.paper);
+  x.font = F(800, 36); x.fillStyle = C.paper; x.fillText('Siga ' + CONFIG.igHandle, M + 166, bY + 274);
   return cv.toDataURL('image/png');
 }
 
