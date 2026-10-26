@@ -61,7 +61,7 @@ def local_pages(directory, paths, fn):
 DATA = local_pages(HERE, ['/engine.html'], lambda pg: pg.evaluate("""() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => {
   const o = OBJECTIONS[id];
   return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: (o.rounds || []).length,
-           faq: aeoFaq(o), video: aeoVideo(o), guide: o.gift.text };
+           faq: aeoFaq(o), geo: o.geo || null, video: aeoVideo(o), guide: o.gift.text };
 })"""))['/engine.html']
 
 ORG = {'@type': 'Organization', '@id': f'{ORIGIN}/#organizacao', 'name': 'SmileFlow', 'url': ORIGIN}
@@ -105,13 +105,26 @@ for d in DATA:
          'breadcrumb': {'@id': url + '#trilha'}, 'datePublished': PUBLISHED, 'dateModified': UPDATED},
         # As perguntas e respostas que aparecem na página: a da objeção ("O que a Nath diz") e uma por conversa (seção das conversas).
         {'@type': 'FAQPage', '@id': url + '#perguntas', 'mainEntity': [{'@type': 'Question', 'name': f['q'],
-         'acceptedAnswer': {'@type': 'Answer', 'text': f['a']}} for f in d['faq']]},
+         'acceptedAnswer': {'@type': 'Answer', 'text': f['a']}} for f in d['faq'] + (d.get('geo') or {}).get('faq', [])]},
         *([{'@type': 'VideoObject', '@id': url + '#video', 'name': f'Nathálya Mello: {d["video"]["title"]}',
             'description': d['snippet'], 'thumbnailUrl': f'{ORIGIN}{BASE}/{d["video"]["poster"]}', 'uploadDate': PUBLISHED,
             'embedUrl': PANDA_EMBED + d['video']['id'], 'inLanguage': 'pt-BR', 'transcript': ' '.join(d['video']['script']),
             'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']}}] if d['video'] else []),
         crumbs(url, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL), (d['phrase'].strip('“”').capitalize(), url)])]))
 BY_ID = {d['id']: d for d in DATA}
+for d in DATA:
+    url = f'{HUB_URL}/{d["id"]}'
+    faqpages = [node for page in PAGES if page[1] == d['id'] for node in page[4] if node.get('@type') == 'FAQPage']
+    assert len(faqpages) == 1, (d['id'], len(faqpages))
+    questions = [item['name'] for item in faqpages[0]['mainEntity']]
+    assert len(questions) == len(set(questions)), (d['id'], 'duplicate FAQ question')
+    if d.get('geo'):
+        geo_questions = [item['q'] for item in d['geo']['faq']]
+        assert len(geo_questions) == 4 and all(question in questions for question in geo_questions), (url, geo_questions)
+
+# Texto para assistentes de IA: reutiliza somente a descrição do hub e respostas do motor.
+llms = ['# Simulador de objeções da Nathálya Mello (SmileFlow)', '', HUB_DESC, '', '## Objeções', '']
+llms.extend(f'- [{d["q"]}]({HUB_URL}/{d["id"]}): {d["geo"]["answer"]}' for d in DATA if d.get('geo'))
 
 # Medição: a camada única de smileflow.com.br (tracking/ → public/_sf/track.js). Ela carrega GA4, Meta e as outras
 # plataformas só no domínio e só com ID. O stub guarda as chamadas feitas antes do script chegar.
@@ -135,6 +148,8 @@ def sub1(s, a, b):
 # 2. As 7 páginas
 dest = os.path.join(OUT, 'simulador-objecoes')
 os.makedirs(dest, exist_ok=True)
+with open(os.path.join(dest, 'llms.txt'), 'w', encoding='utf-8') as f:
+    f.write('\n'.join(llms) + '\n')
 for fname, oid, title, desc, graph in PAGES:
     body = body_src
     cfg_obj = 'ta-caro' if oid == 'hub' else oid
