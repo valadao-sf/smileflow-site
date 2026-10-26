@@ -811,6 +811,33 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 }
 
 /* ---------- tela inicial: igual para todos ---------- */
+/* hero: as pessoas das simulações passando no fundo do título; o card da Nath vem depois (à direita no computador) */
+.hhead{display:flex;flex-direction:column;gap:16px}
+.hhero{position:relative;isolation:isolate;padding-block:14px 18px}
+.hhero .castm{position:absolute;top:0;bottom:0;left:-20px;right:-20px;height:auto;z-index:-2;opacity:.62}
+.hhero::after{content:"";position:absolute;top:0;bottom:0;left:-20px;right:-20px;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 30%,transparent),color-mix(in srgb,var(--ink) 62%,transparent) 45%,color-mix(in srgb,var(--ink) 80%,transparent) 75%,var(--ink))}
+.hhero .castm .col:nth-child(n+5){display:none}
+.exbonus{margin:-2px 0 0;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-size:13px;line-height:1.35;color:var(--sand);text-align:center}
+.exbonus span{color:var(--paper)}
+.exbonus svg{width:13px;height:13px;color:var(--wine-hi)}
+.exbonus button,.exbonus a{font:inherit;color:var(--paper);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.sayq{margin:0;padding-left:12px;border-left:2px solid var(--wine-hi);font:italic 500 15.5px/1.4 var(--ui);color:var(--paper)}
+.aeo{display:flex;flex-direction:column;gap:12px;max-width:44rem}
+.aeo h2{margin:8px 0 0;font:700 21px/1.2 var(--display);letter-spacing:-.015em;text-wrap:balance}
+.aeosteps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.45;color:var(--sand)}
+.aeoqs{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.aeoqs details{border-bottom:1px solid var(--line);padding:2px 0}
+.aeoqs summary{list-style:none;cursor:pointer;padding:12px 28px 12px 0;position:relative;font:600 15.5px/1.35 var(--display);color:var(--paper)}
+.aeoqs summary::-webkit-details-marker{display:none}
+.aeoqs summary::after{content:"+";position:absolute;right:2px;top:10px;font:400 20px/1 var(--ui);color:var(--wine-hi)}
+.aeoqs details[open] summary::after{content:"–"}
+.aeoqs details > :not(summary){margin:0 0 10px;font-size:14.5px;line-height:1.45;color:var(--sand)}
+.aeoqs ul{padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.aeoqs b,.aeoqs q{color:var(--paper)}
+.aeolab{font:800 10.5px/1.2 var(--ui)!important;letter-spacing:.12em;text-transform:uppercase;color:var(--wine-hi)!important;margin-bottom:4px!important}
+.aeosay{font:italic 500 15.5px/1.4 var(--ui)!important;color:var(--paper)!important}
+.aeoby{margin:0;font-size:12.5px;color:var(--sand)}
 /* elenco: as pessoas de todas as simulações, subindo devagar */
 .castm{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;height:168px;overflow:hidden;
   -webkit-mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent)}
@@ -841,7 +868,14 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 @media (min-width:900px){
   .hubtop div{flex:0 1 auto}
   .hubtop .follow{margin-left:12px}
-  .hhead{display:grid;grid-template-columns:minmax(0,1fr) 400px;column-gap:56px;align-items:center}
+  .hhead{display:grid;grid-template-columns:minmax(0,1fr) 400px;column-gap:48px;align-items:center}
+  .hhead.solo{grid-template-columns:minmax(0,1fr)}
+  .hhero{min-height:420px;display:flex;align-items:center;padding-block:24px}
+  .hhero .castm{left:0;right:0;opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);mask-composite:intersect}
+  .hhero::after{left:0;right:0;background:linear-gradient(90deg,var(--ink) 0%,color-mix(in srgb,var(--ink) 82%,transparent) 45%,color-mix(in srgb,var(--ink) 35%,transparent))}
+  .hhero .castm{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .hhero .castm .col:nth-child(n+5){display:block}
+  .hhero .stack{max-width:520px}
   .castm{gap:10px;height:440px}
   .castm .track{gap:10px}
   .castm img{border-radius:14px}
@@ -1169,7 +1203,8 @@ const CONFIG = {
   // Prova social: só aparece quando houver depoimentos reais. Ex.: { quote: '…', name: 'Ana', detail: 'Recepção, clínica odontológica' }
   proof: [],
   objHighlight: '',       // link do destaque “Objeções” (instagram.com/stories/highlights/ID/); vazio = perfil
-  publicUrl: '',           // endereço público deste teste, para ir no texto de compartilhar
+  publicUrl: '',
+  updated: '',             // data da última publicação (AAAA-MM-DD); o build preenche           // endereço público deste teste, para ir no texto de compartilhar
   leadWebhook: 'https://n8n.smileflow.me/webhook/simulador-objecoes', // n8n: contatos, diagnósticos e cliques (workflow “SmileFlow | Simulador de objeções”)
   // Porta para o MNC: V3 (vídeo final universal) → WhatsApp da equipe (fora da saúde: lista de espera).
   whatsapp: '5527999442815', // WhatsApp que recebe as mensagens (por enquanto, o da Nathálya; antes, o da equipe: 5527997801809). Só dígitos com DDI e DDD
@@ -4161,28 +4196,31 @@ function hubCard(id) {
            : `<span class="pr">Simulação · 3 min <span aria-hidden="true">→</span></span>`}
   </div>`;
 }
-// Todas as pessoas das simulações, em 3 colunas (4 no celular) que sobem devagar. Cada coluna repete a lista para o laço não ter emenda.
+// Todas as pessoas das simulações, em 6 colunas (4 no celular) que sobem devagar no fundo do título. Cada coluna repete a lista para o laço não ter emenda.
 const castAll = () => [...new Set(OBJ_LIST.flatMap(({ id }) => (OBJECTIONS[id] ? OBJECTIONS[id].rounds : []).map(r => r.patient.thumb)))];
 function castMarquee() {
-  const all = castAll(), cols = [[], [], [], []];
-  all.forEach((t, i) => cols[i % 4].push(t));
-  const speed = ['64s', '78s', '70s', '84s'], off = ['0s', '-22s', '-41s', '-12s'];
+  const all = castAll(), cols = [[], [], [], [], [], []];
+  all.forEach((t, i) => cols[i % 6].push(t));
+  const speed = ['64s', '78s', '70s', '84s', '74s', '68s'], off = ['0s', '-22s', '-41s', '-12s', '-33s', '-6s'];
   return `<div class="castm" aria-hidden="true">${cols.map((c, j) => `<div class="col"><div class="track" style="--d:${speed[j]};--o:${off[j]}">${[...c, ...c].map(t => `<img src="assets/${t}.webp" alt="" decoding="async">`).join('')}</div></div>`).join('')}</div>`;
 }
 ENTER.hub = () => {
   S.fromHub = true;
   const n = firstName();
   const sc = $('#s-hub');
+  const fn = isWaitlist() ? '' : fnCard('hub');
   sc.innerHTML = `
     ${nathRow()}
-    <header class="stack hhead">
-      <div class="stack">
-      <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-      <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
-      <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>
-      ${isWaitlist() ? '' : fnCard('hub')}
+    <header class="hhead${fn ? '' : ' solo'}">
+      <div class="hhero">
+        ${castMarquee()}
+        <div class="stack">
+          <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
+          <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
+          <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>
+        </div>
       </div>
-      ${castMarquee()}
+      ${fn}
     </header>
     <div class="stack" style="gap:14px">
       <div class="hsub"><h2 class="display" style="font-size:24px">${n ? `<button class="nameedit" data-editname aria-label="${esc(n)}: editar os seus dados">${esc(n)}</button>, qual frase mais trava você?` : 'Qual frase mais trava você?'}</h2>
@@ -4210,6 +4248,10 @@ function forgetMe() {
   if (S.scene === 'hub') ENTER.hub(); else go('hub', -1);
   setTimeout(() => { const h = $('#s-hub h1'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }, REDUCED ? 0 : 480);
 }
+// O guia é bônus: uma linha discreta abaixo do botão, que não disputa a atenção com a simulação.
+const exBonus = id => progOf(id).g1
+  ? `<p class="exbonus">${ICON('ok')}Seu guia: <button data-view="assets/guia1-${id}.webp">abrir</button> · <a data-dl="${id}" href="assets/guia1-${id}.jpg" download="guia-${id}-nathalya-mello.jpg">baixar</a></p>`
+  : `<p class="exbonus">Bônus no fim: o guia <span>${esc(guideTitle(id))}</span></p>`;
 const exGuide = id => {
   const on = progOf(id).g1;
   const tile = `<button class="exguide${on ? ' on' : ''}" ${on ? `data-view="assets/guia1-${id}.webp"` : `data-prev="${id}:g1"`}><span class="th"><img src="assets/guia1-${id}-sm.webp" alt=""></span>
@@ -4241,6 +4283,7 @@ ENTER.obj = () => {
     <div class="stack" style="gap:10px">
       <h1><small>${esc(askLead())}</small> ${esc(ph)}${/\?”$/.test(ph) ? '' : '?'}</h1>
       <p class="lede">${esc(O.answer)} Treine isso em 3 minutos com ${ROUNDS.length} ${esc(CLIS())} e veja onde a sua resposta trava a venda.</p>
+      <p class="sayq">“${esc(sayOf(O))}”</p>
     </div>
     <div class="exgrid one">
     <div class="ex first">
@@ -4250,11 +4293,12 @@ ENTER.obj = () => {
         <h2>Atenda ${ROUNDS.length} ${esc(CLIS())}</h2>
         <p>Cada pessoa tem um motivo. Você responde e a Nath explica.</p>
       </div>
-      ${exGuide(id)}
       <button class="btn btn-main" data-sim>${p.g1 ? 'Fazer a simulação de novo' : 'Começar a simulação'} <span class="arr">→</span></button>
+      ${exBonus(id)}
     </div>
     </div>
     ${guideText(O)}
+    ${aeoBlock(O)}
     ${otherObjs(O)}`;
   sc.scrollTop = 0;
 };
@@ -4270,6 +4314,48 @@ const guideText = o => `
         <p class="more">Mais conversas como estas nos destaques “Objeções” do meu Instagram. <a data-out="instagram-destaque" href="${esc(objHighlight())}" target="_blank" rel="noopener">Ver os destaques →</a></p>
       </div></div>
     </section>`;
+/* O conteúdo da simulação em texto: o passo a passo do guia, as conversas com a resposta que funciona, o que trava,
+   como aparece em cada área e o roteiro do vídeo. Fecha em <details> (não estraga a simulação) e vai no HTML
+   montado pelo build, para quem lê a página sem rodar o JavaScript (Google, ChatGPT, Claude, Perplexity). */
+const AREA_NAME = { odonto: 'Odontologia', estetica: 'Estética', fono: 'Fonoaudiologia' };
+const lineOf = r => r.line || ((r.ctx && (r.ctx.odonto || Object.values(r.ctx)[0])) || {}).line || '';
+const okOf = r => r.options.find(x => x.ok) || r.options[0];
+const sayOf = o => { const m = (o.gift.text || []).join(' ').match(/Pergunte: “([^”]+)”/); return m ? m[1] : okOf(o.rounds[0]).t; };
+const quoteQ = t => { const x = String(t).trim(); return /\?$/.test(x) ? `“${x}”` : `“${x.replace(/[.!…]+$/, '')}”?`; };
+const lc1 = t => String(t).charAt(0).toLowerCase() + String(t).slice(1);
+// Perguntas e respostas da página (as mesmas do FAQ nos dados estruturados): a pergunta da objeção e uma por conversa.
+const aeoFaq = o => [{ q: askQ(o), a: o.rule.text.join(' ') }].concat(o.rounds.map(r => ({
+  q: `O que responder quando o paciente diz ${quoteQ(lineOf(r))}`,
+  a: `Responda: “${okOf(r).t}” No caso ${r.patient.she === 'ele' ? 'do' : 'da'} ${r.patient.name}, na simulação: ${lc1(r.card.title)}. ${r.card.desc}`
+})));
+const aeoVideo = o => { const v = o.videos && o.videos.v2; return v && v.fallback ? { id: v.id, poster: v.poster, title: String(v.title).replace(/^.*?—\s*/, ''), script: v.fallback.script.map(t => t.replace(/\*\*/g, '')) } : null; };
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const dataBR = d => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ''); return m ? `${+m[3]} de ${MESES[+m[2] - 1]} de ${m[1]}` : ''; };
+// Antes do perfil, "paciente" (como na pergunta de busca); depois, o vocabulário da área da pessoa.
+const vocabP = t => (S.biz ? vocab(t) : t);
+const aeoBlock = o => {
+  const faq = aeoFaq(o), v = aeoVideo(o), upd = dataBR(CONFIG.updated);
+  const steps = (o.gift.text || []).filter(t => /^\d+\.\s/.test(t)).map(t => t.replace(/^\d+\.\s*/, ''));
+  return `
+    <section class="aeo" aria-labelledby="aeo-h">
+      <h2 id="aeo-h">${esc(String((o.gift.text || [''])[0]).replace(/:\s*$/, ''))}</h2>
+      <ol class="aeosteps">${steps.map(t => `<li>${esc(vocabP(t))}</li>`).join('')}</ol>
+      <h2>As ${o.rounds.length} conversas da simulação</h2>
+      <div class="aeoqs">${o.rounds.map((r, i) => {
+        const ok = okOf(r);
+        return `<details><summary>${esc(vocabP(faq[i + 1].q))}</summary>
+          <p class="aeolab">Responda</p><p class="aeosay">“${esc(ok.t)}”</p>
+          <p><b>${esc(r.patient.name)}, ${r.patient.age} anos:</b> ${esc(lc1(r.card.title))}. ${esc(r.card.desc)}</p>
+          <p class="aeolab">O que trava a conversa</p>
+          <ul>${r.options.filter(x => !x.ok).map(x => `<li><q>${esc(x.t)}</q> ${esc(String(x.nath[0]).replace(/\{n\}/g, r.patient.name))}</li>`).join('')}</ul>
+          <p class="aeolab">Em cada área</p>
+          <ul>${Object.entries(r.ctx || {}).map(([k, c]) => `<li><b>${AREA_NAME[k] || k}</b> · ${esc(c.proc)}, ${esc(c.price)}: <q>${esc(c.reveal)}</q></li>`).join('')}</ul>
+        </details>`; }).join('')}
+        ${v ? `<details><summary>Roteiro do vídeo da Nath: ${esc(v.title)}</summary>${v.script.map(t => `<p>${esc(t)}</p>`).join('')}</details>` : ''}
+      </div>
+      <p class="aeoby">Por Nathálya Mello${upd ? ` · Atualizado em ${upd}` : ''}</p>
+    </section>`;
+};
 const otherObjs = o => `
     <nav class="others" aria-label="Outras objeções"><p class="eyebrow">Treine outra objeção</p>
       <div class="hgrid">${OBJ_LIST.filter(x => x.id !== o.id && OBJECTIONS[x.id]).map(x => hubCard(x.id)).join('')}</div></nav>`;
