@@ -234,6 +234,51 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .mnccta p{margin:0 0 6px;font:italic 400 17px/1.3 var(--display);color:var(--wine-hi)}
 .mnccta .price{font:600 12.5px/1.4 var(--ui);color:var(--sand)}
 .card.mnc{border-color:rgba(214,163,178,.55);background:linear-gradient(180deg,var(--stage-hi),var(--stage))}
+/* ---------- FUNIL DO VSL: chamada, 5 telas e o vídeo da Nath; o WhatsApp aparece no fim do vídeo ---------- */
+.porta.fnc{gap:0;padding:0;overflow:hidden}
+.porta.fnc h3{font-size:25px;line-height:1.12;text-wrap:balance}
+.fnc .fphb{display:block;width:100%;aspect-ratio:3/2;padding:0;border:0;background:var(--plum);cursor:pointer}
+.fnc .fphb img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.fnc .fbd{display:flex;flex-direction:column;gap:14px;padding:16px 18px 18px}
+/* celular baixo (até 740 px de altura): foto ao lado do título, para o botão caber na primeira tela */
+@media (max-width:899px) and (max-height:740px){
+  .porta.fnc{display:grid;grid-template-columns:96px minmax(0,1fr)}
+  .fnc .fphb{aspect-ratio:auto;height:100%;min-height:110px}
+  .fnc .fphb img{object-position:50% 22%}
+  .fnc .fbd{gap:12px;padding:14px 14px 14px 16px}
+  .porta.fnc h3{font-size:21px}
+}
+.fnph{display:block;width:100%;aspect-ratio:4/3;max-height:34vh;object-fit:cover;object-position:50% 26%;border-radius:18px;background:var(--plum)}
+/* no computador, no guia liberado: a chamada logo abaixo do título, sem esticar ao lado da imagem do guia */
+@media (min-width:900px){
+  .scene.gift:has(> .gtop .fnc){grid-template-rows:auto auto auto minmax(0,1fr)}
+  .scene.gift:has(> .gtop .fnc) > .gimg{grid-row:2 / span 3}
+  .scene.gift .gtop .fnc{align-self:start}
+  .porta.fnc{display:grid;grid-template-columns:minmax(0,1fr) 200px}
+  .fnc .fphb{grid-column:2;grid-row:1;aspect-ratio:auto;height:100%;min-height:150px}
+  .fnc .fbd{grid-column:1;grid-row:1;justify-content:center;padding:22px 24px}
+}
+.fnrev{gap:14px}
+.fnrev .lede{font-size:18px;line-height:1.45;color:var(--paper)}
+#s-vfn .mnccta{opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility 0s linear .45s}
+#s-vfn.cta .mnccta{opacity:1;visibility:visible;transform:none;transition:opacity .45s var(--ease),transform .45s var(--ease)}
+/* o VSL é deitado (16:9): no celular, um recorte 4:5 com a Nath e a legenda inteiras, entre o topo e o botão;
+   no computador, o vídeo inteiro em 16:9. Nada rola e o botão fica sempre na tela. */
+#s-vfn{--vt:calc(env(safe-area-inset-top,0px) + 70px);--vb:calc(env(safe-area-inset-bottom,0px) + 158px);background:var(--ink)}
+#s-vfn::before,#s-vfn::after{display:none}
+#s-vfn .vbg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#s-vfn .vbg::before{content:"";position:absolute;inset:-40px;background:var(--ink) url("/simulador-objecoes/assets/nath-vsl.webp") center 30%/cover no-repeat;filter:blur(30px) brightness(.38)}
+#s-vfn .vbox{position:absolute;left:0;right:0;top:var(--vt);bottom:var(--vb);display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;pointer-events:none}
+#s-vfn .vbox video{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:4/5;max-height:100%;object-fit:cover;object-position:50% 40%}
+#s-vfn .vbox .vphoto{inset:0}
+#s-vfn .vcap{bottom:calc(var(--vb) + 12px)}
+#s-vfn .vtop{padding-block:calc(env(safe-area-inset-top,0px) + 12px) 0}
+#s-vfn .vbottom{min-height:var(--vb);box-sizing:border-box;justify-content:flex-end}
+@media (min-width:900px){
+  #s-vfn{--vt:70px;--vb:150px;--w:min(960px,calc(100vw - 64px),calc((100vh - 48px - 220px) * 16 / 9));width:var(--w);height:calc(var(--w) * 9 / 16 + 220px);top:0;bottom:0;margin-block:auto}
+  #s-vfn .vbox video{aspect-ratio:16/9;object-position:50% 50%}
+  #s-vfn .mnccta{max-width:420px}
+}
 /* ---------- TELA INICIAL (hub) E MEUS GUIAS ---------- */
 .hub,.guias{gap:26px;padding-block:18px 28px}
 .hubtop{display:flex;align-items:center;gap:10px}
@@ -763,16 +808,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .nameedit{font:inherit;color:var(--wine-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:5px;position:relative}
 .nameedit::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:max(100%,44px);transform:translateY(-50%)}
 .nameedit:focus-visible{outline:2px solid var(--wine-hi);outline-offset:3px;border-radius:4px}
-/* além das objeções: o mesmo cartão para todo mundo, que leva ao vídeo da Nath */
-.vban{position:relative;flex:none;display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;padding:14px;border-radius:20px;border:1px solid rgba(214,163,178,.55);background:linear-gradient(180deg,var(--stage-hi),var(--stage));overflow:hidden}
-.vban .ph{position:relative;grid-row:1;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--plum);border:0;padding:0;cursor:pointer}
-.vban .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}
-.vban .ph small{position:absolute;left:6px;bottom:6px;padding:2px 6px;border-radius:5px;background:rgba(18,13,23,.85);color:var(--paper);font:700 11px/1.3 var(--ui)}
-.vban .tx{display:flex;flex-direction:column;gap:6px;min-width:0}
-.vban .tx .eyebrow{color:var(--wine-hi);margin:0}
-.vban h3{margin:0;font:600 20px/1.15 var(--display);letter-spacing:-.015em;text-wrap:balance}
-.vban .tx p{margin:0;font-size:14px;line-height:1.45;color:var(--sand)}
-.vban > .btn{grid-column:1 / -1}
 /* simulação: a Nath como 5ª foto */
 .exfaces:has(.nathf){grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
 .exfaces figure.nathf{outline:1.5px solid var(--wine-hi);outline-offset:-1.5px}
@@ -800,14 +835,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .castm img{border-radius:14px}
   .ocardx.big{min-height:150px;padding:20px}
   .ocardx.big q{font-size:30px;letter-spacing:-.022em}
-  .vban{grid-template-columns:minmax(0,1fr) 240px;padding:0;gap:0;min-height:300px}
-  .vban .tx{grid-column:1;grid-row:1;padding:32px 36px;gap:10px;align-self:center}
-  .vban h3{font-size:30px}
-  .vban .tx p{font-size:15.5px}
-  .vban .ph{grid-column:2;grid-row:1 / span 2;aspect-ratio:auto;height:100%;border-radius:0}
-  .vban .ph small{left:auto;right:12px;bottom:auto;top:12px;font-size:12px;padding:3px 7px}
-  .vban > .btn{grid-column:1;grid-row:2;align-self:start;margin:0 36px 32px;width:auto;min-width:260px;justify-self:start}
-  .scene.hub .vban{grid-template-rows:auto auto}
   .exgrid.one .exfaces:has(.nathf){gap:6px}
   .exfaces figure.nathf figcaption span{display:inline}
   .obchat .nath{gap:16px}
@@ -1092,6 +1119,41 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
     </div>
   </section>
 
+  <!-- FUNIL DO VSL: 5 telas, uma pergunta por vez (montadas pelo script) -->
+  <section class="scene name pad" id="s-fn" hidden></section>
+
+  <!-- VSL DO FUNIL: o vídeo da Nath em tela cheia; o WhatsApp aparece no fim -->
+  <section class="scene vfull" id="s-vfn" data-vkey="vfn" hidden>
+    <div class="vbg" aria-hidden="true"></div>
+    <div class="vbox">
+      <video playsinline webkit-playsinline muted preload="metadata"></video>
+      <img class="vphoto" alt="" hidden>
+      <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
+      <div class="vplayicon" aria-hidden="true"></div>
+    </div>
+    <button class="vtap" aria-label="Ligar o som do vídeo"></button>
+    <div class="vtop pad">
+      <div class="vprog"><i></i></div>
+      <div class="vhead">
+        <button class="backbtn" data-back aria-label="Voltar para a tela anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-back"/></svg></button>
+        <button class="nathchip" data-bio aria-label="Sobre a Nathálya Mello">
+          <img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt="">
+          <span><b>Nathálya Mello</b><small>@nathmellop</small></span>
+        </button>
+        <button class="vmute" aria-label="Ligar ou desligar o som"><svg class="off" viewBox="0 0 24 24"><use href="#i-muted"/></svg><svg class="on" viewBox="0 0 24 24"><use href="#i-sound"/></svg></button>
+      </div>
+      <p class="vsay"></p>
+    </div>
+    <div class="vbottom pad">
+      <div class="vlinks"><button class="link vagain" style="color:var(--paper)">Ver o vídeo de novo</button><button class="link vscript" style="color:var(--paper)" hidden>Ler o roteiro</button></div>
+      <p class="vcap" aria-live="polite"></p>
+      <div class="mnccta">
+        <a class="btn btn-main" data-out="whatsapp" data-wa="funil" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><use href="#i-wa"/></svg>Falar com a equipe da Nath</a>
+        <span class="price">A mensagem já vai pronta.</span>
+      </div>
+    </div>
+  </section>
+
   <!-- INSTAGRAM -->
   <section class="scene story" id="s-ig" hidden>
     <img class="bg" src="/simulador-objecoes/assets/nath-3.webp" alt="">
@@ -1154,7 +1216,7 @@ const CONFIG = {
   publicUrl: 'https://smileflow.com.br/simulador-objecoes/vou-pensar',           // endereço público deste teste, para ir no texto de compartilhar
   leadWebhook: 'https://n8n.smileflow.me/webhook/simulador-objecoes', // n8n: contatos, diagnósticos e cliques (workflow “SmileFlow | Simulador de objeções”)
   // Porta para o MNC: V3 (vídeo final universal) → WhatsApp da equipe (fora da saúde: lista de espera).
-  whatsapp: '5527997801809', // número da equipe da Nath, só dígitos com DDI e DDD, ex.: '5527999999999'
+  whatsapp: '5527999442815', // WhatsApp que recebe as mensagens (por enquanto, o da Nathálya; antes, o da equipe: 5527997801809). Só dígitos com DDI e DDD
   mnc: {
     // O que é o MNC, em até 3 linhas curtas (formato, duração, para quem). Só aparece quando preenchido.
     about: [],
@@ -1204,6 +1266,10 @@ const CONFIG = {
       ]
     }
   },
+  // Funil do VSL (chamada na tela inicial e no fim da simulação → 5 perguntas → vídeo da Nath → WhatsApp).
+  // video: { id, mp4, poster, title } do VSL no Panda. Enquanto estiver vazio, toca o recado V3 (mnc.video).
+  // ctaAt: segundo do vídeo em que o botão do WhatsApp aparece (0 = já na entrada da tela). Vazio = quando faltar 15% do vídeo. Sempre aparece no fim.
+  funil: { video: { id: '754d121e-67ae-4542-b3c5-6aca5ad01298', poster: '/simulador-objecoes/assets/nath-vsl.webp', title: 'VSL da Nath — Diagnóstico de Fechamento (5:20)' }, ctaAt: 0 },
   ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = desligado, todo mundo no A; 50 = metade). ?ab=B força o B. Desligado em 21/out/2026 até ter tráfego.
   site: { base: '/simulador-objecoes' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
@@ -1264,7 +1330,9 @@ const SF_EVENTS = {
   lead: 'guia_liberado', callback: 'pedido_contato', wa_click: 'clique_whatsapp', waitlist: 'lista_espera',
   // o meio do funil, para ver onde as pessoas param
   sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
-  profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto'
+  profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
+  // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
+  fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', fn_cta: 'funil_botao_whatsapp'
 };
 function sfEvent(ev, d) {
   const name = SF_EVENTS[ev]; if (!name || !window.sfTrack) return;
@@ -3096,6 +3164,7 @@ function back() {
   if (!$('#bio').hidden) { closeBio(); return true; }
   track('back', { from: s });
   if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
+  if (s === 'fn' && fnStep > 0) { fnStep--; renderFn(-1); return true; }
   const h = S.hist.pop();
   if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
   const i = FLOW.indexOf(s);
@@ -3370,8 +3439,8 @@ function useScript(sc, key, m) {
 }
 // Prepara as duas telas de vídeo para a objeção atual: vídeo de verdade ou foto com o roteiro.
 function setupMedia(key) {
-  const sc = $('#s-' + key), v = $('video', sc), img = $('.vphoto', sc), m = key === 'v3' ? CONFIG.mnc.video : key === 'vsl' ? CONFIG.mnc.vsl : O.videos[key];
-  const tag = key === 'v3' || key === 'vsl' ? key : O.id;
+  const sc = $('#s-' + key), v = $('video', sc), img = $('.vphoto', sc), m = key === 'v3' ? CONFIG.mnc.video : key === 'vsl' ? CONFIG.mnc.vsl : key === 'vfn' ? fnVideo() : O.videos[key];
+  const tag = key === 'v3' || key === 'vsl' || key === 'vfn' ? key : O.id;
   if (sc.dataset.obj === tag) return;
   sc.dataset.obj = tag;
   const script = !!m.script;
@@ -3381,6 +3450,7 @@ function setupMedia(key) {
     ? `<span>Antes de começar</span>${script ? 'Veja o que a Nath diz' : 'Assista ao vídeo da Nath'}. Depois, responda com o que você falaria de verdade.`
     : key === 'v2' ? `<span>Intervalo entre atendimentos</span>A Nath explica o que fazer quando alguém ${O.ask} ${phEnd(O.phrase)}`
     : key === 'v3' ? '<span>Recado da Nath</span>O que a pessoa fala no final é só uma parte da conversa.'
+    : key === 'vfn' ? ''
     : '<span>Um recado da Nath</span>Antes de mandar o seu resultado, veja o que acontece na conversa com a equipe.';
   $('.vtap', sc).setAttribute('aria-label', script ? 'Pausar ou continuar' : 'Ligar o som do vídeo');
   $('.vagain', sc).textContent = script ? 'Ver de novo' : 'Ver o vídeo de novo';
@@ -3453,7 +3523,7 @@ const v3Seen = () => { if (S.v3) return true; try { return localStorage.getItem(
 // para o WhatsApp da equipe, com a mensagem pronta: quem ela é e como foi a simulação.
 const DG_KEY = 'nath_diag';   // só para apagar o resultado do diagnóstico antigo que ficou salvo no navegador
 try { localStorage.removeItem(DG_KEY); } catch (e) {}
-function contactWaText() {
+function whoLines() {
   const n = firstName();
   const biz = BIZ.find(b => b.id === S.biz), role = ROLES.find(r => r.id === S.role);
   const rw = role ? (typeof role.wa === 'function' ? role.wa() : role.wa) : '';
@@ -3463,6 +3533,10 @@ function contactWaText() {
   const own = /^[A-ZÀ-Ú][a-zà-ú]/.test(own0) ? own0.charAt(0).toLowerCase() + own0.slice(1) : own0;
   if (biz) out.push(own ? `O que eu faço: ${own}.` : `Trabalho com ${biz.label.toLowerCase()}.`);
   if (rw) out.push(rw);
+  return out;
+}
+function contactWaText() {
+  const out = whoLines();
   // O resultado da simulação desta objeção: o desta visita ou o que ficou salvo com o guia.
   const done = S.answers.length ? { hit: computeProfile().open, max: ROUNDS.length } : S.done[O.id];
   if (done) out.push(done.hit ? `Fiz a simulação do ${O.phrase} da Nath e descobri o motivo real em ${done.hit} de ${done.max} conversas.`
@@ -3845,7 +3919,7 @@ function maskPhone(v) {
 let giftURL = '';
 const giftInfo = () => O.gift;
 // Depois do guia vem a porta do MNC (vídeo e diagnóstico). O Instagram fica para depois da oferta, para ninguém sair do funil antes dela.
-const afterGift = () => (v3Seen() ? 'final' : 'v3');
+const afterGift = () => 'final';
 // Links antigos com ?ex=flash (os cartões de treino saíram) vão para a simulação.
 function startFlash() { startSim(); }
 function startSim() { track('sim_start'); S.fromHub = false; S.answers = []; S.afterName = 'v1'; S.nameMode = ''; go(S.biz ? 'v1' : 'name'); }
@@ -3932,13 +4006,7 @@ function renderGiftOpen() {
   track('guide_open', { kind: 'g1' });
   const okLine = P1.open ? `${ICON('ok')}Você descobriu o motivo real em ${P1.open} de ${ROUNDS.length} conversas`
                          : `Em nenhuma das ${ROUNDS.length} conversas você descobriu o motivo real. O guia mostra as perguntas que ajudam a descobrir o motivo.`;
-  const porta = !v3Seen() ? `
-    <div class="porta">
-      <div class="who"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0" style="flex:1;min-width:0"><b>Nathálya Mello</b><span>Especialista em vendas</span></div><a class="follow" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener">${esc(CONFIG.igHandle)}</a></div>
-      <h3>Agora você sabe o que fazer <em>quando ouvir um ${esc(O.phrase)}.</em></h3>
-      <p>Veja, em 1 minuto e meio, por que saber responder uma objeção ainda não fecha a venda.</p>
-      <button class="btn btn-main" data-go="v3"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg>Ver o vídeo da Nath</button>
-    </div>` : mncCard('guia');
+  const chamada = showFnCard() ? fnCard('guia') : '';
   $('#s-gift').innerHTML = `
     <div class="gtop">
     <div class="navrow">${BACK_BTN}<p class="eyebrow">Simulação concluída</p></div>
@@ -3946,6 +4014,7 @@ function renderGiftOpen() {
       <p class="okline">${okLine}</p>
       <h2 class="display" style="font-size:30px">Você liberou <em>o guia.</em></h2>
     </div>
+    ${chamada}
     </div>
     <img class="gimg" id="giftimg" src="${giftURL}" alt="${esc(G.alt)}">
     <div class="gmain">
@@ -3953,8 +4022,8 @@ function renderGiftOpen() {
       <a class="btn btn-ghost" id="gift-wa" target="_blank" rel="noopener" aria-label="Enviar o guia no WhatsApp">${ICON('wa')}Enviar o guia</a>
       <a class="btn btn-ghost" id="gift-dl" download="guia-${O.id}-nathalya-mello.png">${ICON('down')}Baixar o guia</a>
     </div>
-    ${v3Seen() ? nathRow(' nathrow') : ''}
-    ${porta}
+    ${nathRow(' nathrow')}
+    ${chamada ? '' : mncCard('guia')}
     ${missingCard()}
     </div>`;
   $('#s-gift').scrollTop = 0;
@@ -4064,7 +4133,7 @@ const nathRow = (extra = '') => `
     </div>`;
 function openBio() {
   const b = $('#bio'); if (!b.hidden) return;
-  if (LEAVE[S.scene] && (S.scene === 'v1' || S.scene === 'v2' || S.scene === 'v3' || S.scene === 'vsl')) LEAVE[S.scene]();
+  if (LEAVE[S.scene] && (S.scene === 'v1' || S.scene === 'v2' || S.scene === 'v3' || S.scene === 'vsl' || S.scene === 'vfn')) LEAVE[S.scene]();
   $('#bio-ig').href = CONFIG.instagram; $('#bio-tt').href = CONFIG.tiktok;
   b.hidden = false; $('#bio-close').focus(); track('bio_open', { scene: S.scene });
 }
@@ -4101,13 +4170,6 @@ function castMarquee() {
   const speed = ['64s', '78s', '70s', '84s'], off = ['0s', '-22s', '-41s', '-12s'];
   return `<div class="castm" aria-hidden="true">${cols.map((c, j) => `<div class="col"><div class="track" style="--d:${speed[j]};--o:${off[j]}">${[...c, ...c].map(t => `<img src="/simulador-objecoes/assets/${t}.webp" alt="" decoding="async">`).join('')}</div></div>`).join('')}</div>`;
 }
-// Além das objeções: sempre o mesmo cartão, depois das objeções, que leva ao vídeo da Nath (o funil do MNC).
-const videoBanner = () => `
-    <div class="vban">
-      <button class="ph" data-go="v3" aria-label="Ver o vídeo da Nath, 1 minuto e 38 segundos"><img src="/simulador-objecoes/assets/nath-4.webp" alt="" loading="lazy" decoding="async"><small>1:38</small></button>
-      <div class="tx"><p class="eyebrow">Além das objeções</p><h3>Negociar não é ter resposta pronta para cada frase.</h3><p>Em 1 minuto e meio, a Nath explica o que faz a diferença.</p></div>
-      <button class="btn btn-main" data-go="v3"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg>Ver o vídeo da Nath</button>
-    </div>`;
 ENTER.hub = () => {
   S.fromHub = true;
   const n = firstName();
@@ -4119,6 +4181,7 @@ ENTER.hub = () => {
       <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
       <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
       <p class="lede">Escolha a frase que você mais escuta e faça uma simulação de 3 minutos, com 4 conversas. No fim, você libera um guia de uma página para usar antes da próxima conversa.</p>
+      ${isWaitlist() ? '' : fnCard('hub')}
       </div>
       ${castMarquee()}
     </header>
@@ -4126,8 +4189,7 @@ ENTER.hub = () => {
       <div class="hsub"><h2 class="display" style="font-size:24px">${n ? `<button class="nameedit" data-editname aria-label="${esc(n)}: editar os seus dados">${esc(n)}</button>, qual frase mais trava você?` : 'Qual frase mais trava você?'}</h2>
       <p class="note">Cada objeção libera um guia para baixar.</p></div>
       <div class="hgrid">${OBJ_LIST.map(o => hubCard(o.id)).join('')}</div>
-    </div>
-    ${videoBanner()}`;
+    </div>`;
   sc.scrollTop = 0;
   $$('#s-hub [data-obj]').forEach(bt => { bt.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); startObjection(bt.dataset.obj, bt.dataset.ex || ''); }; });
   const ed = $('#s-hub [data-editname]'); if (ed) ed.onclick = editProfile;
@@ -4142,8 +4204,8 @@ function editProfile() {
 // para quem usa um aparelho emprestado. Ficam só o grupo do teste A/B, a origem da visita e a fila de envios pendentes.
 function forgetMe() {
   track('profile_reset', { scene: S.scene });
-  [PERFIL_KEY, GUIAS_KEY, DG_KEY, V3_KEY, LISTA_KEY].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
-  Object.assign(S, { name: '', biz: '', role: '', area: '', other: '', phone: '', lead: false, v3: false, answers: [], quiz: [], done: {} });
+  [PERFIL_KEY, GUIAS_KEY, DG_KEY, V3_KEY, LISTA_KEY, FN_KEY].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
+  Object.assign(S, { name: '', biz: '', role: '', area: '', other: '', phone: '', lead: false, v3: false, answers: [], quiz: [], done: {}, fnAns: {} });
   Object.keys(PROG).forEach(k => delete PROG[k]);
   S.afterName = ''; S.nameMode = '';
   if (S.scene === 'hub') ENTER.hub(); else go('hub', -1);
@@ -4265,7 +4327,7 @@ ENTER.final = () => {
     </header>
 
     <div class="fpair">
-${mncCard('final')}
+${showFnCard() ? fnCard('final') : mncCard('final')}
     <div class="card">
       <h3>Quem da sua equipe acerta mais?</h3>
       <p class="note">${S.answers.length ? (P.open ? `${P.open} de ${ROUNDS.length} ${CLIS()} ${P.open === 1 ? 'contou' : 'contaram'} o motivo real para você.` : `Nenhum dos ${ROUNDS.length} ${CLIS()} contou o motivo real para você.`) : ''} Mande a simulação para alguém da equipe e compare.</p>
@@ -4298,6 +4360,138 @@ ${missingCard()}
   paintMnc();
 };
 
+
+/* =====================================================================
+   FUNIL DO VSL — chamada → 5 telas → vídeo da Nath → WhatsApp
+   ===================================================================== */
+// A chamada fica na tela inicial, no guia liberado e na tela final. As respostas vão só na mensagem do WhatsApp,
+// que a própria pessoa envia (a resposta aberta não vai para o n8n). No aparelho fica só a marca de que ela chegou ao vídeo.
+const FN_KEY = 'nath_funil';
+// [id, opção na tela, como entra na mensagem do WhatsApp]
+const FN = [
+  { k: 'faz', q: 'Quando o paciente diz “tá caro”, o que você faz?', o: [
+    ['trava', 'Travo e não sei responder', 'eu travo e não sei responder'], ['explica', 'Tento explicar demais', 'eu tento explicar demais'],
+    ['desconto', 'Ofereço desconto', 'eu ofereço desconto'], ['deixa', 'Deixo o paciente ir embora', 'eu deixo o paciente ir embora']] },
+  { k: 'origem', q: 'Quem te ensinou a vender?', o: [
+    ['ninguem', 'Ninguém', 'Ninguém me ensinou a vender.'], ['sozinha', 'Aprendi sozinha', 'Aprendi a vender sozinha.'],
+    ['pouco', 'Tive pouco treinamento', 'Tive pouco treinamento em vendas.'], ['estudei', 'Já estudei, mas ainda tenho dificuldade', 'Já estudei vendas, mas ainda tenho dificuldade.']] },
+  { k: 'incomoda', q: 'O que mais te incomoda na hora de vender?', o: [
+    ['insistente', 'Parecer insistente', 'parecer insistente'], ['cobrar', 'Cobrar pelo meu trabalho', 'cobrar pelo meu trabalho'],
+    ['nao', 'Ouvir um “não”', 'ouvir um “não”'], ['dizer', 'Não saber o que dizer', 'não saber o que dizer']] },
+  { k: 'desejo', q: 'Se você vendesse com mais segurança, o que mudaria na sua vida?', open: 'Eu conseguiria...' },
+  { k: 'revela' }
+];
+const fnVideo = () => (CONFIG.funil && CONFIG.funil.video) || CONFIG.mnc.video;
+const fnSeen = () => STORE.get(FN_KEY, {});
+const fnDone = () => !!fnSeen().video;
+// a chamada aparece até a pessoa chegar ao vídeo; depois, no guia e na tela final, volta o cartão do WhatsApp
+const showFnCard = () => !isWaitlist() && !fnDone();
+const fnCard = where => `
+    <div class="porta fnc">
+      <button class="fphb" data-fn="${where}" tabindex="-1" aria-hidden="true"><img src="/simulador-objecoes/assets/nath-vsl-card.webp" alt="" decoding="async"></button>
+      <div class="fbd">
+        <h3>Descubra por que você trava <em>na hora do preço.</em></h3>
+        <button class="btn btn-main" data-fn="${where}">Quero descobrir <span class="arr">→</span></button>
+      </div>
+    </div>`;
+let fnStep = 0, fnTok = 0;
+function startFunnel(where) {
+  S.fnAns = S.fnAns || {}; S.fnFrom = where; fnStep = 0;
+  track('fn_start', { where });
+  if (S.scene === 'fn') renderFn(1); else go('fn');
+}
+function renderFn(dir = 1) {
+  const st = FN[fnStep], A = S.fnAns || (S.fnAns = {}), my = ++fnTok;
+  let body;
+  if (st.o) body = `
+    <header class="stack"><h2 class="display">${esc(st.q)}</h2></header>
+    <div class="choices">${st.o.map(([id, label]) => `<button class="choice" data-fa="${id}" aria-pressed="${A[st.k] === id}">${esc(label)}<span class="arr">→</span></button>`).join('')}</div>`;
+  else if (st.open) body = `
+    <header class="stack"><h2 class="display">${esc(st.q)}</h2></header>
+    <div class="field"><label class="sr" for="fn-open">${esc(st.q)}</label>
+      <textarea class="input area" id="fn-open" rows="3" maxlength="200" autocapitalize="sentences" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="${esc(st.open)}">${esc(A.desejo || '')}</textarea></div>
+    <div class="formfoot"><button class="btn btn-main" id="fn-go">Continuar <span class="arr">→</span></button></div>`;
+  else body = `
+    <header class="stack fnrev"><img class="fnph" src="/simulador-objecoes/assets/nath-vsl.webp" alt="Nathálya Mello"><h2 class="display">Você aprendeu a cuidar. <em>Mas quem te ensinou a vender?</em></h2>
+      <p class="lede">Vender não é pressionar o paciente.</p>
+      <p class="lede">É uma habilidade. E você pode aprender.</p></header>
+    <div class="formfoot"><button class="btn btn-main" id="fn-go">Quero aprender a vender <span class="arr">→</span></button></div>`;
+  $('#s-fn').innerHTML = `
+    <div class="ntop">
+      ${BACK_BTN}
+      <div class="nbar" aria-label="Tela ${fnStep + 1} de ${FN.length}">${FN.map((_, j) => `<span class="${j <= fnStep ? 'on' : ''}"></span>`).join('')}</div>
+    </div>
+    <div class="nbody ${dir < 0 ? 'back' : ''}">${body}</div>`;
+  $('#s-fn').scrollTop = 0;
+  const go1 = $('#fn-go');
+  if (st.open) {
+    const inp = $('#fn-open');
+    inp.oninput = () => { A.desejo = inp.value; };
+    inp.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go1.click(); } };
+    go1.onclick = () => { A.desejo = (A.desejo || '').replace(/\s+/g, ' ').trim(); track('fn_answer', { phase: 'desejo:' + (A.desejo ? 'escreveu' : 'vazio') }); fnNext(); };
+    if (matchMedia('(pointer:fine)').matches) setTimeout(() => inp.isConnected && inp.focus(), 350);
+  } else if (!st.o) {
+    go1.onclick = () => {
+      const first = !fnDone();
+      STORE.set(FN_KEY, { ...fnSeen(), video: Date.now() });
+      track('fn_video', { where: S.fnFrom || '', first });
+      go('vfn');
+    };
+  }
+  $$('#s-fn .choice').forEach(b => b.onclick = () => {
+    if (fnTok !== my) return;
+    $$('#s-fn .choice').forEach(c => c.setAttribute('aria-pressed', c === b));
+    A[st.k] = b.dataset.fa;
+    track('fn_answer', { phase: st.k + ':' + b.dataset.fa });
+    fnTok++;   // trava os outros toques nesta pergunta
+    const tok = fnTok;
+    setTimeout(() => { if (fnTok === tok && S.scene === 'fn') fnNext(); }, REDUCED ? 0 : 240);
+  });
+}
+function fnNext() { if (fnStep < FN.length - 1) { fnStep++; renderFn(1); } }
+ENTER.fn = dir => { if (dir < 0) fnStep = FN.length - 1; renderFn(dir < 0 ? -1 : 1); };
+// A mensagem do WhatsApp com as respostas, na primeira pessoa. Sem respostas (outra visita), vai a mensagem de sempre.
+function funnelWaText() {
+  const A = S.fnAns || {};
+  const say = k => { const st = FN.find(x => x.k === k), o = st && st.o && st.o.find(x => x[0] === A[k]); return o ? o[2] : ''; };
+  if (!A.faz && !A.origem && !A.incomoda && !A.desejo) return contactWaText();
+  const out = [...whoLines(), 'Fiz o teste da Nath.'];
+  if (A.faz) out.push(`Quando o paciente diz “tá caro”, ${say('faz')}.`);
+  if (A.origem) out.push(say('origem'));
+  if (A.incomoda) out.push(`O que mais me incomoda na hora de vender é ${say('incomoda')}.`);
+  const d = (A.desejo || '').replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '');
+  if (d) out.push(/^eu conseguiria\b/i.test(d) ? `Se eu vendesse com mais segurança, ${d.charAt(0).toLowerCase() + d.slice(1)}.` : `Se eu vendesse com mais segurança: ${d}.`);
+  out.push('Quero aprender a vender.');
+  return out.join(' ') + `\n\n(código ${AB}-funil-${O.id})`;
+}
+// O botão do WhatsApp aparece perto do fim do vídeo (CONFIG.funil.ctaAt) e sempre no fim.
+// Quem já viu o botão uma vez, numa próxima visita, já encontra o botão na tela.
+(function wireFnVideo() {
+  const sc = $('#s-vfn'), v = $('video', sc);
+  const show = () => {
+    if (sc.classList.contains('cta') || S.scene !== 'vfn') return;
+    sc.classList.add('cta');
+    $$('#s-vfn [data-wa]').forEach(a => { a.href = waLink(funnelWaText()); });
+    if (!fnSeen().cta) STORE.set(FN_KEY, { ...fnSeen(), cta: Date.now() });
+    track('fn_cta');
+  };
+  const at = () => { const c = CONFIG.funil && CONFIG.funil.ctaAt; return c != null ? c : (v.duration ? v.duration * 0.85 : Infinity); };
+  v.addEventListener('timeupdate', () => { if (v.currentTime >= at()) show(); });
+  v.addEventListener('ended', show);
+  // sem vídeo (roteiro em legenda ou falha): o botão aparece quando a fala termina ou quando o vídeo não carrega
+  new MutationObserver(() => { if (sc.classList.contains('ended') || sc.classList.contains('failed')) show(); }).observe(sc, { attributes: true, attributeFilter: ['class'] });
+  const enter = ENTER.vfn;
+  ENTER.vfn = d => {
+    sc.classList.remove('cta');
+    enter(d);
+    if (fnSeen().cta || (CONFIG.funil && CONFIG.funil.ctaAt === 0)) show();
+  };
+})();
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-fn]');
+  if (b) { e.preventDefault(); startFunnel(b.dataset.fn); }
+});
+
 /* =====================================================================
    LINKS DE SAÍDA
    ===================================================================== */
@@ -4307,7 +4501,7 @@ document.addEventListener('click', e => {
   if (!a) return;
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
   if (a.dataset.wa) {
-    a.href = waLink(contactWaText());
+    a.href = waLink(a.dataset.wa === 'funil' ? funnelWaText() : contactWaText());
     const eid = uuid(); track('wa_click', { where: a.dataset.wa, event_id: eid }); postLead(contactPayload('whatsapp', { where: a.dataset.wa }), eid);
   }
 });
@@ -4328,6 +4522,7 @@ function boot(data) {
 useObjection(O.id);
 setupMedia('v3');
 setupMedia('vsl');
+setupMedia('vfn');
 paintMnc();
 (function startAt() {
   let ex = '';
