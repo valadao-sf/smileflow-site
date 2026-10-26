@@ -235,19 +235,50 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .mnccta .price{font:600 12.5px/1.4 var(--ui);color:var(--sand)}
 .card.mnc{border-color:rgba(214,163,178,.55);background:linear-gradient(180deg,var(--stage-hi),var(--stage))}
 /* ---------- FUNIL DO VSL: chamada, 5 telas e o vídeo da Nath; o WhatsApp aparece no fim do vídeo ---------- */
-.porta.fnc{gap:14px}
+.porta.fnc{gap:0;padding:0;overflow:hidden}
 .porta.fnc h3{font-size:25px;line-height:1.12;text-wrap:balance}
+.fnc .fphb{display:block;width:100%;aspect-ratio:3/2;padding:0;border:0;background:var(--plum);cursor:pointer}
+.fnc .fphb img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.fnc .fbd{display:flex;flex-direction:column;gap:14px;padding:16px 18px 18px}
+/* celular baixo (até 740 px de altura): foto ao lado do título, para o botão caber na primeira tela */
+@media (max-width:899px) and (max-height:740px){
+  .porta.fnc{display:grid;grid-template-columns:96px minmax(0,1fr)}
+  .fnc .fphb{aspect-ratio:auto;height:100%;min-height:110px}
+  .fnc .fphb img{object-position:50% 22%}
+  .fnc .fbd{gap:12px;padding:14px 14px 14px 16px}
+  .porta.fnc h3{font-size:21px}
+}
+.fnph{display:block;width:100%;aspect-ratio:4/3;max-height:34vh;object-fit:cover;object-position:50% 26%;border-radius:18px;background:var(--plum)}
 /* no computador, no guia liberado: a chamada logo abaixo do título, sem esticar ao lado da imagem do guia */
 @media (min-width:900px){
   .scene.gift:has(> .gtop .fnc){grid-template-rows:auto auto auto minmax(0,1fr)}
   .scene.gift:has(> .gtop .fnc) > .gimg{grid-row:2 / span 3}
   .scene.gift .gtop .fnc{align-self:start}
+  .porta.fnc{display:grid;grid-template-columns:minmax(0,1fr) 200px}
+  .fnc .fphb{grid-column:2;grid-row:1;aspect-ratio:auto;height:100%;min-height:150px}
+  .fnc .fbd{grid-column:1;grid-row:1;justify-content:center;padding:22px 24px}
 }
 .fnrev{gap:14px}
 .fnrev .lede{font-size:18px;line-height:1.45;color:var(--paper)}
 #s-vfn .mnccta{opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility 0s linear .45s}
 #s-vfn.cta .mnccta{opacity:1;visibility:visible;transform:none;transition:opacity .45s var(--ease),transform .45s var(--ease)}
-#s-vfn.cta::after{height:46%;background:linear-gradient(to top,rgba(10,7,12,.92) 40%,rgba(10,7,12,0))}
+/* o VSL é deitado (16:9): no celular, um recorte 4:5 com a Nath e a legenda inteiras, entre o topo e o botão;
+   no computador, o vídeo inteiro em 16:9. Nada rola e o botão fica sempre na tela. */
+#s-vfn{--vt:calc(env(safe-area-inset-top,0px) + 70px);--vb:calc(env(safe-area-inset-bottom,0px) + 158px);background:var(--ink)}
+#s-vfn::before,#s-vfn::after{display:none}
+#s-vfn .vbg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#s-vfn .vbg::before{content:"";position:absolute;inset:-40px;background:var(--ink) url("/simulador-objecoes/assets/nath-vsl.webp") center 30%/cover no-repeat;filter:blur(30px) brightness(.38)}
+#s-vfn .vbox{position:absolute;left:0;right:0;top:var(--vt);bottom:var(--vb);display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;pointer-events:none}
+#s-vfn .vbox video{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:4/5;max-height:100%;object-fit:cover;object-position:50% 40%}
+#s-vfn .vbox .vphoto{inset:0}
+#s-vfn .vcap{bottom:calc(var(--vb) + 12px)}
+#s-vfn .vtop{padding-block:calc(env(safe-area-inset-top,0px) + 12px) 0}
+#s-vfn .vbottom{min-height:var(--vb);box-sizing:border-box;justify-content:flex-end}
+@media (min-width:900px){
+  #s-vfn{--vt:70px;--vb:150px;--w:min(960px,calc(100vw - 64px),calc((100vh - 48px - 220px) * 16 / 9));width:var(--w);height:calc(var(--w) * 9 / 16 + 220px);top:0;bottom:0;margin-block:auto}
+  #s-vfn .vbox video{aspect-ratio:16/9;object-position:50% 50%}
+  #s-vfn .mnccta{max-width:420px}
+}
 /* ---------- TELA INICIAL (hub) E MEUS GUIAS ---------- */
 .hub,.guias{gap:26px;padding-block:18px 28px}
 .hubtop{display:flex;align-items:center;gap:10px}
@@ -461,7 +492,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hsoon em{flex:none;padding:5px 8px;border-radius:6px;border:1px solid var(--soft);font:800 10px/1 var(--ui);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:#d9cfe0}
 /* ---------- DIAGNÓSTICO (perguntas → resultado → WhatsApp) ---------- */
 .cbform{display:flex;flex-direction:column;gap:12px}
-#s-vsl .vcap,#s-v3 .vcap,#s-vfn.cta .vcap{bottom:calc(208px + env(safe-area-inset-bottom,0px))}
+#s-vsl .vcap,#s-v3 .vcap{bottom:calc(208px + env(safe-area-inset-bottom,0px))}
 #s-vsl.ended::after{height:56%;background:linear-gradient(to top,rgba(10,7,12,.95) 45%,rgba(10,7,12,0))}
 @keyframes nudge{0%,100%{transform:none}50%{transform:translateY(-4px)}}
 
@@ -1093,11 +1124,14 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
 
   <!-- VSL DO FUNIL: o vídeo da Nath em tela cheia; o WhatsApp aparece no fim -->
   <section class="scene vfull" id="s-vfn" data-vkey="vfn" hidden>
-    <video playsinline webkit-playsinline muted preload="metadata"></video>
-    <img class="vphoto" alt="" hidden>
+    <div class="vbg" aria-hidden="true"></div>
+    <div class="vbox">
+      <video playsinline webkit-playsinline muted preload="metadata"></video>
+      <img class="vphoto" alt="" hidden>
+      <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
+      <div class="vplayicon" aria-hidden="true"></div>
+    </div>
     <button class="vtap" aria-label="Ligar o som do vídeo"></button>
-    <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
-    <div class="vplayicon" aria-hidden="true"></div>
     <div class="vtop pad">
       <div class="vprog"><i></i></div>
       <div class="vhead">
@@ -1182,7 +1216,7 @@ const CONFIG = {
   publicUrl: 'https://smileflow.com.br/simulador-objecoes/ta-caro',           // endereço público deste teste, para ir no texto de compartilhar
   leadWebhook: 'https://n8n.smileflow.me/webhook/simulador-objecoes', // n8n: contatos, diagnósticos e cliques (workflow “SmileFlow | Simulador de objeções”)
   // Porta para o MNC: V3 (vídeo final universal) → WhatsApp da equipe (fora da saúde: lista de espera).
-  whatsapp: '5527997801809', // número da equipe da Nath, só dígitos com DDI e DDD, ex.: '5527999999999'
+  whatsapp: '5527999442815', // WhatsApp que recebe as mensagens (por enquanto, o da Nathálya; antes, o da equipe: 5527997801809). Só dígitos com DDI e DDD
   mnc: {
     // O que é o MNC, em até 3 linhas curtas (formato, duração, para quem). Só aparece quando preenchido.
     about: [],
@@ -1235,7 +1269,7 @@ const CONFIG = {
   // Funil do VSL (chamada na tela inicial e no fim da simulação → 5 perguntas → vídeo da Nath → WhatsApp).
   // video: { id, mp4, poster, title } do VSL no Panda. Enquanto estiver vazio, toca o recado V3 (mnc.video).
   // ctaAt: segundo do vídeo em que o botão do WhatsApp aparece. Vazio = quando faltar 15% do vídeo. Sempre aparece no fim.
-  funil: { video: null, ctaAt: null },
+  funil: { video: { id: '754d121e-67ae-4542-b3c5-6aca5ad01298', poster: '/simulador-objecoes/assets/nath-vsl.webp', title: 'VSL da Nath — Diagnóstico de Fechamento (5:20)' }, ctaAt: 275 },
   ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = desligado, todo mundo no A; 50 = metade). ?ab=B força o B. Desligado em 21/out/2026 até ter tráfego.
   site: { base: '/simulador-objecoes' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
@@ -4354,8 +4388,11 @@ const fnDone = () => !!fnSeen().video;
 const showFnCard = () => !isWaitlist() && !fnDone();
 const fnCard = where => `
     <div class="porta fnc">
-      <h3>Descubra por que você trava <em>na hora do preço.</em></h3>
-      <button class="btn btn-main" data-fn="${where}">Quero descobrir <span class="arr">→</span></button>
+      <button class="fphb" data-fn="${where}" tabindex="-1" aria-hidden="true"><img src="/simulador-objecoes/assets/nath-vsl-card.webp" alt="" decoding="async"></button>
+      <div class="fbd">
+        <h3>Descubra por que você trava <em>na hora do preço.</em></h3>
+        <button class="btn btn-main" data-fn="${where}">Quero descobrir <span class="arr">→</span></button>
+      </div>
     </div>`;
 let fnStep = 0, fnTok = 0;
 function startFunnel(where) {
@@ -4375,7 +4412,7 @@ function renderFn(dir = 1) {
       <textarea class="input area" id="fn-open" rows="3" maxlength="200" autocapitalize="sentences" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="${esc(st.open)}">${esc(A.desejo || '')}</textarea></div>
     <div class="formfoot"><button class="btn btn-main" id="fn-go">Continuar <span class="arr">→</span></button></div>`;
   else body = `
-    <header class="stack fnrev"><h2 class="display">Você aprendeu a cuidar. <em>Mas quem te ensinou a vender?</em></h2>
+    <header class="stack fnrev"><img class="fnph" src="/simulador-objecoes/assets/nath-vsl.webp" alt="Nathálya Mello"><h2 class="display">Você aprendeu a cuidar. <em>Mas quem te ensinou a vender?</em></h2>
       <p class="lede">Vender não é pressionar o paciente.</p>
       <p class="lede">É uma habilidade. E você pode aprender.</p></header>
     <div class="formfoot"><button class="btn btn-main" id="fn-go">Quero aprender a vender <span class="arr">→</span></button></div>`;
