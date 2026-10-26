@@ -93,7 +93,7 @@ Os vídeos de cada objeção ficam em `OBJECTIONS[id].videos.v1/v2`. Sem `id` do
 
 - `id` é o id do player do Panda (o `v=` do embed), não o `video_id` da API. O HLS sai de `CONFIG.pandaHls + id + '/playlist.m3u8'`.
 - Com vídeo: `{ id, poster, title, fallback: { photo, script } }`. O roteiro fica como legenda sobre o pôster para quando o vídeo não carregar. Só o “tá caro” tem `mp4` local (para o artefato); sem `mp4`, o artefato mostra a legenda.
-- Gravados (21/out/2026): todos os V1 e V2, menos o V2 do “vou pensar”, que continua com foto e legenda. O recado do diagnóstico (`CONFIG.mnc.vsl`) também está gravado, mas fala do diagnóstico antigo ("em qual parte a sua venda escapa"), que saiu do funil em 21/out/2026; a tela `vsl` ficou sem entrada. O teste `CONFIG.ab.vsl` está em 0: com 0 (ou 100), ninguém fica com grupo salvo no navegador. O vídeo `5e6c20eb…` no Panda é uma cópia do V2 do "marido" (mesmo áudio), não o V2 do "vou pensar".
+- Gravados: todos os V1 e V2 (o V2 do “vou pensar”, `5e6c20eb…`, entrou em 26/out/2026). O recado do diagnóstico (`CONFIG.mnc.vsl`) também está gravado, mas fala do diagnóstico antigo ("em qual parte a sua venda escapa"), que saiu do funil em 21/out/2026; a tela `vsl` ficou sem entrada. O teste `CONFIG.ab.vsl` está em 0: com 0 (ou 100), ninguém fica com grupo salvo no navegador.
 - Pôsteres: `assets/<objeção>-v1-poster.webp` e `-v2-`, um quadro do começo de cada vídeo (540×952).
 
 ## Dados
