@@ -992,7 +992,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
 
   <!-- VÍDEO 1 -->
   <section class="scene vfull" id="s-v1" data-vkey="v1" hidden>
-    <video playsinline webkit-playsinline muted preload="metadata"></video>
+    <video playsinline webkit-playsinline muted preload="none"></video>
     <img class="vphoto" alt="" hidden>
     <button class="vtap" aria-label="Ligar o som do vídeo"></button>
     <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
@@ -1018,7 +1018,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
 
   <!-- VÍDEO 2 -->
   <section class="scene vfull" id="s-v2" data-vkey="v2" hidden>
-    <video playsinline webkit-playsinline muted preload="metadata"></video>
+    <video playsinline webkit-playsinline muted preload="none"></video>
     <img class="vphoto" alt="" hidden>
     <button class="vtap" aria-label="Ligar o som do vídeo"></button>
     <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
@@ -1058,7 +1058,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
 
   <!-- VÍDEO 3 — final universal: depois do guia, leva para o MNC -->
   <section class="scene vfull" id="s-v3" data-vkey="v3" hidden>
-    <video playsinline webkit-playsinline muted preload="metadata"></video>
+    <video playsinline webkit-playsinline muted preload="none"></video>
     <img class="vphoto" alt="" hidden>
     <button class="vtap" aria-label="Ligar o som do vídeo"></button>
     <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
@@ -1169,7 +1169,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
 
   <!-- VSL do teste B: recado da Nath entre o resultado e o WhatsApp -->
   <section class="scene vfull" id="s-vsl" data-vkey="vsl" hidden>
-    <video playsinline webkit-playsinline muted preload="metadata"></video>
+    <video playsinline webkit-playsinline muted preload="none"></video>
     <img class="vphoto" alt="" hidden>
     <button class="vtap" aria-label="Ligar o som do vídeo"></button>
     <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
@@ -1203,7 +1203,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
   <!-- VSL DO FUNIL: o vídeo da Nath em tela cheia; o WhatsApp aparece no fim -->
   <section class="scene vfull" id="s-vfn" data-vkey="vfn" hidden>
     <div class="vbox">
-      <video playsinline webkit-playsinline muted preload="metadata"></video>
+      <video playsinline webkit-playsinline muted preload="none"></video>
       <img class="vphoto" alt="" hidden>
       <div class="vpill" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-muted"/></svg>Toque para ouvir</div>
       <div class="vplayicon" aria-hidden="true"></div>
@@ -1282,7 +1282,7 @@ const CONFIG = {
   instagram: 'https://www.instagram.com/nathmellop/',
   tiktok: 'https://www.tiktok.com/@nathmellop', tiktokHandle: '@nathmellop',
   igHandle: '@nathmellop',
-  privacyUrl: '',         // página de privacidade; enquanto vazio, o link não aparece nos formulários
+  privacyUrl: 'https://www.smileflow.com.br/privacidade',
   // Prova social: só aparece quando houver depoimentos reais. Ex.: { quote: '…', name: 'Ana', detail: 'Recepção, clínica odontológica' }
   proof: [],
   objHighlight: '',       // link do destaque “Objeções” (instagram.com/stories/highlights/ID/); vazio = perfil
@@ -3369,6 +3369,7 @@ function videoFailed(v, m) {
   $('.vsay', sc)?.insertAdjacentHTML('beforeend', '<b class="verr"> O vídeo não carregou. Toque em “Ver o vídeo de novo” ou siga em frente.</b>');
 }
 function attachSource(v, m) {
+  v._sourceAttached = true;
   const scf = v.closest && v.closest('.vfull');
   if (scf) { scf.classList.remove('failed'); $('.verr', scf)?.remove(); }
   if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
@@ -3412,6 +3413,8 @@ function attachSource(v, m) {
 }
 function tryPlay(sc) {
   const v = $('video', sc);
+  if (!v._sourceAttached) attachSource(v, MEDIA[sc.dataset.vkey].m);
+  if (!v.hasAttribute('src')) return;
   v.muted = !SOUND;
   sc.classList.toggle('sound', SOUND);
   const p = v.play();
@@ -3479,6 +3482,7 @@ function useScript(sc, key, m) {
   const v = $('video', sc), img = $('.vphoto', sc);
   try { v.pause(); } catch (e) {}
   v._gen = (v._gen || 0) + 1;
+  v._sourceAttached = false;
   if (v._hls) { try { v._hls.destroy(); } catch (e) {} v._hls = null; }
   v.removeAttribute('src'); v.removeAttribute('poster'); v.hidden = true;
   img.src = m.photo; img.hidden = false;
@@ -3513,7 +3517,7 @@ function setupMedia(key) {
   else {
     img.hidden = true; img.removeAttribute('src'); v.hidden = false;
     if (m.poster) v.poster = m.poster;
-    attachSource(v, m);
+    v._sourceAttached = false;
     MEDIA[key] = { script: false, m };
   }
 }
@@ -3544,7 +3548,7 @@ $$('.vfull').forEach(sc => {
     if (v.muted) {
       v.muted = false; SOUND = true; sc.classList.add('sound');
       if (!sc.dataset.heard) { sc.dataset.heard = '1'; v.currentTime = 0; }   // ao ligar o som, volta para o começo
-      v.play().catch(() => {});
+      tryPlay(sc);
       track('video_sound_on', { video: key });
     } else if (v.paused || v.ended) v.play().catch(() => {});
     else v.pause();
@@ -3552,12 +3556,12 @@ $$('.vfull').forEach(sc => {
   $('.vmute', sc).addEventListener('click', e => {
     e.stopPropagation();
     v.muted = !v.muted; SOUND = !v.muted; sc.classList.toggle('sound', SOUND);
-    if (SOUND && v.paused) v.play().catch(() => {});
+    if (SOUND && v.paused) tryPlay(sc);
   });
   $('.vagain', sc).addEventListener('click', () => {
     if (isScript()) { MEDIA[key].player.restart(); return; }
-    if (sc.classList.contains('failed')) { attachSource(v, MEDIA[key].m); sc.classList.remove('ended'); tryPlay(sc); return; }
-    v.currentTime = 0; v.play().catch(() => {});
+    if (sc.classList.contains('failed')) { v._sourceAttached = false; sc.classList.remove('ended'); tryPlay(sc); return; }
+    v.currentTime = 0; tryPlay(sc);
   });
   $('.vscript', sc).addEventListener('click', () => openScript(sc, key));
   ENTER[key] = () => {
@@ -3997,8 +4001,8 @@ ENTER.gift = async () => {
   const G = giftInfo();
   if (S.lead) {
     const k = O.id + ':g1';
-    if (!SENT_GUIDES.has(k)) {
-      SENT_GUIDES.add(k);
+    if (!guideSent(k)) {
+      markGuideSent(k);
       const P = computeProfile();
       postLead({ type: 'guia', first_contact: false, name: S.name, phone: S.phone || '', objection: O.id, ...profileFields(),
                  exercise: 'simulacao', patients: P.open, ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id });
@@ -4045,8 +4049,9 @@ async function submitLead(e) {
     answers: S.answers.map(a => a && a.mode), utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id
   };
   const eid = uuid();
-  track('lead', { profile: P.key, score: P.hit, event_id: eid });
+  if (await firstRegistration(S.phone, eid)) track('lead', { profile: P.key, score: P.hit, event_id: eid });
   postLead({ type: 'guia', first_contact: true, ab: AB, ...payload }, eid);
+  markGuideSent(O.id + ':g1');
   savePerfil();
   S.lead = true;
   $('#giftwrap').classList.remove('locked');
@@ -4054,7 +4059,21 @@ async function submitLead(e) {
   await wait(900);
   renderGiftOpen();
 }
-const SENT_GUIDES = new Set();
+const SENT_GUIDES_KEY = 'nath_guias_enviados';
+const guideSent = k => { try { return (JSON.parse(sessionStorage.getItem(SENT_GUIDES_KEY) || '[]')).includes(k); } catch (e) { return false; } };
+const markGuideSent = k => { try { const a = JSON.parse(sessionStorage.getItem(SENT_GUIDES_KEY) || '[]'); if (!a.includes(k)) sessionStorage.setItem(SENT_GUIDES_KEY, JSON.stringify([...a, k])); } catch (e) {} };
+const CR_KEY = 'sf_cr_v1';
+async function sha256Hex(s) {
+  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(s))); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return ''; }
+}
+async function firstRegistration(phone, eid) {
+  const h = await sha256Hex('sf-cr-v1|ph|' + String(phone || '').replace(/\D/g, ''));
+  const key = h ? 'p:' + h.slice(0, 16) : 'e:' + eid;
+  let seen = []; try { seen = JSON.parse(localStorage.getItem(CR_KEY) || '[]'); } catch (e) {}
+  if (seen.includes(key)) return false;
+  try { localStorage.setItem(CR_KEY, JSON.stringify([...seen, key].slice(-20))); } catch (e) {}
+  return true;
+}
 function renderGiftOpen() {
   const n = firstName(), G = giftInfo();
   const P1 = computeProfile();
@@ -4657,7 +4676,6 @@ function funnelWaText() {
     sc.classList.add('cta');
     $$('#s-vfn [data-wa]').forEach(a => { a.href = waLink(funnelWaText()); });
     if (!fnSeen().cta) STORE.set(FN_KEY, { ...fnSeen(), cta: Date.now() });
-    track('funil_botao_whatsapp');
   };
   const at = () => { const c = CONFIG.funil && CONFIG.funil.ctaAt; return c != null ? c : (v.duration ? v.duration * 0.85 : Infinity); };
   v.addEventListener('timeupdate', () => { if (v.currentTime >= at()) show(); });
@@ -4683,6 +4701,7 @@ $$('[data-out="instagram"]').forEach(a => a.href = CONFIG.instagram);
 document.addEventListener('click', e => {
   const a = e.target.closest('[data-out]');
   if (!a) return;
+  if (a.matches('#s-vfn a[data-wa="funil"]')) track('funil_botao_whatsapp');
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
   if (a.dataset.wa) {
     a.href = waLink(a.dataset.wa === 'funil' ? funnelWaText() : contactWaText());
@@ -4710,10 +4729,12 @@ setupMedia('vfn');
 paintMnc();
 (function startAt() {
   let ex = '';
-  try { ex = new URLSearchParams(location.search).get('ex') || ''; } catch (e) {}
+  let requestedObj = '';
+  try { const q = new URLSearchParams(location.search); ex = q.get('ex') || ''; requestedObj = q.get('obj') || (location.hash.match(/obj=([\w-]+)/) || [])[1] || ''; } catch (e) {}
   if (CONFIG.start !== 'hub' && CONFIG.start !== 'obj' && ex !== 'flash' && ex !== 'sim') return;
   $('#s-hero').hidden = true; S.scene = '';
-  if (CONFIG.start === 'hub') go('hub');
+  if (CONFIG.start === 'hub' && !(requestedObj && OBJECTIONS[OBJ_ALIAS[requestedObj] || requestedObj])) go('hub');
+  else if (CONFIG.start === 'hub') go('obj');
   else if (ex === 'sim' || ex === 'flash') startSim();
   else go('obj');
 })();
