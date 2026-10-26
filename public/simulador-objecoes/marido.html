@@ -3313,6 +3313,8 @@ function back() {
   track('back', { from: s });
   if (s === 'name' && nStep > 0) { nStep--; renderNameStep(-1); return true; }
   if (s === 'fn' && fnStep > 0) { fnStep--; renderFn(-1); return true; }
+  // da 1ª pergunta do funil, volta para onde a pessoa estava (o perfil, se acabou de preencher, já está salvo)
+  if (s === 'fn') while (S.hist.length && S.hist[S.hist.length - 1].s === 'name') S.hist.pop();
   const h = S.hist.pop();
   if (h) { if (h.k) S.kind = h.k; go(h.s, -1); return true; }
   const i = FLOW.indexOf(s);
@@ -3703,13 +3705,9 @@ function paintMnc() {
         <p>Conte como são as suas conversas de venda.</p>
         <a class="btn btn-main" data-out="whatsapp" data-wa="video" href="#" target="_blank" rel="noopener">${ICON('wa')}Falar no WhatsApp</a>
         <span class="price">A mensagem já vai pronta. Quem responde é uma pessoa da equipe.</span>`
-    : onList() ? `
-        <h3>Você está na lista.</h3>
-        <p>Se sair uma versão do MNC para a sua área, a equipe da Nath avisa você primeiro.</p>`
     : `
-        <h3>O MNC é feito para clínicas.</h3>
-        <p>Entre na lista e saiba primeiro se sair uma versão para a sua área.</p>
-        <button class="btn btn-main" data-go="final">Entrar na lista <span class="arr">→</span></button>`;
+        <h3>Descubra por que você trava <em>na hora do preço.</em></h3>
+        <button class="btn btn-main" data-fn="v3">Quero descobrir <span class="arr">→</span></button>`;
   $$('a[data-wa]').forEach(a => { a.href = href; });
   ['#s-gift', '#s-final'].forEach(id => { const root = $(id); if (root) { wireCallback(root); wireWaitlist(root); } });
 }
@@ -3863,7 +3861,7 @@ function sendCallback(box) {
   box.innerHTML = `<p class="note" style="text-align:center">Pronto. A equipe da Nath vai chamar você no WhatsApp ${esc(maskPhone(d))}.</p>`;
 }
 // O próximo passo, no guia e na tela final: WhatsApp da equipe ou, fora da saúde, a lista de espera.
-const mncCard = where => (isWaitlist() ? waitCard() : waCard(where));
+const mncCard = where => (isWaitlist() ? fnCard(where) : waCard(where));
 {
   const enter = ENTER.v3;
   ENTER.v3 = d => { S.v3 = true; try { localStorage.setItem(V3_KEY, '1'); } catch (e) {} $('#v3-skip').dataset.go = S.fromHub ? 'hub' : 'final'; paintMnc(); enter(d); };
@@ -4057,7 +4055,6 @@ ENTER.result = () => {
       ${O.resultNath.map(p => `<p>${esc(p)}</p>`).join('')}</div>
     </div>
     <button class="btn btn-main" data-go="gift" data-kind="g1">Receber o guia de presente <span class="arr">→</span></button>`;
-  dock($('#s-result'), '[data-go="gift"]');
 };
 
 /* =====================================================================
@@ -4331,7 +4328,7 @@ ENTER.hub = () => {
   S.fromHub = true;
   const n = firstName();
   const sc = $('#s-hub');
-  const fn = isWaitlist() ? '' : fnCard('hub');
+  const fn = fnCard('hub');
   sc.innerHTML = `
     ${nathRow()}
     <header class="hhead${fn ? '' : ' solo'}">
@@ -4593,10 +4590,10 @@ const fnVideo = () => (CONFIG.funil && CONFIG.funil.video) || CONFIG.mnc.video;
 const fnSeen = () => STORE.get(FN_KEY, {});
 const fnDone = () => !!fnSeen().video;
 // a chamada aparece até a pessoa chegar ao vídeo; depois, no guia e na tela final, volta o cartão do WhatsApp
-const showFnCard = () => !isWaitlist() && !fnDone();
+const showFnCard = () => !fnDone();
 const fnCard = where => `
     <div class="porta fnc">
-      <div class="who"><img src="/simulador-objecoes/assets/nath-vsl-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0" style="flex:1;min-width:0"><b>Nathálya Mello</b><span>Especialista em vendas</span></div><a class="follow" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener">${esc(CONFIG.igHandle)}</a></div>
+      <div class="who"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt="" data-bio><div data-bio role="button" tabindex="0" style="flex:1;min-width:0"><b>Nathálya Mello</b><span>Especialista em vendas</span></div><a class="follow" data-out="instagram" href="${CONFIG.instagram}" target="_blank" rel="noopener">${esc(CONFIG.igHandle)}</a></div>
       <h3>Descubra por que você trava <em>na hora do preço.</em></h3>
       <button class="btn btn-main" data-fn="${where}">Quero descobrir <span class="arr">→</span></button>
     </div>`;
@@ -4608,6 +4605,8 @@ let fnStep = 0, fnTok = 0;
 function startFunnel(where) {
   S.fnAns = S.fnAns || {}; S.fnFrom = where; fnStep = 0;
   track('fn_start', { where });
+  // como nos outros fluxos: sem o perfil (nome, o que faz e a área), pede antes; com ele, vai direto
+  if (!S.biz) { S.afterName = 'fn'; S.nameMode = ''; go('name'); return; }
   if (S.scene === 'fn') renderFn(1); else go('fn');
 }
 function fnShell() { $('#s-fn').innerHTML = `<div class="fx-top">${BACK_BTN}<div class="fx-bar" aria-hidden="true"><i></i></div></div><div class="fx-stage" aria-live="polite"></div>`; }
