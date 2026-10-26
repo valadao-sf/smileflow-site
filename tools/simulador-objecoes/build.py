@@ -14,7 +14,7 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', 'public')
 BASE = '/simulador-objecoes'
-ORIGIN = 'https://smileflow.com.br'
+ORIGIN = 'https://www.smileflow.com.br'
 INSTAGRAM = 'https://www.instagram.com/nathmellop/'
 eng = open(os.path.join(HERE, 'engine.html'), encoding='utf-8').read()
 cut = eng.index('<div id="app"')
@@ -75,7 +75,7 @@ PAGES = []   # (arquivo, id da objeção ou 'hub', título, descrição, dados e
 PAGES.append(('index', 'hub', HUB_TITLE, HUB_DESC, [ORG, NATH,
     {'@type': 'CollectionPage', '@id': HUB_URL + '#pagina', 'url': HUB_URL, 'name': HUB_NAME, 'alternateName': BRAND, 'headline': HUB_TITLE, 'description': HUB_DESC,
      'inLanguage': 'pt-BR', 'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']},
-     'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/og-hub.jpg', 'breadcrumb': {'@id': HUB_URL + '#trilha'},
+     'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-hub.jpg', 'breadcrumb': {'@id': HUB_URL + '#trilha'},
      'mainEntity': {'@type': 'ItemList', 'itemListElement': [
          {'@type': 'ListItem', 'position': i + 1, 'url': f'{HUB_URL}/{d["id"]}', 'name': d['q']} for i, d in enumerate(DATA)]}},
     crumbs(HUB_URL, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL)])]))
@@ -88,7 +88,7 @@ for d in DATA:
     PAGES.append((d['id'], d['id'], title, desc, [ORG, NATH,
         {'@type': 'WebPage', '@id': url + '#pagina', 'url': url, 'name': title, 'headline': d['q'], 'description': desc,
          'inLanguage': 'pt-BR', 'isPartOf': {'@id': HUB_URL + '#pagina'}, 'author': {'@id': NATH['@id']},
-         'publisher': {'@id': ORG['@id']}, 'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/og-{d["id"]}.jpg',
+         'publisher': {'@id': ORG['@id']}, 'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-{d["id"]}.jpg',
          'breadcrumb': {'@id': url + '#trilha'}},
         # Só a pergunta e a resposta que aparecem na tela (o "Resposta curta" da tela da objeção).
         {'@type': 'FAQPage', '@id': url + '#perguntas', 'mainEntity': [{'@type': 'Question', 'name': d['q'],
@@ -128,7 +128,9 @@ for fname, oid, title, desc, graph in PAGES:
                   ("  publicUrl: '',", f"  publicUrl: '{ORIGIN}{BASE}{'' if oid == 'hub' else '/' + oid}',")]:
         body = sub1(body, a, bb)
     url = f'{ORIGIN}{BASE}' + ('' if oid == 'hub' else '/' + oid)
-    og = f'{ORIGIN}{BASE}/assets/og-{oid}.jpg'
+    og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg'   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
+    og_sq = f'{ORIGIN}{BASE}/assets/share-{oid}-sq.jpg'   # 1200×1200 (quem prefere quadrado)
+    og_alt = 'Nathálya Mello, especialista em vendas, na simulação grátis: ' + title.split(' | ')[0]
     ld = json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False).replace('</', '<\\/')
     doc = f'''<!doctype html>
 <html lang="pt-BR">
@@ -148,9 +150,22 @@ for fname, oid, title, desc, graph in PAGES:
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:image" content="{og}">
+<meta property="og:image:secure_url" content="{og}">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{e(og_alt)}">
+<meta property="og:image" content="{og_sq}">
+<meta property="og:image:secure_url" content="{og_sq}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="{e(og_alt)}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(title)}">
+<meta name="twitter:description" content="{e(desc)}">
+<meta name="twitter:image" content="{og}">
+<meta name="twitter:image:alt" content="{e(og_alt)}">
 <link rel="icon" href="https://smileflow-marketing.vercel.app/favicon.ico">
 <script type="application/ld+json">{ld}</script>
 {TAGS}
