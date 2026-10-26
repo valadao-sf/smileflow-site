@@ -1196,8 +1196,8 @@ const CONFIG = {
   },
   // Funil do VSL (chamada na tela inicial e no fim da simulação → 5 perguntas → vídeo da Nath → WhatsApp).
   // video: { id, mp4, poster, title } do VSL no Panda. Enquanto estiver vazio, toca o recado V3 (mnc.video).
-  // ctaAt: segundo do vídeo em que o botão do WhatsApp aparece. Vazio = quando faltar 15% do vídeo. Sempre aparece no fim.
-  funil: { video: { id: '754d121e-67ae-4542-b3c5-6aca5ad01298', poster: 'assets/nath-vsl.webp', title: 'VSL da Nath — Diagnóstico de Fechamento (5:20)' }, ctaAt: 275 },
+  // ctaAt: segundo do vídeo em que o botão do WhatsApp aparece (0 = já na entrada da tela). Vazio = quando faltar 15% do vídeo. Sempre aparece no fim.
+  funil: { video: { id: '754d121e-67ae-4542-b3c5-6aca5ad01298', poster: 'assets/nath-vsl.webp', title: 'VSL da Nath — Diagnóstico de Fechamento (5:20)' }, ctaAt: 0 },
   ab: { vsl: 0 },          // teste A/B: % de pessoas que veem o VSL antes do WhatsApp (0 = desligado, todo mundo no A; 50 = metade). ?ab=B força o B. Desligado em 21/out/2026 até ter tráfego.
   site: { base: '' },       // no site: '/simulador-objecoes' (o build preenche). Vazio = tudo na mesma página.
   start: 'obj',             // 'hub' = tela inicial; 'obj' = tela da objeção com os dois exercícios (abertura de cada fluxo)
@@ -4412,7 +4412,7 @@ function funnelWaText() {
   ENTER.vfn = d => {
     sc.classList.remove('cta');
     enter(d);
-    if (fnSeen().cta) show();
+    if (fnSeen().cta || (CONFIG.funil && CONFIG.funil.ctaAt === 0)) show();
   };
 })();
 document.addEventListener('click', e => {
