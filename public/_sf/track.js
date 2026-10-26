@@ -11,7 +11,7 @@
    Antes do script carregar, as páginas podem chamar o stub `sfTrack(...)`: as chamadas ficam na fila. */
 (function (w, d) {
   'use strict';
-  var CFG = {"hosts":["smileflow.com.br","www.smileflow.com.br"],"currency":"BRL","consent":{"required":false},"userData":{"enabled":false},"ga4":{"id":"G-ZC4Y4L1YQN"},"meta":{"pixelId":"888486630406077"},"googleAds":{"id":"","labels":{"diagnostico_concluido":"","guia_liberado":"","pedido_contato":"","clique_whatsapp":""}},"tiktok":{"pixelId":""},"microsoftUet":{"tagId":""},"clarity":{"projectId":""},"linkedin":{"partnerId":"","conversions":{"diagnostico_concluido":""}},"pinterest":{"tagId":""},"kwai":{"pixelId":""}};
+  var CFG = {"hosts":["smileflow.com.br","www.smileflow.com.br"],"currency":"BRL","consent":{"required":false},"userData":{"enabled":false},"ga4":{"id":"G-ZC4Y4L1YQN"},"meta":{"pixelId":"888486630406077"},"googleAds":{"id":"AW-17316220856","labels":{"diagnostico_concluido":"lltzCJShiKQdELifgsFA","guia_liberado":"sB5wCJehiKQdELifgsFA","pedido_contato":"fTY2CJqhiKQdELifgsFA","clique_whatsapp":"fc28CJ2hiKQdELifgsFA"}},"tiktok":{"pixelId":""},"microsoftUet":{"tagId":""},"clarity":{"projectId":"z0ydd3my38"},"linkedin":{"partnerId":"","conversions":{"diagnostico_concluido":""}},"pinterest":{"tagId":""},"kwai":{"pixelId":""}};
   var prev = w.sfTrack, queue = (prev && prev.q) || [];
   if (prev && prev.loaded) return;
 
