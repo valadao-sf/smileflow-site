@@ -80,6 +80,7 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
   await pg.evaluate(({ area, what }) => { go("vfn"); }, { area, what });
   await pg.evaluate(() => { S.fnAns = { desejo: "fechar 1234567 tratamentos" }; });
   await pg.waitForTimeout(200);
+  const funnelButtonBeforeClick = await pg.evaluate(() => window.dataLayer.filter((x) => x && x.event === "sf_funil_botao_whatsapp").length);
   await soundVideo("#s-vfn video");
   await pg.$eval("#s-vfn .vtap", (b) => b.click());
   await finishVideo("#s-vfn video");
@@ -101,7 +102,94 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
   }));
   const funnelText = await pg.evaluate(() => funnelWaText());
   await ctx.close();
-  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, funnelText, platformRequests, blocked };
+  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, funnelText, platformRequests, blocked, funnelButtonBeforeClick };
+}
+
+async function probeVideoRequests(b, path) {
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 } });
+  const videoRequests = [];
+  await ctx.route("**/*", async (r) => {
+    const req = r.request(), url = req.url();
+    if (/\.(mp4|m3u8|ts)(?:[?#]|$)|pandavideo|b-cdn/i.test(url) || req.resourceType() === "media") videoRequests.push(url);
+    if (!url.startsWith("https://smileflow.com.br/")) return r.abort();
+    if (new URL(url).pathname === "/_sf/track.js") return r.fulfill({ body: trackJs, contentType: "text/javascript" });
+    const u = new URL(url), target = ORIGIN + u.pathname + (u.pathname.startsWith("/simulador-objecoes/") && !/\.\w+$/.test(u.pathname) ? ".html" : "") + u.search;
+    const res = await fetch(target);
+    return r.fulfill({ status: res.status, body: Buffer.from(await res.arrayBuffer()), headers: { "content-type": res.headers.get("content-type") || "text/html" } });
+  });
+  const pg = await ctx.newPage();
+  await pg.goto("https://smileflow.com.br" + path);
+  await pg.waitForTimeout(3000);
+  await ctx.close();
+  return videoRequests;
+}
+
+async function guideDedup(b) {
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 } });
+  const posts = [];
+  await ctx.route("**/*", async (r) => {
+    const url = r.request().url();
+    if (/n8n\.smileflow\.me/.test(url) && r.request().method() === "POST") {
+      posts.push(JSON.parse(r.request().postData()));
+      return r.fulfill({ status: 200, headers: { "access-control-allow-origin": "https://smileflow.com.br" }, body: "" });
+    }
+    if (!url.startsWith("https://smileflow.com.br/")) return r.abort();
+    const u = new URL(url);
+    if (u.pathname === "/_sf/track.js") return r.fulfill({ body: trackJs, contentType: "text/javascript" });
+    if (/\.js(?:[?#]|$)/i.test(u.pathname)) return r.fulfill({ body: "", contentType: "text/javascript" });
+    const target = ORIGIN + u.pathname + (u.pathname.startsWith("/simulador-objecoes/") && !/\.\w+$/.test(u.pathname) ? ".html" : "") + u.search;
+    const res = await fetch(target);
+    return r.fulfill({ status: res.status, body: Buffer.from(await res.arrayBuffer()), headers: { "content-type": res.headers.get("content-type") || "text/html" } });
+  });
+  const first = await ctx.newPage();
+  await first.goto("https://smileflow.com.br/simulador-objecoes/ta-caro");
+  await first.waitForTimeout(800);
+  await first.evaluate(() => { S.name = "Teste Guia"; S.biz = "saude_estetica"; S.area = "saude_estetica"; go("gift"); });
+  await first.waitForSelector("#lead-form");
+  await first.fill("#ld-name", "Teste Guia"); await first.fill("#ld-phone", "27999990000"); await first.check("#ld-ok"); await first.click("#ld-send");
+  await first.waitForTimeout(1300);
+  const firstBeforeReload = await first.evaluate(() => (window.fbq && window.fbq.queue || []).filter((a) => a[0] === "track" && a[1] === "CompleteRegistration").map((a) => Array.from(a)));
+  await first.evaluate(() => { go("obj"); }); await first.waitForTimeout(600);
+  await first.evaluate(() => go("gift")); await first.waitForTimeout(500);
+  await first.reload(); await first.waitForTimeout(600);
+  await first.evaluate(() => go("gift")); await first.waitForTimeout(500);
+  const second = await ctx.newPage();
+  await second.goto("https://smileflow.com.br/simulador-objecoes/ta-caro"); await second.waitForTimeout(800);
+  await second.evaluate(() => go("gift")); await second.waitForTimeout(700);
+  await second.evaluate(() => go("obj")); await second.waitForTimeout(600);
+  await second.evaluate(() => { S.lead = false; go("gift"); });
+  await second.waitForSelector("#lead-form", { state: "visible" });
+  await second.fill("#ld-name", "Teste Guia"); await second.fill("#ld-phone", "27999990000"); await second.check("#ld-ok"); await second.click("#ld-send");
+  await second.waitForTimeout(1300);
+  const pixel = await Promise.all([first, second].map((pg) => pg.evaluate(() => (window.fbq && window.fbq.queue || []).filter((a) => a[0] === "track" && a[1] === "CompleteRegistration").map((a) => Array.from(a)))));
+  await ctx.close();
+  return { posts, pixel: [...firstBeforeReload, ...pixel.flat()] };
+}
+
+async function emptyAreaWhatsApp(b) {
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 } });
+  const posts = [];
+  await ctx.route("**/*", async (r) => {
+    const url = r.request().url();
+    if (!url.startsWith("https://smileflow.com.br/")) return r.abort();
+    const u = new URL(url);
+    if (u.pathname === "/_sf/track.js") return r.fulfill({ body: trackJs, contentType: "text/javascript" });
+    if (/\.js(?:[?#]|$)/i.test(u.pathname)) return r.fulfill({ body: "", contentType: "text/javascript" });
+    const target = ORIGIN + u.pathname + (u.pathname.startsWith("/simulador-objecoes/") && !/\.\w+$/.test(u.pathname) ? ".html" : "") + u.search;
+    const res = await fetch(target);
+    return r.fulfill({ status: res.status, body: Buffer.from(await res.arrayBuffer()), headers: { "content-type": res.headers.get("content-type") || "text/html" } });
+  });
+  await ctx.route(/n8n\.smileflow\.me/, (r) => { if (r.request().method() === "POST") posts.push(JSON.parse(r.request().postData())); r.fulfill({ status: 200, headers: { "access-control-allow-origin": "https://smileflow.com.br" }, body: "" }); });
+  await ctx.route(/bat\.bing\.com/, (r) => r.fulfill({ contentType: "text/javascript", body: "window.__uet=[];window.UET=function(o){(o.q||[]).forEach(function(a){window.__uet.push(a)});this.push=function(){window.__uet.push([].slice.call(arguments))}};" }));
+  await ctx.route(/googletagmanager|connect\.facebook|analytics\.tiktok|clarity\.ms|pandavideo|jsdelivr/, (r) => r.fulfill({ body: "", contentType: "text/javascript" }));
+  const pg = await ctx.newPage();
+  await pg.goto("https://smileflow.com.br/simulador-objecoes/ta-caro"); await pg.waitForTimeout(1000);
+  await pg.evaluate(() => { go("vsl"); }); await pg.waitForTimeout(300);
+  await pg.$eval('#s-vsl a[data-wa="vsl"]', (a) => { a.target = "_self"; a.addEventListener("click", e => e.preventDefault(), { once: true }); });
+  await pg.$eval('#s-vsl a[data-wa="vsl"]', (a) => a.click()); await pg.waitForTimeout(300);
+  const q = await pg.evaluate(() => ({ segment: S.biz || "", fbq: (window.fbq && window.fbq.queue || []).map((a) => Array.from(a)) }));
+  await ctx.close();
+  return { q, posts };
 }
 
 const b = await chromium.launch({ executablePath: CHROME, headless: true });
@@ -109,12 +197,25 @@ const ok = [];
 const check = (name, fn) => { fn(); ok.push(name); };
 
 const s = await session(b, {});
+const gd = await guideDedup(b);
+const emptyWa = await emptyAreaWhatsApp(b);
+const idleVideoRequests = await Promise.all(["/simulador-objecoes/ta-caro", "/simulador-objecoes"].map((path) => probeVideoRequests(b, path)));
 const guia = s.posts.find((p) => p.type === "guia");
 check("sem erro de página", () => assert.deepEqual(s.errs, []));
+check("botão do funil não mede ao aparecer", () => assert.equal(s.funnelButtonBeforeClick, 0));
+check("na entrada mobile do simulador, 3 s sem tráfego de vídeo", () => assert.deepEqual(idleVideoRequests, [[], []]));
 check("todas as plataformas de teste carregaram", () => assert.deepEqual(s.q.vendors.sort(), ["clarity", "ga4", "googleAds", "meta", "microsoftUet", "tiktok"]));
 check("guia: Meta CompleteRegistration uma vez, com o event_id do n8n", () => {
   const ev = s.q.fbq.filter((a) => a[0] === "track" && a[1] === "CompleteRegistration");
   assert.equal(ev.length, 1); assert.equal(ev[0][3].eventID, guia.event_id);
+});
+check("guia: 1 CompleteRegistration por pessoa", () => {
+  const guidePosts = gd.posts.filter((p) => p.type === "guia");
+  const ev = gd.pixel;
+  const diagnostic = JSON.stringify(guidePosts.map(({ type, first_contact, event_id }) => ({ type, first_contact, event_id })));
+  assert.equal(guidePosts.length, 3, `posts guia (type, first_contact, event_id): ${diagnostic}`);
+  assert.equal(ev.length, 1, `CompleteRegistration no pixel; posts guia (type, first_contact, event_id): ${diagnostic}`);
+  assert.ok(guidePosts.some((p) => p.first_contact === true && p.event_id === ev[0][3].eventID), `eventID deve corresponder ao POST guia first_contact=true; posts: ${diagnostic}`);
 });
 check("nenhum dado pessoal em parâmetro de evento", () => assert.ok(!JSON.stringify(s.q).match(/Teste Simulador|27999990000|5527999990000/)));
 check("n8n recebe origem e click IDs no payload", () => { assert.ok(guia.attribution && guia.attribution.first && guia.attribution.ids); assert.ok("channel_last" in guia.attribution); });
@@ -143,6 +244,7 @@ check("WhatsApp: mesmo event_id na Meta e no POST, ref válido", () => {
   assert.equal(s.q.gtag.filter((a) => a[0] === "event" && a[1] === "generate_lead").length, 0);
   assert.ok(s.funnelText.includes("1234567")); assert.match(s.funnelText, /\(Ref: MNC-[a-z0-9]{4}\)$/);
   const funnelEvent = s.q.funnelButton[0]; assert.ok(funnelEvent);
+  assert.equal(s.q.funnelButton.length, 1);
   const funnelMeta = s.q.fbq.filter((a) => a[2]?.event_id === funnelEvent.event_id);
   assert.equal(funnelMeta.length, 1); assert.deepEqual(funnelMeta[0].slice(0, 2), ["trackCustom", "funil_botao_whatsapp"]);
   assert.equal(s.q.fbq.filter((a) => a[2]?.event_id === funnelEvent.event_id && a[0] === "track").length, 0);
@@ -153,12 +255,26 @@ check("WhatsApp: mesmo event_id na Meta e no POST, ref válido", () => {
 });
 
 const f = await session(b, { area: "comercio", what: "Loja de móveis" });
-check("fora da saúde: nenhuma conversão padrão em plataforma nenhuma", () => {
-  assert.equal(f.q.fbq.filter((a) => a[0] === "track" && a[1] !== "PageView").length, 0);
-  assert.ok(f.q.fbq.some((a) => a[0] === "trackCustom" && a[1] === "clique_whatsapp"));
+check("fora da saúde: só clique WhatsApp vira Lead padrão da Meta", () => {
+  const posts = f.posts.filter((p) => p.type === "whatsapp");
+  const leads = f.q.fbq.filter((a) => a[0] === "track" && a[1] === "Lead");
+  assert.equal(posts.length, 2);
+  assert.equal(leads.length, 2);
+  assert.equal(new Set(posts.map((p) => p.event_id)).size, 2);
+  for (const post of posts) {
+    assert.equal(leads.filter((a) => a[3].eventID === post.event_id).length, 1);
+  }
   assert.ok(f.q.gtag.some((a) => a[0] === "event" && a[1] === "clique_whatsapp"));
   assert.equal(f.q.ttq.filter((a) => a[0] === "track" && ["SubmitForm", "Contact", "CompleteRegistration"].includes(a[1])).length, 0);
   assert.equal(f.q.gtag.filter((a) => a[0] === "event" && ["generate_lead", "sign_up", "conversion"].includes(a[1])).length, 0);
+});
+
+check("WhatsApp antes de escolher área: Meta Lead usa event_id do POST", () => {
+  assert.equal(emptyWa.q.segment, "");
+  const post = emptyWa.posts.find((p) => p.type === "whatsapp" && p.where === "vsl"); assert.ok(post);
+  const leads = emptyWa.q.fbq.filter((a) => a[0] === "track" && a[1] === "Lead");
+  assert.equal(leads.length, 1); assert.equal(leads[0][3].eventID, post.event_id);
+  assert.equal(leads[0][2].lead_type, "whatsapp_vsl");
 });
 
 const t = await session(b, { query: "?teste=1" });
