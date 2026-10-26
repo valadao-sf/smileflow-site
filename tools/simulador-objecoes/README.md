@@ -75,6 +75,8 @@ python3 tools/simulador-objecoes/render_guides.py
 - Abaixo dela, a seção das conversas (`aeoBlock`), toda montada a partir dos dados da objeção, sem texto novo: o passo a passo do guia (`gift.text`), uma pergunta por conversa (fala do paciente → resposta certa, motivo do `card`, o que trava pelas opções erradas, o caso em cada área do `ctx`) e o roteiro do vídeo 2. Fica em `<details>` fechado para não estragar a simulação, mas vai no HTML montado. As mesmas perguntas (`aeoFaq`) viram o `FAQPage`; o vídeo 2 vira `VideoObject` com a transcrição; `datePublished`/`dateModified` e o "Atualizado em" saem do build.
 - O guia, na tela da objeção, é uma linha de bônus abaixo do botão (`exBonus`). O botão da simulação é o destaque.
 - O texto aberto é só a explicação. As perguntas para usar na conversa continuam no guia em imagem, que a simulação libera.
+- `OBJECTIONS[id].geo` guarda a resposta direta e quatro perguntas abertas, com texto da Redação (Parte B de `mnc-chatgpt-copy-v1`); o `build.py` inclui tudo no HTML e no `FAQPage`, sem adaptar o vocabulário.
+- O build também gera `public/simulador-objecoes/llms.txt`, com a descrição do hub e as respostas diretas ligadas às URLs canônicas das objeções.
 - Tom dos textos (explicação, guia, explicação depois de cada resposta, resultado e perfis): objetivo. O que a resposta fez, o efeito na pessoa e o que fazer. Sem frase de efeito, bordão de uma palavra ("Pare.", "Acolha."), "Segure essa vontade" ou fecho de impacto. As falas da Nath nos roteiros dos vídeos ficam como ela fala.
 - Para conferir, extraia o texto sem JavaScript das 7 páginas: nenhuma pode repetir o texto de outra objeção.
 
