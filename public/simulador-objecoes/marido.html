@@ -862,12 +862,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .nameedit{font:inherit;color:var(--wine-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:5px;position:relative}
 .nameedit::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:max(100%,44px);transform:translateY(-50%)}
 .nameedit:focus-visible{outline:2px solid var(--wine-hi);outline-offset:3px;border-radius:4px}
-/* simulação: a Nath como 5ª foto */
-.exfaces:has(.nathf){grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
-.exfaces figure.nathf{outline:1.5px solid var(--wine-hi);outline-offset:-1.5px}
-.exfaces figure.nathf img{object-position:50% 20%}
-.exfaces figure.nathf figcaption{color:var(--wine-hi)}
-.exfaces figure.nathf figcaption span{display:none}
 /* tela da objeção: a explicação no formato da conversa da simulação */
 .obchat{display:flex;flex-direction:column;gap:12px}
 .obchat .nath{animation:none;max-width:44rem}
@@ -889,8 +883,6 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .castm img{border-radius:14px}
   .ocardx.big{min-height:150px;padding:20px}
   .ocardx.big q{font-size:30px;letter-spacing:-.022em}
-  .exgrid.one .exfaces:has(.nathf){gap:6px}
-  .exfaces figure.nathf figcaption span{display:inline}
   .obchat .nath{gap:16px}
   .obchat .nath .avatar{width:56px;height:56px}
   .obchat .nath h2{font-size:24px}
@@ -1088,7 +1080,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
     </div>
     <div class="exgrid one">
     <div class="ex first">
-      <div class="exfaces" aria-label="As 4 pessoas da simulação: Carla, Lúcia, Felipe, Gabriela"><figure><img src="/simulador-objecoes/assets/s71.webp" srcset="/simulador-objecoes/assets/s71.webp 240w, /simulador-objecoes/assets/p71.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Carla</figcaption></figure><figure><img src="/simulador-objecoes/assets/s85.webp" srcset="/simulador-objecoes/assets/s85.webp 240w, /simulador-objecoes/assets/p85.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Lúcia</figcaption></figure><figure><img src="/simulador-objecoes/assets/s35.webp" srcset="/simulador-objecoes/assets/s35.webp 240w, /simulador-objecoes/assets/p35.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Felipe</figcaption></figure><figure><img src="/simulador-objecoes/assets/s57.webp" srcset="/simulador-objecoes/assets/s57.webp 240w, /simulador-objecoes/assets/p57.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Gabriela</figcaption></figure><figure class="nathf"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><figcaption>Nath<span> explica</span></figcaption></figure></div>
+      <div class="exfaces" aria-label="As 4 pessoas da simulação: Carla, Lúcia, Felipe, Gabriela"><figure><img src="/simulador-objecoes/assets/s71.webp" srcset="/simulador-objecoes/assets/s71.webp 240w, /simulador-objecoes/assets/p71.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Carla</figcaption></figure><figure><img src="/simulador-objecoes/assets/s85.webp" srcset="/simulador-objecoes/assets/s85.webp 240w, /simulador-objecoes/assets/p85.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Lúcia</figcaption></figure><figure><img src="/simulador-objecoes/assets/s35.webp" srcset="/simulador-objecoes/assets/s35.webp 240w, /simulador-objecoes/assets/p35.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Felipe</figcaption></figure><figure><img src="/simulador-objecoes/assets/s57.webp" srcset="/simulador-objecoes/assets/s57.webp 240w, /simulador-objecoes/assets/p57.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>Gabriela</figcaption></figure></div>
       <div class="exbody">
         <div class="exhead"><i><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chat"></use></svg></i><span>Simulação</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"></use></svg>3 min</em></div>
         <h2>Atenda 4 pessoas</h2>
@@ -4284,7 +4276,7 @@ ENTER.obj = () => {
   S.fromHub = false;
   const id = O.id, ph = O.phrase, p = progOf(id);
   const sc = $('#s-obj');
-  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${r.patient.thumb}.webp 240w, /simulador-objecoes/assets/${r.patient.img}.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('') + `<figure class="nathf"><img src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><figcaption>Nath<span> explica</span></figcaption></figure>`;
+  const faces = ROUNDS.map(r => `<figure><img src="/simulador-objecoes/assets/${r.patient.thumb}.webp" srcset="/simulador-objecoes/assets/${r.patient.thumb}.webp 240w, /simulador-objecoes/assets/${r.patient.img}.webp 720w" sizes="(min-width:900px) 120px, 22vw" alt=""><figcaption>${esc(r.patient.name)}</figcaption></figure>`).join('');
   sc.innerHTML = `
     <div class="navrow"><button class="backbtn" data-hub aria-label="Voltar para a tela inicial">${ICON('back')}</button>
       <button class="nathchip" data-bio aria-label="Sobre a Nathálya Mello"><img class="avatar" src="/simulador-objecoes/assets/nath-avatar.webp" alt=""><span><b>Nathálya Mello</b><small>Especialista em vendas</small></span></button></div>

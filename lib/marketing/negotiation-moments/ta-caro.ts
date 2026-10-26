@@ -27,7 +27,7 @@ export const taCaroMoment: NegotiationMomentConfig = {
     title: "O que responder quando a paciente fala “tá caro” | Nathálya",
     description:
       "Faça uma simulação rápida e veja como Nathálya conduziria essa conversa antes de dar desconto ou defender o preço.",
-    canonical: "https://smileflow.com.br/quando-acham-caro",
+    canonical: "https://www.smileflow.com.br/quando-acham-caro",
   },
   visibleTitle: "O que responder quando a paciente fala “tá caro”?",
   video1: {
@@ -203,6 +203,6 @@ export const taCaroMoment: NegotiationMomentConfig = {
     product: "Método Negociação Clínica",
     detail: "Da primeira pergunta até a decisão.",
     actionLabel: "Quero conhecer o MNC",
-    destination: "https://smileflow.com.br/negociacao-clinica",
+    destination: "https://www.smileflow.com.br/negociacao-clinica",
   },
 };
