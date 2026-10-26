@@ -1331,7 +1331,7 @@ const SF_EVENTS = {
   sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
   // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
-  fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', fn_cta: 'funil_botao_whatsapp'
+  fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', funil_botao_whatsapp: 'funil_botao_whatsapp'
 };
 function sfEvent(ev, d) {
   // Eventos legados continuam no dataLayer; vídeo só é medido pelo player quando há som.
@@ -3576,9 +3576,8 @@ function contactWaText() {
                               : `Fiz a simulação do ${O.phrase} da Nath e não descobri o motivo real em nenhuma das ${done.max} conversas.`);
   else out.push(`Vi a simulação do ${O.phrase} da Nath.`);
   out.push('Quero entender como o MNC pode me ajudar.');
-  return safeWaText(out.join(' ') + `\n\n(Ref: ${REF})`);
+  return out.join(' ') + `\n\n(Ref: ${REF})`;
 }
-function safeWaText(text) { return text.replace(/\d{6,}/g, '••••'); }
 const waLink = text => (CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}` : 'https://wa.me/') + '?text=' + encodeURIComponent(text);
 function paintMnc() {
   const href = waLink(contactWaText());
@@ -4504,7 +4503,7 @@ function funnelWaText() {
   const d = (A.desejo || '').replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '');
   if (d) out.push(/^eu conseguiria\b/i.test(d) ? `Se eu vendesse com mais segurança, ${d.charAt(0).toLowerCase() + d.slice(1)}.` : `Se eu vendesse com mais segurança: ${d}.`);
   out.push('Quero aprender a vender.');
-  return safeWaText(out.join(' ') + `\n\n(Ref: ${REF})`);
+  return out.join(' ') + `\n\n(Ref: ${REF})`;
 }
 // O botão do WhatsApp aparece perto do fim do vídeo (CONFIG.funil.ctaAt) e sempre no fim.
 // Quem já viu o botão uma vez, numa próxima visita, já encontra o botão na tela.
@@ -4515,7 +4514,7 @@ function funnelWaText() {
     sc.classList.add('cta');
     $$('#s-vfn [data-wa]').forEach(a => { a.href = waLink(funnelWaText()); });
     if (!fnSeen().cta) STORE.set(FN_KEY, { ...fnSeen(), cta: Date.now() });
-    track('fn_cta');
+    track('funil_botao_whatsapp');
   };
   const at = () => { const c = CONFIG.funil && CONFIG.funil.ctaAt; return c != null ? c : (v.duration ? v.duration * 0.85 : Infinity); };
   v.addEventListener('timeupdate', () => { if (v.currentTime >= at()) show(); });

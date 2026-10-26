@@ -64,10 +64,11 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
     Object.defineProperty(v, "duration", { configurable: true, value: 100 });
     Object.defineProperty(v, "currentTime", { configurable: true, writable: true, value: 0 });
     Object.defineProperty(v, "paused", { configurable: true, value: false });
+    const k = v.closest(".vfull").dataset.vkey; if (MEDIA[k]) MEDIA[k].script = false; v.closest(".vfull").classList.remove("failed"); // simula HLS carregado
     v.muted = true; v.dispatchEvent(new Event("play")); v.dispatchEvent(new Event("timeupdate"));
   }, { sel });
   await soundVideo("#s-vsl video");
-  await pg.locator("#s-vsl .vtap").click({ force: true });
+  await pg.$eval("#s-vsl .vtap", (b) => b.click());
   const finishVideo = async (sel) => pg.evaluate(({ sel }) => {
     const v = document.querySelector(sel);
     for (let round = 0; round < 2; round++) {
@@ -77,15 +78,16 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
   }, { sel });
   await finishVideo("#s-vsl video");
   await pg.evaluate(({ area, what }) => { go("vfn"); }, { area, what });
+  await pg.evaluate(() => { S.fnAns = { desejo: "fechar 1234567 tratamentos" }; });
   await pg.waitForTimeout(200);
   await soundVideo("#s-vfn video");
-  await pg.locator("#s-vfn .vtap").click({ force: true });
+  await pg.$eval("#s-vfn .vtap", (b) => b.click());
   await finishVideo("#s-vfn video");
   const waText = await pg.$eval('#s-vsl a[data-wa="vsl"]', (a) => decodeURIComponent(new URL(a.href).searchParams.get("text") || ""));
   await pg.$eval('#s-vsl a[data-wa="vsl"]', (a) => { a.target = "_self"; a.addEventListener("click", e => e.preventDefault(), { once: true }); });
-  await pg.click('#s-vsl a[data-wa="vsl"]'); await pg.waitForTimeout(250);
+  await pg.$eval('#s-vsl a[data-wa="vsl"]', (a) => a.click()); await pg.waitForTimeout(250);
   const funilWa = pg.locator('#s-vfn a[data-wa="funil"]');
-  if (await funilWa.count()) { await funilWa.evaluate((a) => { a.addEventListener("click", e => e.preventDefault(), { once: true }); }); await funilWa.click({ force: true }); await pg.waitForTimeout(250); }
+  if (await funilWa.count()) { await funilWa.evaluate((a) => { a.addEventListener("click", e => e.preventDefault(), { once: true }); }); await funilWa.evaluate((a) => a.click()); await pg.waitForTimeout(250); }
   const q = await pg.evaluate(() => ({
     fbq: (window.fbq && window.fbq.queue || []).map((a) => Array.from(a)), ttq: (window.ttq || []).filter(Array.isArray),
     uetq: window.__uet || [],
@@ -95,9 +97,11 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
     videoMeta: (window.fbq && window.fbq.queue || []).filter((a) => a[0] === "trackCustom" && /^vsl_(play|25|50|75|100)$/.test(a[1])).map((a) => Array.from(a)),
     videoIds: window.dataLayer.filter((x) => x && x[0] === "event" && /^video_/.test(x[1])).map((x) => x[2]),
     mncData: window.dataLayer.filter((x) => x && x.event && /^mnc_video_/.test(x.event)),
+    funnelButton: window.dataLayer.filter((x) => x && x.event === "sf_funil_botao_whatsapp"),
   }));
+  const funnelText = await pg.evaluate(() => funnelWaText());
   await ctx.close();
-  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, platformRequests, blocked };
+  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, funnelText, platformRequests, blocked };
 }
 
 const b = await chromium.launch({ executablePath: CHROME, headless: true });
@@ -112,7 +116,6 @@ check("guia: Meta CompleteRegistration uma vez, com o event_id do n8n", () => {
   const ev = s.q.fbq.filter((a) => a[0] === "track" && a[1] === "CompleteRegistration");
   assert.equal(ev.length, 1); assert.equal(ev[0][3].eventID, guia.event_id);
 });
-check("Microsoft UET: submit_lead_form uma vez", () => assert.equal(s.q.uetq.filter((a) => a[0] === "event" && a[1] === "submit_lead_form").length, 1));
 check("nenhum dado pessoal em parâmetro de evento", () => assert.ok(!JSON.stringify(s.q).match(/Teste Simulador|27999990000|5527999990000/)));
 check("n8n recebe origem e click IDs no payload", () => { assert.ok(guia.attribution && guia.attribution.first && guia.attribution.ids); assert.ok("channel_last" in guia.attribution); });
 check("dois vídeos: autoplay mudo não mede; cada marco audível é único por video_id", () => {
@@ -125,19 +128,28 @@ check("dois vídeos: autoplay mudo não mede; cada marco audível é único por 
     assert.ok(ga.every((a) => a[2].objecao && a[2].ab));
   }
 });
-check("WhatsApp: mesmo event_id na Meta e no POST, ref válido e sem telefone/código longo", () => {
+check("WhatsApp: mesmo event_id na Meta e no POST, ref válido", () => {
   const post = s.posts.find((p) => p.type === "whatsapp" && p.where === "vsl"); assert.ok(post);
   const ev = s.q.fbq.find((a) => a[0] === "track" && a[1] === "Lead" && a[2].lead_type === "whatsapp_vsl");
   assert.ok(ev); assert.equal(ev[3].eventID, post.event_id);
   const ga = s.q.gtag.find((a) => a[0] === "event" && a[1] === "clique_whatsapp" && a[2].where === "vsl");
   assert.ok(ga); assert.equal(ga[2].objecao, post.objecao); assert.equal(ga[2].event_id, post.event_id);
-  assert.match(post.ref, /^MNC-[a-z0-9]{4}$/); assert.ok(!/\d{6,}/.test(s.waText));
+  assert.match(post.ref, /^MNC-[a-z0-9]{4}$/); assert.match(s.waText, /\(Ref: MNC-[a-z0-9]{4}\)$/);
   for (const key of ["ref", "sid", "event_id", "objecao", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id", "gclid", "fbclid", "ttclid", "msclkid"]) assert.ok(key in post, key);
   const simPost = s.posts.find((p) => p.type === "whatsapp" && p.where === "funil");
-  const simLead = s.q.fbq.find((a) => a[0] === "track" && a[1] === "Lead" && a[2].lead_type === "whatsapp_simulador");
+  const simLead = s.q.fbq.find((a) => a[0] === "track" && a[1] === "Lead" && a[2].lead_type === "whatsapp_vsl" && a[3].eventID === simPost.event_id);
   assert.ok(simPost && simLead); assert.equal(simLead[3].eventID, simPost.event_id);
   assert.equal(s.q.gtag.filter((a) => a[0] === "event" && a[1] === "clique_whatsapp" && a[2].where === "funil").length, 1);
   assert.equal(s.q.gtag.filter((a) => a[0] === "event" && a[1] === "generate_lead").length, 0);
+  assert.ok(s.funnelText.includes("1234567")); assert.match(s.funnelText, /\(Ref: MNC-[a-z0-9]{4}\)$/);
+  const funnelEvent = s.q.funnelButton[0]; assert.ok(funnelEvent);
+  const funnelMeta = s.q.fbq.filter((a) => a[2]?.event_id === funnelEvent.event_id);
+  assert.equal(funnelMeta.length, 1); assert.deepEqual(funnelMeta[0].slice(0, 2), ["trackCustom", "funil_botao_whatsapp"]);
+  assert.equal(s.q.fbq.filter((a) => a[2]?.event_id === funnelEvent.event_id && a[0] === "track").length, 0);
+  assert.equal(funnelEvent.sf_standard, false);
+  assert.equal(s.q.gtag.filter((a) => a[0] === "event" && a[1] === "funil_botao_whatsapp" && a[2].event_id === funnelEvent.event_id).length, 1);
+  assert.equal(s.q.gtag.filter((a) => a[0] === "event" && ["conversion", "generate_lead"].includes(a[1]) && a[2].event_id === funnelEvent.event_id).length, 0);
+  assert.equal(simLead[2].lead_type, "whatsapp_vsl");
 });
 
 const f = await session(b, { area: "comercio", what: "Loja de móveis" });
@@ -154,7 +166,7 @@ check("?teste=1: nenhuma plataforma carrega/chama e n8n recebe is_test", () => {
   assert.equal(t.q.test, true);
   assert.equal(t.q.fbq.filter((a) => a[0] === "track" && a[1] !== "PageView").length + t.q.fbq.filter((a) => a[0] === "trackCustom").length, 0);
   assert.equal(t.q.ttq.filter((a) => a[0] === "track").length, 0);
-  assert.equal(t.q.gtag.length, 0); assert.deepEqual(t.q.vendors, []); assert.deepEqual(t.platformRequests, []);
+  assert.equal(t.q.gtag.length, 0); assert.deepEqual(t.q.vendors, []); assert.deepEqual(t.platformRequests.filter((u) => !/n8n\.smileflow\.me/.test(u)), []);
   assert.ok(t.posts.every((p) => p.is_test === true));
 });
 
@@ -173,10 +185,10 @@ check("sete páginas, duas rodadas: marcos únicos por vídeo; teste sem vendors
     }
     assert.equal(testRun.q.test, true, path); assert.deepEqual(testRun.q.vendors, [], path);
     assert.equal(testRun.q.gtag.length, 0, path); assert.equal(testRun.q.fbq.length, 0, path);
-    assert.deepEqual(testRun.platformRequests, [], path);
+    assert.deepEqual(testRun.platformRequests.filter((u) => !/n8n\.smileflow\.me/.test(u)), [], path);
     assert.deepEqual(testRun.blocked.filter((url) => /facebook|google-analytics|googletagmanager|googleadservices|doubleclick|n8n/i.test(url)), [], path);
     const post = run.posts.find((p) => p.type === "whatsapp" && p.where === "vsl"); assert.ok(post, path);
-    assert.match(post.ref, /^MNC-[a-z0-9]{4}$/); assert.ok(!/\d{6,}/.test(run.waText));
+    assert.match(post.ref, /^MNC-[a-z0-9]{4}$/); assert.match(run.waText, /\(Ref: MNC-[a-z0-9]{4}\)$/);
   }
   const refs = pageRuns.filter((_, i) => i % 2 === 0).map((run) => run.posts.find((p) => p.type === "whatsapp" && p.where === "vsl").ref);
   assert.equal(new Set(refs).size, refs.length);

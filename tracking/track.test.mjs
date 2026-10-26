@@ -64,6 +64,16 @@ test("diagnóstico sem WhatsApp não é a conversão principal", () => {
   assert.equal(g.calls.fbq[0][0], "trackCustom");
 });
 
+test("botão do funil é evento personalizado, não conversão padrão", () => {
+  const g = load({ config: ALL });
+  g.w.sfTrack("funil_botao_whatsapp", { segment_group: "saude_estetica" });
+  assert.deepEqual(g.calls.fbq.map((c) => c.slice(0, 2)), [["trackCustom", "funil_botao_whatsapp"]]);
+  assert.equal(events(g, "funil_botao_whatsapp").length, 1);
+  assert.equal(events(g, "conversion").length, 0);
+  assert.equal(events(g, "generate_lead").length, 0);
+  assert.equal(g.calls.fbq.filter((c) => c[0] === "track").length, 0);
+});
+
 test("secundárias: guia, pedido de contato e WhatsApp; o clique vira Lead só na saúde", () => {
   const g = load({ config: ALL });
   g.w.sfTrack("guia_liberado", { segment_group: "saude_estetica" }, { eventId: "g" });
