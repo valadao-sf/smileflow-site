@@ -12,6 +12,7 @@
   },
   "ga4": { "id": "G-ZC4Y4L1YQN" },
   "meta": { "pixelId": "888486630406077" },
+  "openai": { "pixelId": "" },
   "googleAds": {
     "id": "AW-17316220856",
     "labels": { "diagnostico_concluido": "lltzCJShiKQdELifgsFA", "guia_liberado": "sB5wCJehiKQdELifgsFA", "pedido_contato": "fTY2CJqhiKQdELifgsFA", "clique_whatsapp": "fc28CJ2hiKQdELifgsFA" }

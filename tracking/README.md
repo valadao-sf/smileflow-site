@@ -28,8 +28,8 @@ No React: `import { sfTrack } from "@/lib/tracking"`. Mande o mesmo `eventId` ao
 navegador e servidor (Meta `eventID`, TikTok `event_id`, Google Ads `transaction_id`).
 
 - Só carrega em `smileflow.com.br` e `www.smileflow.com.br`. Fora disso (prévias, localhost) tudo é teste e nada carrega.
-- `?teste=1` vale para a sessão inteira: GA4 recebe `debug_mode` (e `traffic_type=internal`); as plataformas de anúncio
-  não recebem nada do navegador. O teste delas é pelo servidor, com `test_event_code`.
+- `?teste=1` vale para a sessão inteira: nenhuma plataforma carrega ou recebe chamadas; só `dataLayer`
+  preserva o diagnóstico (`sf_test: true`).
 - Nome, telefone e e-mail nunca vão em parâmetro de evento (a camada descarta essas chaves).
 - `sfTrack.attribution()` devolve o primeiro e o último toque (UTMs, `gclid`, `gbraid`, `wbraid`, `fbclid`, `ttclid`,
   `msclkid`, `li_fat_id`, referrer externo e página de entrada, por 90 dias) e o canal de cada um.
@@ -52,6 +52,11 @@ Assim os anúncios não aprendem a buscar o público errado.
 | `diagnostico_concluido` sem WhatsApp | Funil | `diagnostico_concluido` | personalizado | personalizado | — | personalizado |
 | `lista_espera` (fora da saúde) | Funil | `lista_espera` | personalizado | personalizado | — | personalizado |
 | Funil: `perfil_preenchido`, `simulacao_iniciada`, `resultado_simulacao`, `pedido_whatsapp_visto`, `guia_aberto`, `flashcards_iniciados`, `cartoes_concluidos`, `diagnostico_iniciado`, `lp_view`… | — | mesmo nome | personalizado | — | — | — |
+
+No simulador MNC, `clique_whatsapp` continua com esse nome no GA4 e usa `Lead` da Meta somente
+para `saude_estetica`, com `lead_type=whatsapp_vsl` ou `whatsapp_simulador`. Vídeos VSL audíveis
+enviam `video_start`, `video_progress` (25/50/75) e `video_complete` ao GA4, e `vsl_play`,
+`vsl_25`, `vsl_50`, `vsl_75` e `vsl_100` como eventos personalizados da Meta.
 
 LinkedIn (`conversions[evento]`), Pinterest (`lead`, `signup`) e Kwai (`EVENT_FORM_SUBMIT`, `EVENT_COMPLETE_REGISTRATION`,
 `EVENT_CONTACT`) seguem a mesma regra, só quando o ID estiver preenchido.

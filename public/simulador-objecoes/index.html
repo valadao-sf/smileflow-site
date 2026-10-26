@@ -1340,14 +1340,8 @@ const ICON = n => `<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${n
 const UTM = {};
 try {
   const q = new URLSearchParams(location.search);
-  ['intent','utm_source','utm_medium','utm_campaign','utm_content','utm_term','creative','partner','gclid','fbclid']
+  ['intent','utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','creative','partner','gclid','fbclid','ttclid','msclkid']
     .forEach(k => { const v = q.get(k); if (v) UTM[k] = v; });
-} catch (e) {}
-// primeiro toque: guarda a origem do anúncio por 30 dias, para o contato feito depois em outra página
-try {
-  const saved = JSON.parse(localStorage.getItem('nath_utm') || 'null');
-  if (UTM.utm_source || UTM.gclid || UTM.fbclid) localStorage.setItem('nath_utm', JSON.stringify({ ...UTM, ts: Date.now() }));
-  else if (saved && Date.now() - (saved.ts || 0) < 30 * 864e5) { delete saved.ts; Object.assign(UTM, saved, { first_touch: true }); }
 } catch (e) {}
 // teste: fora de smileflow.com.br ou com ?teste=1 nada chega na equipe
 const IS_TEST = (() => {
@@ -1356,6 +1350,12 @@ const IS_TEST = (() => {
   return !/(^|\.)smileflow\.com\.br$/.test(location.hostname);
 })();
 const SID = Math.random().toString(36).slice(2, 10);
+const REF = (() => {
+  let h = 2166136261;
+  for (const c of SID) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const s = (h >>> 0).toString(36).padStart(4, '0').slice(-4).replace(/[0-9]/g, c => String.fromCharCode(97 + Number(c)));
+  return 'MNC-' + s;
+})();
 // Variante do teste A/B, sorteada uma vez por aparelho. A = resultado → WhatsApp; B = resultado → VSL → WhatsApp.
 const AB = (() => {
   let v = '';
@@ -1373,18 +1373,52 @@ const AB = (() => {
 const SF_EVENTS = {
   // conversões: guia liberado, pedido de contato e clique no WhatsApp da equipe (o diagnóstico saiu em 21/out/2026)
   lead: 'guia_liberado', callback: 'pedido_contato', wa_click: 'clique_whatsapp', waitlist: 'lista_espera',
+  vsl_play: 'video_start', vsl_progress: 'video_progress', vsl_complete: 'video_end',
   // o meio do funil, para ver onde as pessoas param
   sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
   // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
-  fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', fn_cta: 'funil_botao_whatsapp'
+  fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', funil_botao_whatsapp: 'funil_botao_whatsapp'
 };
 function sfEvent(ev, d) {
+  // Eventos legados continuam no dataLayer; vídeo só é medido pelo player quando há som.
+  if (['video_start', 'video_end', 'video_sound_on'].includes(d.event.replace(/^mnc_/, ''))) return;
   const name = SF_EVENTS[ev]; if (!name || !window.sfTrack) return;
   const seg = bizGroup();
-  const params = { objection: d.intent, ab: d.ab, has_whatsapp: !!S.phone, ...(d.phase ? { phase: d.phase } : {}), ...(d.where ? { where: d.where } : {}),
+  const params = { objection: d.intent, objecao: d.intent, ab: d.ab, has_whatsapp: !!S.phone, ...(d.phase ? { phase: d.phase } : {}), ...(d.where ? { where: d.where } : {}),
                    ...(seg ? { segment_group: seg } : {}), ...(typeof d.value === 'number' ? { value: d.value } : {}) };
   try { window.sfTrack(name, params, d.event_id ? { eventId: d.event_id } : {}); } catch (e) {}
+}
+function sfVideoEvent(ev, videoId, videoPercent) {
+  if (!window.sfTrack) return;
+  const name = SF_EVENTS[ev]; if (!name) return;
+  const seg = bizGroup();
+  const params = { objecao: O ? O.id : '', video_id: videoId, ab: AB, ...(seg ? { segment_group: seg } : {}), ...(videoPercent ? { video_percent: videoPercent } : {}) };
+  try { window.sfTrack(name, params); } catch (e) {}
+}
+const VIDEO_MILESTONES = Object.create(null);
+function measureVslVideo(video) {
+  if (!video || !['vfn', 'vsl'].includes(video.closest('.vfull')?.dataset.vkey)) return;
+  const key = video.closest('.vfull').dataset.vkey;
+  const videoId = key === 'vfn' ? CONFIG.funil.video.id : CONFIG.mnc.vsl.id;
+  const seen = VIDEO_MILESTONES[videoId] || (VIDEO_MILESTONES[videoId] = Object.create(null));
+  const send = (mark, event, percent) => {
+    if (video.muted || seen[mark]) return;
+    seen[mark] = true;
+    sfVideoEvent(event, videoId, percent);
+  };
+  video.addEventListener('play', () => send('play', 'vsl_play'));
+  video.addEventListener('playing', () => send('play', 'vsl_play'));
+  video.addEventListener('volumechange', () => {
+    if (!video.muted && !video.paused) send('play', 'vsl_play');
+  });
+  video.addEventListener('timeupdate', () => {
+    if (video.muted || !video.duration) return;
+    if (!video.paused) send('play', 'vsl_play');
+    const percent = video.currentTime / video.duration * 100;
+    [25, 50, 75].forEach(p => { if (percent >= p) send(String(p), 'vsl_progress', p); });
+  });
+  video.addEventListener('ended', () => send('100', 'vsl_complete', 100));
 }
 const sfAttribution = () => { try { return window.sfTrack && window.sfTrack.attribution ? { ...window.sfTrack.attribution(), ids: window.sfTrack.ids() } : null; } catch (e) { return null; } };
 function track(ev, props = {}) {
@@ -3524,6 +3558,7 @@ function useObjection(id) {
 
 $$('.vfull').forEach(sc => {
   const key = sc.dataset.vkey, v = $('video', sc), bar = $('.vprog i', sc);
+  measureVslVideo(v);
   const isScript = () => MEDIA[key] && MEDIA[key].script;
   v.muted = true; v.playsInline = true;
   v.addEventListener('timeupdate', () => { bar.style.transform = `scaleX(${v.duration ? v.currentTime / v.duration : 0})`; });
@@ -3588,7 +3623,7 @@ function contactWaText() {
                               : `Fiz a simulação do ${O.phrase} da Nath e não descobri o motivo real em nenhuma das ${done.max} conversas.`);
   else out.push(`Vi a simulação do ${O.phrase} da Nath.`);
   out.push('Quero entender como o MNC pode me ajudar.');
-  return out.join(' ') + `\n\n(código ${AB}-${O.id})`;
+  return out.join(' ') + `\n\n(Ref: ${REF})`;
 }
 const waLink = text => (CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}` : 'https://wa.me/') + '?text=' + encodeURIComponent(text);
 function paintMnc() {
@@ -3610,8 +3645,16 @@ function paintMnc() {
   ['#s-gift', '#s-final'].forEach(id => { const root = $(id); if (root) { wireCallback(root); wireWaitlist(root); } });
 }
 function contactPayload(type, extra = {}) {
-  return { type, name: S.name || '', phone: S.phone || '', objection: O.id, ...profileFields(),
-           ab: AB, utm: UTM, sid: SID, ts: new Date().toISOString(), source: 'simulador-' + O.id, ...extra };
+  const source = (() => {
+    try {
+      const live = window.sfTrack?.attribution?.();
+      if (live) return live.last || live.first || {};
+    } catch (e) {}
+    try { const saved = JSON.parse(localStorage.getItem('sf_attr') || 'null'); return saved && (saved.last || saved.first) || {}; } catch (e) { return {}; }
+  })();
+  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id', 'gclid', 'fbclid', 'ttclid', 'msclkid'];
+  return { type, name: S.name || '', phone: S.phone || '', objection: O.id, objecao: O.id, ref: REF, sid: SID, ...profileFields(),
+           ...Object.fromEntries(keys.map(k => [k, source[k] || ''])), ab: AB, utm: UTM, ts: new Date().toISOString(), source: 'simulador-' + O.id, ...extra };
 }
 // Envia um evento ao n8n. Vai como texto simples (sem pré-checagem de CORS) e por beacon,
 // para chegar mesmo quando a pessoa sai da página para o WhatsApp.
@@ -4519,7 +4562,7 @@ function funnelWaText() {
   const d = (A.desejo || '').replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '');
   if (d) out.push(/^eu conseguiria\b/i.test(d) ? `Se eu vendesse com mais segurança, ${d.charAt(0).toLowerCase() + d.slice(1)}.` : `Se eu vendesse com mais segurança: ${d}.`);
   out.push('Quero aprender a vender.');
-  return out.join(' ') + `\n\n(código ${AB}-funil-${O.id})`;
+  return out.join(' ') + `\n\n(Ref: ${REF})`;
 }
 // O botão do WhatsApp aparece perto do fim do vídeo (CONFIG.funil.ctaAt) e sempre no fim.
 // Quem já viu o botão uma vez, numa próxima visita, já encontra o botão na tela.
@@ -4530,7 +4573,7 @@ function funnelWaText() {
     sc.classList.add('cta');
     $$('#s-vfn [data-wa]').forEach(a => { a.href = waLink(funnelWaText()); });
     if (!fnSeen().cta) STORE.set(FN_KEY, { ...fnSeen(), cta: Date.now() });
-    track('fn_cta');
+    track('funil_botao_whatsapp');
   };
   const at = () => { const c = CONFIG.funil && CONFIG.funil.ctaAt; return c != null ? c : (v.duration ? v.duration * 0.85 : Infinity); };
   v.addEventListener('timeupdate', () => { if (v.currentTime >= at()) show(); });
@@ -4559,7 +4602,7 @@ document.addEventListener('click', e => {
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
   if (a.dataset.wa) {
     a.href = waLink(a.dataset.wa === 'funil' ? funnelWaText() : contactWaText());
-    const eid = uuid(); track('wa_click', { where: a.dataset.wa, event_id: eid }); postLead(contactPayload('whatsapp', { where: a.dataset.wa }), eid);
+    const eid = uuid(); track('wa_click', { where: a.dataset.wa, event_id: eid }); postLead(contactPayload('whatsapp', { where: a.dataset.wa, event_id: eid }), eid);
   }
 });
 

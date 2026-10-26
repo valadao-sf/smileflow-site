@@ -11,7 +11,7 @@
    Antes do script carregar, as páginas podem chamar o stub `sfTrack(...)`: as chamadas ficam na fila. */
 (function (w, d) {
   'use strict';
-  var CFG = {"hosts":["smileflow.com.br","www.smileflow.com.br"],"currency":"BRL","consent":{"required":false},"userData":{"enabled":false},"ga4":{"id":"G-ZC4Y4L1YQN"},"meta":{"pixelId":"888486630406077"},"googleAds":{"id":"AW-17316220856","labels":{"diagnostico_concluido":"lltzCJShiKQdELifgsFA","guia_liberado":"sB5wCJehiKQdELifgsFA","pedido_contato":"fTY2CJqhiKQdELifgsFA","clique_whatsapp":"fc28CJ2hiKQdELifgsFA"}},"tiktok":{"pixelId":""},"microsoftUet":{"tagId":""},"clarity":{"projectId":"z0ydd3my38"},"linkedin":{"partnerId":"","conversions":{"diagnostico_concluido":""}},"pinterest":{"tagId":""},"kwai":{"pixelId":""}};
+  var CFG = {"hosts":["smileflow.com.br","www.smileflow.com.br"],"currency":"BRL","consent":{"required":false},"userData":{"enabled":false},"ga4":{"id":"G-ZC4Y4L1YQN"},"meta":{"pixelId":"888486630406077"},"openai":{"pixelId":""},"googleAds":{"id":"AW-17316220856","labels":{"diagnostico_concluido":"lltzCJShiKQdELifgsFA","guia_liberado":"sB5wCJehiKQdELifgsFA","pedido_contato":"fTY2CJqhiKQdELifgsFA","clique_whatsapp":"fc28CJ2hiKQdELifgsFA"}},"tiktok":{"pixelId":""},"microsoftUet":{"tagId":""},"clarity":{"projectId":"z0ydd3my38"},"linkedin":{"partnerId":"","conversions":{"diagnostico_concluido":""}},"pinterest":{"tagId":""},"kwai":{"pixelId":""}};
   var prev = w.sfTrack, queue = (prev && prev.q) || [];
   if (prev && prev.loaded) return;
 
@@ -97,7 +97,7 @@
   function consentState(c) {
     return { ad_storage: c.ads ? 'granted' : 'denied', ad_user_data: c.ads ? 'granted' : 'denied', ad_personalization: c.ads ? 'granted' : 'denied', analytics_storage: c.analytics ? 'granted' : 'denied' };
   }
-  if (CFG.consent && CFG.consent.required) gtag('consent', 'default', Object.assign(consentState(consent), { wait_for_update: 500 }));
+  if (!IS_TEST && CFG.consent && CFG.consent.required) gtag('consent', 'default', Object.assign(consentState(consent), { wait_for_update: 500 }));
 
   /* ---------- carregadores (só no domínio, só com ID) ---------- */
   function script(src, attrs) {
@@ -111,7 +111,7 @@
       if (!has(CFG.ga4.id)) return;
       script('https://www.googletagmanager.com/gtag/js?id=' + CFG.ga4.id);
       gtag('js', new Date());
-      gtag('config', CFG.ga4.id, IS_TEST ? { debug_mode: true, traffic_type: 'internal' } : {});
+      gtag('config', CFG.ga4.id, {});
       loaded.ga4 = true;
     },
     googleAds: function () {
@@ -128,6 +128,9 @@
       w.fbq('init', CFG.meta.pixelId);
       w.fbq('track', 'PageView');
       loaded.meta = true;
+    },
+    openai: function () {
+      /* Endereço do pixel a definir quando a conta existir. */
     },
     tiktok: function () {
       if (!has(CFG.tiktok.pixelId)) return;
@@ -175,9 +178,9 @@
       loaded.kwai = true;
     }
   };
-  var ANALYTICS = ['ga4'], ADS = ['googleAds', 'meta', 'tiktok', 'microsoftUet', 'linkedin', 'pinterest', 'kwai'], BEHAVIOR = ['clarity'];
+  var ANALYTICS = ['ga4'], ADS = ['googleAds', 'meta', 'tiktok', 'microsoftUet', 'linkedin', 'pinterest', 'kwai', 'openai'], BEHAVIOR = ['clarity'];
   function boot() {
-    if (!ON_HOST) return;
+    if (!ON_HOST || IS_TEST) return;
     // GA4 carrega sempre: sem aceite, o Consent Mode manda pings sem cookie.
     ANALYTICS.forEach(function (k) { if (!loaded[k]) V[k](); });
     if (consent.ads) ADS.forEach(function (k) { if (!loaded[k]) V[k](); });
@@ -191,7 +194,12 @@
     diagnostico_concluido: { needsWhatsapp: true, ga4: 'generate_lead', ga4p: { lead_type: 'diagnostico' }, meta: 'Lead', tiktok: 'SubmitForm', uet: 'submit_lead_form', pinterest: 'lead', kwai: 'EVENT_FORM_SUBMIT', primary: true },
     guia_liberado: { ga4: 'sign_up', ga4p: { method: 'guia' }, meta: 'CompleteRegistration', tiktok: 'CompleteRegistration', uet: 'sign_up', pinterest: 'signup', kwai: 'EVENT_COMPLETE_REGISTRATION' },
     pedido_contato: { ga4: 'pedido_contato', meta: 'Contact', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' },
-    clique_whatsapp: { ga4: 'clique_whatsapp', meta: 'Contact', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' }
+    clique_whatsapp: { ga4: 'clique_whatsapp', meta: 'Lead', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' }
+  };
+  var VIDEO_EVENTS = {
+    video_start: { ga4: 'video_start', meta: 'vsl_play' },
+    video_progress: { ga4: 'video_progress', meta: function (p) { return 'vsl_' + p.video_percent; } },
+    video_end: { ga4: 'video_complete', meta: 'vsl_100' }
   };
   function clean(p) {
     var o = {};
@@ -210,7 +218,7 @@
     if (sent[key]) return eventId;   // o mesmo evento nunca dispara duas vezes
     sent[key] = 1;
     var seg = params.segment_group || opts.segment || '';
-    var conv = CONVERSIONS[name];
+    var conv = CONVERSIONS[name], video = VIDEO_EVENTS[name];
     var standard = !!conv && seg === 'saude_estetica' && (!conv.needsWhatsapp || params.has_whatsapp === true);
     var p = clean(params);
     var value = typeof params.value === 'number' && params.value > 0 ? params.value : null;
@@ -219,12 +227,20 @@
     try { w.dataLayer.push(Object.assign({ event: 'sf_' + name, sf_test: IS_TEST, sf_standard: standard }, base)); } catch (e) {}
     if (!ON_HOST) return eventId;
 
-    // GA4: sempre (é análise); em teste vai com debug_mode e fica fora dos relatórios pelo filtro de tráfego interno.
-    if (loaded.ga4) try { gtag('event', standard ? conv.ga4 : name, Object.assign({}, base, standard && conv.ga4p ? conv.ga4p : {}, IS_TEST ? { debug_mode: true } : {}, { send_to: CFG.ga4.id })); } catch (e) {}
+    if (video) {
+      if (IS_TEST) return eventId;
+      if (loaded.ga4) try { gtag('event', video.ga4, Object.assign({}, base, name === 'video_progress' ? { video_percent: params.video_percent } : {}, { send_to: CFG.ga4.id })); } catch (e) {}
+      try { if (loaded.meta && w.fbq) w.fbq('trackCustom', typeof video.meta === 'function' ? video.meta(params) : video.meta, base, { eventID: eventId }); } catch (e) {}
+      return eventId;
+    }
+
+    // GA4 nunca recebe chamadas em ?teste=1.
+    if (!IS_TEST && loaded.ga4) try { gtag('event', standard ? conv.ga4 : name, Object.assign({}, base, standard && conv.ga4p ? conv.ga4p : {}, { send_to: CFG.ga4.id })); } catch (e) {}
     // Plataformas de anúncio: em teste não disparam (não ensinam o algoritmo). O teste delas é pelo servidor, com test_event_code.
     if (IS_TEST) return eventId;
     var custom = !!conv;   // conversões fora do público viram evento personalizado; eventos de funil só vão para GA4 e Meta (personalizado)
-    try { if (loaded.meta && w.fbq) standard ? w.fbq('track', conv.meta, base, { eventID: eventId }) : w.fbq('trackCustom', name, base, { eventID: eventId }); } catch (e) {}
+    var metaParams = name === 'clique_whatsapp' && standard ? Object.assign({}, base, { lead_type: params.where === 'vsl' || params.where === 'funil' ? 'whatsapp_vsl' : 'whatsapp_simulador' }) : base;
+    try { if (loaded.meta && w.fbq) standard ? w.fbq('track', conv.meta, metaParams, { eventID: eventId }) : w.fbq('trackCustom', name, metaParams, { eventID: eventId }); } catch (e) {}
     if (!custom && !standard) return eventId;
     try { if (loaded.tiktok && w.ttq) w.ttq.track(standard ? conv.tiktok : name, Object.assign({}, p, money, { content_name: name }), { event_id: eventId }); } catch (e) {}
     try { if (loaded.microsoftUet && w.uetq) w.uetq.push('event', standard ? conv.uet : name, Object.assign({ event_category: standard ? 'conversao' : 'fora_publico', event_label: name }, value != null ? { revenue_value: value, currency: CFG.currency } : {})); } catch (e) {}
@@ -251,7 +267,7 @@
     if (!c) return Object.assign({}, consent);
     consent = { ads: !!c.ads, analytics: !!c.analytics };
     store.set(CONSENT_KEY, consent);
-    gtag('consent', 'update', consentState(consent));
+    if (!IS_TEST) gtag('consent', 'update', consentState(consent));
     if (w.ttq && loaded.tiktok) try { consent.ads ? w.ttq.grantConsent() : w.ttq.revokeConsent(); } catch (e) {}
     boot();
     return Object.assign({}, consent);
