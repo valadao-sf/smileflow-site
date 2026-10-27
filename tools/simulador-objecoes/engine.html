@@ -1323,6 +1323,8 @@ const SF_EVENTS = {
   // o meio do funil, para ver onde as pessoas param
   sim_start: 'simulacao_iniciada', flash_start: 'flashcards_iniciados', guide_open: 'guia_aberto',
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
+  // clique no botão do PDF do guia (página /simulador-objecoes/guia/<objeção> e tela do guia de quem volta)
+  pdf_download: 'guia_pdf_baixado',
   // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
   fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', funil_botao_whatsapp: 'funil_botao_whatsapp'
 };
@@ -3933,9 +3935,10 @@ ENTER.gift = async () => {
     <form id="lead-form" class="stack" style="gap:14px" novalidate>
       <div class="field"><label for="ld-name">Seu nome</label><input class="input" id="ld-name" autocomplete="name" value="${esc(S.name)}"></div>
       <div class="field"><label for="ld-phone">Seu WhatsApp, com DDD</label><input class="input" id="ld-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(27) 99999-9999"></div>
-      <label class="check" for="ld-ok"><input type="checkbox" id="ld-ok"> <span>Aceito receber o guia e mensagens da equipe da Nathálya Mello pelo WhatsApp. Posso pedir para sair quando quiser.</span></label>
+      <label class="check" for="ld-ok"><input type="checkbox" id="ld-ok"> <span>Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp. Posso pedir para sair quando quiser.</span></label>
       ${privacyLink()}
       <p class="err" id="ld-err" aria-live="polite"></p>
+      <p class="note">Seu guia abre na próxima página, com o PDF para baixar.</p>
       <button class="btn btn-main" type="submit" id="ld-send">${ICON('lock')}Liberar meu guia</button>
     </form>
     <button class="link" data-go="${afterGift()}" style="align-self:center">Continuar sem o guia</button>`;
@@ -3963,9 +3966,18 @@ async function submitLead(e) {
   };
   const eid = uuid();
   track('lead', { profile: P.key, score: P.hit, event_id: eid });
-  postLead({ type: 'guia', first_contact: true, ab: AB, ...payload }, eid);
+  const sent = postLead({ type: 'guia', first_contact: true, ab: AB, ...payload }, eid);
   savePerfil();
   S.lead = true;
+  // Nas páginas publicadas, o guia abre numa página própria, com o PDF e um endereço que a pessoa pode reabrir.
+  // Espera o POST ao n8n (até 1,5 s; ele também usa keepalive e a fila do aparelho) antes de sair da página.
+  if (CONFIG.site.base && !IN_ARTIFACT) {
+    const P1 = computeProfile();
+    markGuide(O.id, 'g1', { hit: P1.open, max: ROUNDS.length }); S.done[O.id] = { hit: P1.open, max: ROUNDS.length };
+    await Promise.race([sent, new Promise(r => setTimeout(r, 1500))]);
+    location.assign(`${CONFIG.site.base}/guia/${O.id}`);
+    return;
+  }
   $('#giftwrap').classList.remove('locked');
   $('#lead-form').remove();
   await wait(900);
@@ -4001,9 +4013,16 @@ function renderGiftOpen() {
     </div>`;
   $('#s-gift').scrollTop = 0;
   const dl = $('#gift-dl');
-  if (IN_ARTIFACT || !giftURL) { dl.hidden = true; $('#gift-row').style.gridTemplateColumns = '1fr'; }
-  else dl.href = giftURL;
-  dl.onclick = () => track('gift_download');
+  if (CONFIG.site.base && !IN_ARTIFACT) {
+    // O PDF estático do guia: funciona no navegador interno do Instagram e do ChatGPT, onde a imagem gerada pode falhar.
+    dl.href = `${CONFIG.site.base}/guia/guia-${O.id}.pdf`; dl.download = `guia-${O.id}-nathalya-mello.pdf`; dl.hidden = false;
+    dl.innerHTML = `${ICON('down')}Baixar o guia (PDF)`;
+    dl.onclick = () => { track('gift_download'); track('pdf_download', { where: 'guia_simulador' }); };
+  } else {
+    if (IN_ARTIFACT || !giftURL) { dl.hidden = true; $('#gift-row').style.gridTemplateColumns = '1fr'; }
+    else dl.href = giftURL;
+    dl.onclick = () => track('gift_download');
+  }
   const text = [...G.text, '',
     `Da simulação grátis da Nathálya Mello, especialista em vendas (${CONFIG.igHandle})` + (shareUrl() ? ': ' + shareUrl() : '')
   ].join('\n');
