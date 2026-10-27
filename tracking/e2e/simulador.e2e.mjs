@@ -32,6 +32,7 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
   // bat.js falso: a UET de verdade troca a fila por um objeto com push; este grava em window.__uet
   await ctx.route(/bat\.bing\.com/, (r) => r.fulfill({ contentType: "text/javascript", body: "window.__uet=[];window.UET=function(o){(o.q||[]).forEach(function(a){window.__uet.push(a)});this.push=function(){window.__uet.push([].slice.call(arguments))}};" }));
   await ctx.route(/googletagmanager|connect\.facebook|analytics\.tiktok|clarity\.ms|pandavideo|jsdelivr/, (r) => r.fulfill({ body: "", contentType: "text/javascript" }));
+  let guiaUrl = "", guiaPdf = "", leadFbq = [];
   const pg = await ctx.newPage(); const errs = []; pg.on("pageerror", (e) => errs.push(e.message));
   pg.on("request", (r) => { if (/facebook|google-analytics|googletagmanager|googleadservices|doubleclick|n8n/i.test(r.url())) platformRequests.push(r.url()); });
   await pg.goto("https://smileflow.com.br" + path + query); await pg.waitForTimeout(1200);
@@ -54,8 +55,14 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
       const p = [...root.querySelectorAll(".opt, .choice, .dopt")].find(vis) || [...root.querySelectorAll(".btn-main, .btn-wine, .btn")].find(vis); p && p.click(); }, await pg.evaluate("S.scene"));
     await pg.waitForTimeout(700);
   }
-  await pg.fill("#ld-name", "Teste Simulador"); await pg.fill("#ld-phone", "27999990000"); await pg.check("#ld-ok"); await pg.click("#ld-send");
-  await pg.waitForTimeout(2500);
+  await pg.fill("#ld-name", "Teste Simulador"); await pg.fill("#ld-phone", "27999990000"); await pg.check("#ld-ok");
+  // o envio leva à página do guia: guarda a fila do pixel antes de sair da página e volta ao simulador depois
+  await pg.evaluate(() => addEventListener("pagehide", () => { try { sessionStorage.setItem("__e2e_fbq", JSON.stringify((window.fbq && window.fbq.queue || []).map((a) => Array.from(a)))); } catch (e) {} }));
+  await pg.click("#ld-send");
+  await pg.waitForURL(/\/simulador-objecoes\/guia\/[a-z-]+$/, { timeout: 8000 });
+  guiaUrl = pg.url(); guiaPdf = await pg.getAttribute("#guia-pdf", "href");
+  leadFbq = JSON.parse(await pg.evaluate(() => sessionStorage.getItem("__e2e_fbq") || "[]"));
+  await pg.goto("https://smileflow.com.br" + path + query); await pg.waitForTimeout(1200);
   }
   await pg.evaluate(({ area, what }) => { S.biz = area; S.name = "Ana"; S.other = what; go("vsl"); }, { area, what });
   await pg.waitForTimeout(300);
@@ -101,7 +108,7 @@ async function session(b, { query = "", area = "saude_estetica", what = "Clínic
   }));
   const funnelText = await pg.evaluate(() => funnelWaText());
   await ctx.close();
-  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, funnelText, platformRequests, blocked };
+  return { q: JSON.parse(JSON.stringify(q)), posts, errs, waText, funnelText, platformRequests, blocked, guiaUrl, guiaPdf, leadFbq };
 }
 
 const b = await chromium.launch({ executablePath: CHROME, headless: true });
@@ -113,8 +120,12 @@ const guia = s.posts.find((p) => p.type === "guia");
 check("sem erro de página", () => assert.deepEqual(s.errs, []));
 check("todas as plataformas de teste carregaram", () => assert.deepEqual(s.q.vendors.sort(), ["clarity", "ga4", "googleAds", "meta", "microsoftUet", "tiktok"]));
 check("guia: Meta CompleteRegistration uma vez, com o event_id do n8n", () => {
-  const ev = s.q.fbq.filter((a) => a[0] === "track" && a[1] === "CompleteRegistration");
+  const ev = s.leadFbq.filter((a) => a[0] === "track" && a[1] === "CompleteRegistration");
   assert.equal(ev.length, 1); assert.equal(ev[0][3].eventID, guia.event_id);
+});
+check("guia: abre /simulador-objecoes/guia/ta-caro com o PDF estático e um só POST do guia", () => {
+  assert.match(s.guiaUrl, /\/simulador-objecoes\/guia\/ta-caro$/); assert.equal(s.guiaPdf, "/simulador-objecoes/guia/guia-ta-caro.pdf");
+  assert.equal(s.posts.filter((p) => p.type === "guia" && p.first_contact === true).length, 1);
 });
 check("nenhum dado pessoal em parâmetro de evento", () => assert.ok(!JSON.stringify(s.q).match(/Teste Simulador|27999990000|5527999990000/)));
 check("n8n recebe origem e click IDs no payload", () => { assert.ok(guia.attribution && guia.attribution.first && guia.attribution.ids); assert.ok("channel_last" in guia.attribution); });

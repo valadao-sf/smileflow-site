@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         source: "/simulador-objecoes/:slug(ta-caro|vou-pensar|marido|medo|outra-clinica|desconto)",
         destination: "/simulador-objecoes/:slug.html",
       },
+      // Página do guia, para onde a pessoa vai depois de enviar os dados (o PDF fica em /simulador-objecoes/guia/guia-<objeção>.pdf).
+      {
+        source: "/simulador-objecoes/guia/:slug(ta-caro|vou-pensar|marido|medo|outra-clinica|desconto)",
+        destination: "/simulador-objecoes/guia/:slug.html",
+      },
     ];
   },
 };

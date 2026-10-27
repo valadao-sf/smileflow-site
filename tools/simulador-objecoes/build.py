@@ -1,6 +1,7 @@
 # Gera as páginas de smileflow.com.br/simulador-objecoes a partir do motor (engine.html, ao lado deste arquivo).
 # Uso: python3 tools/simulador-objecoes/build.py   (precisa de Playwright com Chromium)
 # Saída: public/simulador-objecoes/{index,ta-caro,vou-pensar,marido,medo,outra-clinica,desconto}.html
+#        e public/simulador-objecoes/guia/<objeção>.html (a página do guia, com o PDF de guia/guia-<objeção>.pdf)
 # As imagens ficam em public/simulador-objecoes/assets e não são copiadas por este script (veja o README).
 #
 # Em três passos:
@@ -219,3 +220,56 @@ for fname, oid, *_ in PAGES:
     doc = re.sub(r'(<h2 class="storyq" id="ig-q">).*?(</h2>)', lambda m: m[1] + (f'Nos destaques do meu Instagram, tem mais conversas com <em>{d["phrase"]}{"" if d["phrase"].endswith("?”") else "."}</em>' if d else '') + m[2], doc, count=1)
     open(path, 'w', encoding='utf-8').write(doc)
     print('page', fname, len(doc))
+
+# 4. Páginas do guia: depois do envio dos dados, a pessoa vem para cá. Página leve, sem o motor, com o PDF estático
+#    (o link baixa direto, inclusive no navegador interno do Instagram e do ChatGPT) e um endereço que dá para reabrir.
+#    Os PDFs e as prévias (guia-<objeção>.pdf, thumb-guia-<objeção>.png) ficam em public/simulador-objecoes/guia.
+GUIA_DIR = os.path.join(dest, 'guia')
+GUIA_CSS = """<style>html,body{margin:0;background:#0b080e}
+.guiapg{box-sizing:border-box;max-width:480px;margin:0 auto;padding:22px 18px 40px;display:flex;flex-direction:column;gap:16px}
+.guiapg h1{margin:0}.guiapg .note{margin:0}.guiapg .gthumb img{display:block;width:100%;height:auto;border-radius:14px}
+.guiapg .btn svg{width:20px;height:20px;flex:none}</style>"""
+DOWN = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+        'stroke-linejoin="round" d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>')
+for d in DATA:
+    oid = d['id']
+    pdf, thumb = f'guia-{oid}.pdf', f'thumb-guia-{oid}.png'
+    assert os.path.exists(os.path.join(GUIA_DIR, pdf)) and os.path.exists(os.path.join(GUIA_DIR, thumb)), oid
+    url = f'{ORIGIN}{BASE}/guia/{oid}'
+    title = f'Seu guia: {d["q"]} | Nathálya Mello'
+    doc = f'''<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{e(title)}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="{url}">
+<meta name="theme-color" content="#120d17">
+<link rel="icon" href="https://smileflow-marketing.vercel.app/favicon.ico">
+{TAGS}
+{asset_abs(head_src).strip()}
+{GUIA_CSS}
+</head>
+<body>
+<main class="guiapg">
+  <p class="eyebrow">Seu guia está liberado</p>
+  <h1 class="display" style="font-size:30px">As perguntas para usar no próximo {e(d["phrase"])}</h1>
+  <a class="btn btn-main" id="guia-pdf" href="{BASE}/guia/{pdf}" download="guia-{oid}-nathalya-mello.pdf">{DOWN}Baixar o guia (PDF)</a>
+  <p class="note">Se o download não começar, toque no botão de novo ou abra o PDF e salve no celular.</p>
+  <a class="gthumb" href="{BASE}/guia/{pdf}" data-pdf="imagem"><img src="{BASE}/guia/{thumb}" alt="Prévia do guia: {e(d["q"])}"></a>
+  <a class="btn btn-ghost" href="{BASE}/{oid}">Voltar ao simulador</a>
+</main>
+<script>
+(function () {{
+  function pdf(where) {{ try {{ window.sfTrack('guia_pdf_baixado', {{ objection: '{oid}', objecao: '{oid}', where: where }}); }} catch (e) {{}} }}
+  document.getElementById('guia-pdf').addEventListener('click', function () {{ pdf('botao'); }});
+  document.querySelector('[data-pdf]').addEventListener('click', function () {{ pdf('imagem'); }});
+}})();
+</script>
+</body>
+</html>
+'''
+    assert "'assets/" not in doc and '"assets/' not in doc and '`assets/' not in doc and 'w, assets/' not in doc, oid
+    open(os.path.join(GUIA_DIR, oid + '.html'), 'w', encoding='utf-8').write(doc)
+    print('guia', oid, len(doc))
