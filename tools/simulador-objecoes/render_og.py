@@ -38,17 +38,18 @@ h1{font-size:62px}
 <span class="tag">''' + IG + '''@nathmellop</span>
 <div class="l"><span class="chip" style="align-self:flex-start"><i></i>CHIP</span><h1>H1</h1><div class="by"><b>Nathálya Mello</b><span>Especialista em vendas para clínicas</span></div></div>
 <script>const h=document.querySelector('h1');let z=62;while(h.scrollHeight>330&&z>40){z-=2;h.style.fontSize=z+'px'}</script></body></html>'''
+# Quadrada: vira miniatura pequena (WhatsApp, iMessage), então só o rosto grande e poucas palavras.
 SQUARE = '''<!doctype html><html><head><meta charset="utf-8"><style>''' + CSS + '''
-body{width:1200px;height:1200px;--hx:50%;--hy:28%}
-.ph{left:50%;top:70px;width:500px;height:500px;transform:translateX(-50%)}
-.tag{left:50%;top:536px;transform:translateX(-50%)}
-.l{position:absolute;left:0;right:0;top:640px;bottom:0;box-sizing:border-box;padding:0 80px 70px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:26px}
-h1{font-size:82px}
-.by{margin-top:auto}
+body{width:1200px;height:1200px;--hx:50%;--hy:34%}
+.ph{left:50%;top:64px;width:680px;height:680px;padding:12px;transform:translateX(-50%)}
+.tag{left:50%;top:712px;transform:translateX(-50%);font-size:30px;padding:13px 24px 13px 16px}
+.tag svg{width:34px;height:34px}
+.l{position:absolute;left:0;right:0;top:820px;bottom:0;box-sizing:border-box;padding:0 70px 60px;display:flex;align-items:center;justify-content:center;text-align:center}
+h1{font-size:96px;line-height:1.02}
 </style></head><body><div class="bg"></div><div class="grain"></div><div class="ph"><img src="assets/share-nath-roxo.webp"></div>
 <span class="tag">''' + IG + '''@nathmellop</span>
-<div class="l"><span class="chip"><i></i>CHIP</span><h1>H1</h1><div class="by"><b>Nathálya Mello</b><span>Especialista em vendas para clínicas</span></div></div>
-<script>const h=document.querySelector('h1');let z=82;while(h.scrollHeight>290&&z>48){z-=2;h.style.fontSize=z+'px'}</script></body></html>'''
+<div class="l"><h1>SHORT</h1></div>
+<script>const h=document.querySelector('h1');let z=96;while(h.scrollHeight>300&&z>52){z-=2;h.style.fontSize=z+'px'}</script></body></html>'''
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -67,16 +68,19 @@ with sync_playwright() as p:
     pg.goto(f'{base}/ta-caro.html'); pg.wait_for_timeout(1200)
     objs = pg.evaluate("() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => ({ id, phrase: OBJECTIONS[id].phrase }))")
     pg.close()
-    pages = [{'id': 'hub', 'chip': 'Treinos da Nath · simulação grátis', 'h1': 'Como responder às objeções de pacientes <em>que travam a venda.</em>'}]
-    pages.append({'id': 'perfil', 'chip': 'Perfil de negociação · grátis', 'h1': 'Por que você trava <em>na hora do preço?</em>'})
+    pages = [{'id': 'hub', 'chip': 'Treinos da Nath · simulação grátis', 'h1': 'Como responder às objeções de pacientes <em>que travam a venda.</em>',
+              'short': 'Objeções que <em>travam a venda</em>'}]
+    pages.append({'id': 'perfil', 'chip': 'Perfil de negociação · grátis', 'h1': 'Por que você trava <em>na hora do preço?</em>',
+                  'short': 'Por que você trava <em>no preço?</em>'})
     for o in objs:
         end = '' if o['phrase'].endswith('?”') else '?'
-        pages.append({'id': o['id'], 'chip': 'Simulação grátis · 2 min', 'h1': f"O que responder quando o paciente diz <em>{o['phrase']}</em>{end}"})
+        pages.append({'id': o['id'], 'chip': 'Simulação grátis · 2 min', 'h1': f"O que responder quando o paciente diz <em>{o['phrase']}</em>{end}",
+                      'short': f"<em>{o['phrase'][0]}{o['phrase'][1].upper()}{o['phrase'][2:]}</em>"})
     try:
         for tpl, (w, h), suf in ((WIDE, (1200, 630), ''), (SQUARE, (1200, 1200), '-sq')):
             pg = b.new_page(viewport={'width': w, 'height': h})
             for it in pages:
-                open(tmp, 'w', encoding='utf-8').write(tpl.replace('CHIP', it['chip']).replace('H1', it['h1']))
+                open(tmp, 'w', encoding='utf-8').write(tpl.replace('CHIP', it['chip']).replace('H1', it['h1']).replace('SHORT', it['short']))
                 pg.goto(f"{base}/_og.html?v={it['id']}{suf}"); pg.wait_for_timeout(800)   # ?v= evita reaproveitar a página anterior
                 assert pg.evaluate("document.fonts.check('700 60px Inter')"), 'Inter não carregou'
                 assert pg.evaluate("document.querySelector('.ph img').naturalWidth > 0"), 'a foto não carregou'

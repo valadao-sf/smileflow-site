@@ -72,7 +72,7 @@ NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathály
         'knowsAbout': ['Vendas em clínicas de saúde e estética', 'Objeções de pacientes', 'Negociação de orçamentos',
                        'Treinamento de equipes comerciais']}
 # Sobe quando as imagens de compartilhamento mudam, para WhatsApp, Facebook e LinkedIn buscarem a nova.
-OG_V = '2'
+OG_V = '3'
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'
 HUB_TITLE = 'Como responder objeções de pacientes | Simulador grátis'
