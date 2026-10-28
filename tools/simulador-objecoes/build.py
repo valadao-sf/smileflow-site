@@ -61,7 +61,7 @@ def local_pages(directory, paths, fn):
 # 1. Texto de cada objeção, direto do motor
 DATA = local_pages(HERE, ['/engine.html'], lambda pg: pg.evaluate("""() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => {
   const o = OBJECTIONS[id];
-  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: (o.rounds || []).length,
+  return { id, phrase: o.phrase, ask: o.ask, q: askQ(o), steps: o.rule.steps, text: o.rule.text, snippet: o.snippet, hero: o.hero, n: SIM_N,
            faq: aeoFaq(o), video: aeoVideo(o), guide: o.gift.text };
 })"""))['/engine.html']
 
@@ -112,6 +112,14 @@ for d in DATA:
             'embedUrl': PANDA_EMBED + d['video']['id'], 'inLanguage': 'pt-BR', 'transcript': ' '.join(d['video']['script']),
             'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']}}] if d['video'] else []),
         crumbs(url, [('SmileFlow', ORIGIN), (HUB_NAME, HUB_URL), (d['phrase'].strip('“”').capitalize(), url)])]))
+PERFIL_URL = f'{ORIGIN}/perfil-de-negociacao'
+PERFIL_TITLE = 'Por que você trava na hora do preço? | Perfil de negociação'
+PERFIL_DESC = 'Responda 4 perguntas rápidas e veja o vídeo da Nathálya Mello sobre o que faz você travar na hora de falar o preço. Grátis.'
+assert len(PERFIL_DESC) <= 155
+PAGES.append(('perfil-de-negociacao', 'perfil', PERFIL_TITLE, PERFIL_DESC, [ORG, NATH,
+    {'@type': 'WebPage', '@id': PERFIL_URL + '#pagina', 'url': PERFIL_URL, 'name': PERFIL_TITLE, 'description': PERFIL_DESC, 'inLanguage': 'pt-BR',
+     'author': {'@id': NATH['@id']}, 'publisher': {'@id': ORG['@id']}, 'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-perfil.jpg',
+     'datePublished': UPDATED, 'dateModified': UPDATED}]))
 BY_ID = {d['id']: d for d in DATA}
 
 # Medição: a camada única de smileflow.com.br (tracking/ → public/_sf/track.js). Ela carrega GA4, Meta e as outras
@@ -133,21 +141,24 @@ def sub1(s, a, b):
     return s.replace(a, b)
 
 
-# 2. As 7 páginas
+# 2. As 8 páginas (7 do simulador + o perfil de negociação, que fica fora da pasta do simulador)
 dest = os.path.join(OUT, 'simulador-objecoes')
 os.makedirs(dest, exist_ok=True)
+out_path = lambda f: os.path.join(OUT, f + '.html') if f == 'perfil-de-negociacao' else os.path.join(dest, f + '.html')
+web_path = lambda f: f'/{f}.html' if f == 'perfil-de-negociacao' else f'{BASE}/{f}.html'
 for fname, oid, title, desc, graph in PAGES:
     body = body_src
-    cfg_obj = 'ta-caro' if oid == 'hub' else oid
+    cfg_obj = 'ta-caro' if oid in ('hub', 'perfil') else oid
     b2 = body.replace("  objection: 'ta-caro',", f"  objection: '{cfg_obj}',", 1)
     assert b2 != body or cfg_obj == 'ta-caro'; body = b2
     for a, bb in [("  site: { base: '' },", f"  site: {{ base: '{BASE}' }},"),
-                  ("  start: 'obj',", f"  start: '{'hub' if oid == 'hub' else 'obj'}',"),
-                  ("  publicUrl: '',", f"  publicUrl: '{ORIGIN}{BASE}{'' if oid == 'hub' else '/' + oid}',"),
+                  ("  start: 'obj',", f"  start: '{ {'hub': 'hub', 'perfil': 'fn'}.get(oid, 'obj') }',"),
+                  ("  publicUrl: '',", f"  publicUrl: '{PERFIL_URL if oid == 'perfil' else ORIGIN + BASE + ('' if oid == 'hub' else '/' + oid)}',"),
+                  ("  standalone: false,", f"  standalone: {'true' if oid == 'perfil' else 'false'},"),
                   ("  updated: '',", f"  updated: '{UPDATED}',")]:
         body = sub1(body, a, bb)
-    url = f'{ORIGIN}{BASE}' + ('' if oid == 'hub' else '/' + oid)
-    og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg'   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
+    url = PERFIL_URL if oid == 'perfil' else f'{ORIGIN}{BASE}' + ('' if oid == 'hub' else '/' + oid)
+    og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg'   # perfil: share-perfil.jpg   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
     og_sq = f'{ORIGIN}{BASE}/assets/share-{oid}-sq.jpg'   # 1200×1200 (quem prefere quadrado)
     og_alt = 'Nathálya Mello, especialista em vendas, na simulação grátis: ' + title.split(' | ')[0]
     ld = json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False).replace('</', '<\\/')
@@ -197,19 +208,19 @@ for fname, oid, title, desc, graph in PAGES:
 </html>
 '''
     assert "'assets/" not in doc and '"assets/' not in doc and '`assets/' not in doc and 'w, assets/' not in doc, fname
-    open(os.path.join(dest, fname + '.html'), 'w', encoding='utf-8').write(doc)
+    open(out_path(fname), 'w', encoding='utf-8').write(doc)
 
 # 3. A primeira tela já montada no HTML
-SCENE = {'hub': 'hub', **{d['id']: 'obj' for d in DATA}}
-snap = local_pages(OUT, [f'{BASE}/{f}.html' for f, *_ in PAGES], lambda pg: pg.evaluate(
+SCENE = {'hub': 'hub', 'perfil': 'fn', **{d['id']: 'obj' for d in DATA}}
+snap = local_pages(OUT, [web_path(f) for f, *_ in PAGES], lambda pg: pg.evaluate(
     "() => ({ scene: S.scene, html: document.querySelector('#s-' + S.scene).innerHTML.trim() })"))
 for fname, oid, *_ in PAGES:
-    path = os.path.join(dest, fname + '.html')
+    path = out_path(fname)
     doc = open(path, encoding='utf-8').read()
-    got = snap[f'{BASE}/{fname}.html']
+    got = snap[web_path(fname)]
     sc = SCENE[oid]
     assert got['scene'] == sc and len(got['html']) > 500, (fname, got['scene'])
-    cls = {'hub': 'scene hub pad', 'obj': 'scene objs pad'}[sc]
+    cls = {'hub': 'scene hub pad', 'obj': 'scene objs pad', 'fn': 'scene pad'}[sc]
     doc = sub1(doc, f'<section class="{cls}" id="s-{sc}" hidden></section>', f'<section class="{cls}" id="s-{sc}">\n{got["html"]}\n</section>')
     # A abertura antiga fica escondida e com o texto da própria objeção (na tela inicial, vazia).
     d = BY_ID.get(oid)

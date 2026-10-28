@@ -63,9 +63,10 @@ with sync_playwright() as p:
     objs = pg.evaluate("() => OBJ_LIST.filter(o => OBJECTIONS[o.id]).map(({ id }) => ({ id, phrase: OBJECTIONS[id].phrase }))")
     pg.close()
     pages = [{'id': 'hub', 'chip': 'Treinos da Nath · simulação grátis', 'h1': 'Como responder às objeções de pacientes <em>que travam a venda.</em>'}]
+    pages.append({'id': 'perfil', 'chip': 'Perfil de negociação · grátis', 'h1': 'Por que você trava <em>na hora do preço?</em>'})
     for o in objs:
         end = '' if o['phrase'].endswith('?”') else '?'
-        pages.append({'id': o['id'], 'chip': 'Simulação grátis · 3 min', 'h1': f"O que responder quando o paciente diz <em>{o['phrase']}</em>{end}"})
+        pages.append({'id': o['id'], 'chip': 'Simulação grátis · 2 min', 'h1': f"O que responder quando o paciente diz <em>{o['phrase']}</em>{end}"})
     try:
         for tpl, (w, h), suf in ((WIDE, (1200, 630), ''), (SQUARE, (1200, 1200), '-sq')):
             pg = b.new_page(viewport={'width': w, 'height': h})
