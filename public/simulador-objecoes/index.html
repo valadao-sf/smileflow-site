@@ -278,6 +278,7 @@ h2.display{font-size:clamp(26px,7vw,32px)}
 .fx-who span{display:block;font:500 13px/1.3 var(--ui);color:var(--sand)}
 .fx-q{margin:0;font:700 clamp(28px,7.6vw,34px)/1.12 var(--display);letter-spacing:-.026em;text-wrap:balance}
 .fx-q em{font-style:normal;color:var(--wine-hi)}
+.fx-form{display:flex;flex-direction:column;gap:14px;animation:fxin .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
 .fx-opts{display:flex;flex-direction:column;gap:10px;margin-top:6px}
 .fx-opt{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:62px;padding:12px 16px 12px 18px;border-radius:18px;border:1.5px solid var(--line);background:var(--stage);color:var(--paper);font:600 16.5px/1.3 var(--ui);text-align:left;cursor:pointer;transition:border-color .2s,background .2s,transform .12s}
 .fx-opt i{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-hi);display:grid;place-items:center;transition:background .2s,border-color .2s}
@@ -4285,19 +4286,27 @@ async function drawGuideCover(kind = 'capa') {
     x.font = F(800, 46); x.fillStyle = C.paper; x.fillText('Nathálya Mello', M, H - 214);
     x.font = F(500, 30); x.fillStyle = 'rgba(246,244,242,.78)'; x.fillText('Especialista em vendas para clínicas', M, H - 156);
     igGlyph(M, H - 104, 34, C.pink); x.font = F(700, 32); x.fillStyle = C.pink; x.fillText(CONFIG.igHandle, M + 48, H - 104);
-  } else {
-    const r = 120, cxp = W / 2, cy = 520;
+  } else {   // contracapa: chama para o perfil de negociação (o PDF leva o link clicável nessa área)
+    const r = 110, cxp = W / 2, cy = 400;
     x.save(); x.beginPath(); x.arc(cxp, cy, r + 8, 0, Math.PI * 2); x.fillStyle = C.pink; x.fill();
     x.beginPath(); x.arc(cxp, cy, r, 0, Math.PI * 2); x.clip(); if (photo) x.drawImage(photo, cxp - r, cy - r, 2 * r, 2 * r); x.restore();
     x.textAlign = 'center';
-    x.font = F(800, 72); x.fillStyle = C.paper; x.fillText('Agora, treine.', W / 2, 720);
-    let y = 830; lines('Cada objeção tem uma simulação grátis de 2 minutos: você responde 2 pacientes e vê onde a venda trava.', F(500, 40), W - 2 * M - 40)
-      .forEach(l => { x.font = F(500, 40); x.fillStyle = 'rgba(246,244,242,.85)'; x.fillText(l, W / 2, y); y += 54; });
-    x.font = F(800, 40); x.fillStyle = C.pink; x.fillText('smileflow.com.br/simulador-objecoes', W / 2, y + 50);
-    x.fillStyle = 'rgba(246,244,242,.14)'; x.fillRect(M, y + 190, W - 2 * M, 2);
-    x.font = F(600, 32); x.fillStyle = 'rgba(246,244,242,.78)'; x.fillText('Mais conversas como estas no meu Instagram', W / 2, y + 240);
-    x.font = F(800, 52); const t = 'Siga ' + CONFIG.igHandle, tw = x.measureText(t).width;
-    igGlyph(W / 2 - tw / 2 - 30, y + 302, 44, C.paper); x.fillStyle = C.paper; x.fillText(t, W / 2 + 30, y + 300);
+    x.font = F(800, 26); x.fillStyle = C.pink; x.fillText('O PRÓXIMO PASSO', W / 2, 580);
+    x.font = F(800, 84); x.fillStyle = C.paper; x.fillText('Qual é o seu perfil', W / 2, 630);
+    x.fillStyle = C.pink; x.fillText('de negociação?', W / 2, 730);
+    let y = 880; lines('Saber o que responder é metade. A outra metade é entender por que você trava na hora do preço.', F(500, 40), W - 2 * M - 40)
+      .forEach(l => { x.font = F(500, 40); x.fillStyle = 'rgba(246,244,242,.88)'; x.fillText(l, W / 2, y); y += 54; });
+    y += 24; lines('4 perguntas rápidas e um vídeo da Nath sobre o seu jeito de negociar. Grátis.', F(500, 34), W - 2 * M - 80)
+      .forEach(l => { x.font = F(500, 34); x.fillStyle = 'rgba(246,244,242,.66)'; x.fillText(l, W / 2, y); y += 46; });
+    const bw = 760, bh = 124, bx = (W - bw) / 2, by = y + 56;
+    x.beginPath(); x.roundRect ? x.roundRect(bx, by, bw, bh, 62) : x.rect(bx, by, bw, bh); x.fillStyle = C.paper; x.fill();
+    x.font = F(800, 44); x.fillStyle = '#2a1f3d'; x.fillText('Descobrir meu perfil  →', W / 2, by + 38);
+    x.font = F(700, 32); x.fillStyle = C.pink; x.fillText('www.smileflow.com.br/perfil-de-negociacao', W / 2, by + bh + 34);
+    window.__guideCta = { x: bx, y: by, w: bw, h: bh + 90 };   // área clicável no PDF (botão + endereço)
+    x.fillStyle = 'rgba(246,244,242,.14)'; x.fillRect(M, H - 260, W - 2 * M, 2);
+    x.font = F(600, 30); x.fillStyle = 'rgba(246,244,242,.75)'; x.fillText('Mais conversas como estas no meu Instagram', W / 2, H - 220);
+    x.font = F(800, 48); const t = 'Siga ' + CONFIG.igHandle, tw = x.measureText(t).width;
+    igGlyph(W / 2 - tw / 2 - 30, H - 158, 42, C.paper); x.fillStyle = C.paper; x.fillText(t, W / 2 + 30, H - 160);
     x.textAlign = 'left';
   }
   return cv.toDataURL('image/png');
@@ -4633,6 +4642,13 @@ const FN = [
   { k: 'desejo', q: 'Se você vendesse com mais segurança, o que mudaria na sua vida?', open: 'Eu conseguiria...' },
   { k: 'revela' }
 ];
+// Perfil de negociação (página própria): intro → nome e WhatsApp → área → função → as 4 perguntas → revelação → vídeo.
+const PERFIL_FORM = { id: 'perfil_negociacao_v1', version: '1.0.0' };
+const PERFIL_CONSENT = 'Aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp. Posso pedir para sair quando quiser.';
+if (CONFIG.standalone) FN.unshift(
+  { k: 'intro' }, { k: 'dados' },
+  { k: 'area', q: 'Você trabalha com o quê?', o: () => BIZ.map(b => [b.id, b.label, '']) },
+  { k: 'funcao', q: 'O que você faz?', o: () => ROLES.map(r => [r.id, r.label(), '']) });
 const fnVideo = () => (CONFIG.funil && CONFIG.funil.video) || CONFIG.mnc.video;
 const fnSeen = () => STORE.get(FN_KEY, {});
 const fnDone = () => !!fnSeen().video;
@@ -4645,7 +4661,7 @@ const fnCard = where => `
       <button class="btn btn-main" data-fn="${where}">Quero descobrir <span class="arr">→</span></button>
     </div>`;
 // as perguntas como aparecem na tela, com o destaque em rosa
-const FN_Q = { faz: 'Quando o paciente diz <em>“tá caro”</em>, o que você faz?', origem: 'Quem te ensinou <em>a vender?</em>',
+const FN_Q = { area: 'Você trabalha <em>com o quê?</em>', funcao: 'E o que você <em>faz</em>?', faz: 'Quando o paciente diz <em>“tá caro”</em>, o que você faz?', origem: 'Quem te ensinou <em>a vender?</em>',
   incomoda: 'O que mais te incomoda <em>na hora de vender?</em>', desejo: 'Se você vendesse com <em>mais segurança</em>, o que mudaria na sua vida?' };
 const fnWho = () => `<div class="fx-who" style="--i:0"><img src="/simulador-objecoes/assets/nath-vsl-avatar.webp" alt=""><div><b>Nathálya Mello</b><span>${esc(CONFIG.igHandle)}</span></div></div>`;
 let fnStep = 0, fnTok = 0;
@@ -4661,17 +4677,30 @@ function renderFn(dir = 1) {
   const sc = $('#s-fn');
   if (!$('.fx-stage', sc)) fnShell();
   { const bb = $('[data-back]', sc); if (bb) bb.style.visibility = CONFIG.standalone && fnStep === 0 ? 'hidden' : ''; }
-  const st = FN[fnStep], A = S.fnAns || (S.fnAns = {}), my = ++fnTok, stage = $('.fx-stage', sc), rev = !st.o && !st.open;
+  const st = FN[fnStep], A = S.fnAns || (S.fnAns = {}), my = ++fnTok, stage = $('.fx-stage', sc), rev = st.k === 'revela' || st.k === 'intro';
+  const opts = typeof st.o === 'function' ? st.o() : st.o;
   let html;
-  if (st.o) html = `${fnWho()}<h2 class="fx-q" style="--i:1">${FN_Q[st.k]}</h2>
-    <div class="fx-opts" role="group" aria-label="${esc(st.q)}">${st.o.map(([id, label], j) => `<button class="fx-opt${A[st.k] === id ? ' sel' : ''}" data-fa="${id}" aria-pressed="${A[st.k] === id}" style="--i:${j + 2}"><span>${esc(label)}</span><i>${ICON('ok')}</i></button>`).join('')}</div>`;
+  if (st.k === 'intro') html = `<h2 class="fx-rev" style="--i:0">Qual é o seu <em>perfil de negociação?</em></h2>
+    <div class="fx-lines" style="--i:1"><p>4 perguntas rápidas mostram por que você trava na hora do preço.</p><p>No fim, a Nath explica o que fazer.</p></div>
+    <div class="fx-foot" style="--i:2"><button class="btn btn-main" id="fn-go">Começar <span class="arr">→</span></button></div>`;
+  else if (st.k === 'dados') html = `${fnWho()}<h2 class="fx-q" style="--i:1">Antes de começar, <em>como a Nath te chama?</em></h2>
+    <form class="fx-form" id="fn-form" novalidate style="--i:2">
+      <div class="field"><label for="fn-name">Seu nome</label><input class="input" id="fn-name" autocomplete="name" value="${esc(S.name || '')}"></div>
+      <div class="field"><label for="fn-phone">Seu WhatsApp, com DDD</label><input class="input" id="fn-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(27) 99999-9999" value="${S.phone ? esc(maskPhone(S.phone.slice(2))) : ''}"></div>
+      <label class="check" for="fn-ok"><input type="checkbox" id="fn-ok"> <span>${esc(PERFIL_CONSENT)}</span></label>
+      ${privacyLink()}
+      <p class="err" id="fn-err" aria-live="polite"></p>
+      <button class="btn btn-main" type="submit" id="fn-go">Continuar <span class="arr">→</span></button>
+    </form>`;
+  else if (opts) html = `${fnWho()}<h2 class="fx-q" style="--i:1">${FN_Q[st.k]}</h2>
+    <div class="fx-opts" role="group" aria-label="${esc(st.q)}">${opts.map(([id, label], j) => `<button class="fx-opt${A[st.k] === id ? ' sel' : ''}" data-fa="${id}" aria-pressed="${A[st.k] === id}" style="--i:${j + 2}"><span>${esc(label)}</span><i>${ICON('ok')}</i></button>`).join('')}</div>`;
   else if (st.open) html = `${fnWho()}<h2 class="fx-q" style="--i:1">${FN_Q[st.k]}</h2>
     <label class="sr" for="fn-open">${esc(st.q)}</label>
     <textarea class="fx-area" id="fn-open" style="--i:2" rows="4" maxlength="200" autocapitalize="sentences" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="${esc(st.open)}">${esc(A.desejo || '')}</textarea>
     <div class="fx-foot" style="--i:3"><button class="btn btn-main" id="fn-go">Continuar <span class="arr">→</span></button></div>`;
   else html = `<h2 class="fx-rev" style="--i:0">Você aprendeu a cuidar. <em>Mas quem te ensinou a vender?</em></h2>
     <div class="fx-lines" style="--i:1"><p>Vender não é pressionar o paciente.</p><p>É uma habilidade. E você pode aprender.</p></div>
-    <div class="fx-foot" style="--i:2"><button class="btn btn-main" id="fn-go">Quero aprender a vender <span class="arr">→</span></button></div>`;
+    <div class="fx-foot" style="--i:2"><button class="btn btn-main" id="fn-go">Quero entender meu perfil <span class="arr">→</span></button></div>`;
   requestAnimationFrame(() => { const bar = $('.fx-bar i', sc); if (bar) bar.style.width = `${Math.round((fnStep + 1) / FN.length * 100)}%`; });
   const paint = () => {
     if (fnTok !== my || !stage.isConnected) return;
@@ -4696,6 +4725,20 @@ function bindFn(st, A, my) {
     inp.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go1.click(); } };
     go1.onclick = () => { A.desejo = (A.desejo || '').replace(/\s+/g, ' ').trim(); track('fn_answer', { phase: 'desejo:' + (A.desejo ? 'escreveu' : 'vazio') }); fnNext(); };
     if (matchMedia('(pointer:fine)').matches) setTimeout(() => inp.isConnected && inp.focus({ preventScroll: true }), 420);
+  } else if (st.k === 'intro') {
+    go1.onclick = () => { track('fn_answer', { phase: 'intro:comecou' }); fnNext(); };
+  } else if (st.k === 'dados') {
+    const ph = $('#fn-phone'); ph.oninput = () => { ph.value = maskPhone(ph.value); };
+    $('#fn-form').onsubmit = e => {
+      e.preventDefault();
+      const nm = $('#fn-name').value.trim(), dg = ph.value.replace(/\D/g, ''), err = $('#fn-err');
+      if (nm.length < 2) { err.textContent = 'Escreva o seu nome.'; $('#fn-name').focus(); return; }
+      if (!phoneOk(dg)) { err.textContent = PHONE_ERR; ph.focus(); return; }
+      if (!$('#fn-ok').checked) { err.textContent = 'Marque a caixa para a equipe poder falar com você.'; return; }
+      S.name = nm; S.phone = '55' + dg; S.perfilConsent = true; savePerfil();
+      track('fn_answer', { phase: 'dados:ok' }); fnNext();
+    };
+    if (matchMedia('(pointer:fine)').matches) setTimeout(() => { const n = $('#fn-name'); if (n && n.isConnected && !n.value) n.focus({ preventScroll: true }); }, 420);
   } else if (!st.o) {
     go1.onclick = () => {
       const first = !fnDone();
@@ -4709,11 +4752,21 @@ function bindFn(st, A, my) {
     $$('#s-fn .fx-opt').forEach(c => { c.classList.toggle('sel', c === b); c.setAttribute('aria-pressed', c === b); });
     try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
     A[st.k] = b.dataset.fa;
+    if (st.k === 'area') S.biz = b.dataset.fa;
+    if (st.k === 'funcao') { S.role = b.dataset.fa; savePerfil(); sendPerfilLead(); }
     track('fn_answer', { phase: st.k + ':' + b.dataset.fa });
     fnTok++;   // trava os outros toques nesta pergunta
     const tok = fnTok;
     setTimeout(() => { if (fnTok === tok && S.scene === 'fn') fnNext(); }, REDUCED ? 0 : 340);
   });
+}
+// O contato do perfil de negociação vai uma vez, quando os dados estão completos (nome, WhatsApp, aceite, área e função).
+function sendPerfilLead() {
+  if (!CONFIG.standalone || !S.phone || !S.perfilConsent || S.perfilSent) return;
+  S.perfilSent = true;
+  const eid = uuid();
+  track('lead', { event_id: eid, where: 'perfil' });
+  postLead(contactPayload('perfil', { form_id: PERFIL_FORM.id, form_version: PERFIL_FORM.version, consent: true, consent_text: PERFIL_CONSENT, where: 'perfil', first_contact: true }), eid);
 }
 function fnNext() { if (fnStep < FN.length - 1) { fnStep++; renderFn(1); } }
 ENTER.fn = dir => { fnShell(); if (dir < 0) fnStep = FN.length - 1; renderFn(dir < 0 ? -1 : 1); };
@@ -4728,7 +4781,7 @@ function funnelWaText() {
   if (A.incomoda) out.push(`O que mais me incomoda na hora de vender é ${say('incomoda')}.`);
   const d = (A.desejo || '').replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '');
   if (d) out.push(/^eu conseguiria\b/i.test(d) ? `Se eu vendesse com mais segurança, ${d.charAt(0).toLowerCase() + d.slice(1)}.` : `Se eu vendesse com mais segurança: ${d}.`);
-  out.push('Quero aprender a vender.');
+  out.push(CONFIG.standalone ? 'Quero entender o meu perfil.' : 'Quero aprender a vender.');
   return out.join(' ') + `\n\n(Ref: ${REF})`;
 }
 // O botão do WhatsApp aparece perto do fim do vídeo (CONFIG.funil.ctaAt) e sempre no fim.

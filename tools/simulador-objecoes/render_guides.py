@@ -51,6 +51,7 @@ with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 390, 'height': 844})
     pg.goto(f'{base}/index.html'); pg.wait_for_timeout(1500)
     covers = {k: pg.evaluate(f"drawGuideCover('{k}')") for k in ('capa', 'contracapa')}
+    cta = pg.evaluate("window.__guideCta")
     b.close()
 srv.shutdown()
 def img(data_url): return Image.open(io.BytesIO(base64.b64decode(data_url.split(',')[1]))).convert('RGB')
@@ -60,4 +61,17 @@ capa.resize((180, 320), Image.LANCZOS).save(os.path.join(ASSETS, 'guia-objecoes-
 pages = [capa] + [Image.open(os.path.join(ASSETS, f'guia1-{oid}.jpg')).convert('RGB') for oid in IDS] + [contra]
 pdf = os.path.join(ASSETS, 'guia-de-objecoes-nathalya-mello.pdf')
 pages[0].save(pdf, 'PDF', resolution=150, save_all=True, append_images=pages[1:])
+# Link clicável na contracapa (botão + endereço) para o perfil de negociação, e na capa para o Instagram da Nath.
+from pypdf import PdfReader, PdfWriter
+from pypdf.annotations import Link
+from pypdf.generic import NameObject, DictionaryObject, TextStringObject
+rd = PdfReader(pdf); wr = PdfWriter(); wr.append(rd)
+def link(page_i, box, url):
+    pg_ = wr.pages[page_i]; pw, ph = float(pg_.mediabox.width), float(pg_.mediabox.height); k = pw / 1080
+    x0, y0, w, h = box
+    ann = Link(rect=(x0 * k, ph - (y0 + h) * k, (x0 + w) * k, ph - y0 * k), url=url)
+    wr.add_annotation(page_number=page_i, annotation=ann)
+link(len(pages) - 1, (cta['x'], cta['y'], cta['w'], cta['h']), 'https://www.smileflow.com.br/perfil-de-negociacao?utm_source=guia&utm_medium=pdf&utm_campaign=guia-objecoes')
+link(len(pages) - 1, (0, 1660, 1080, 160), 'https://www.instagram.com/nathmellop/')
+with open(pdf, 'wb') as f: wr.write(f)
 print('ok PDF', len(pages), 'páginas', os.path.getsize(pdf) // 1024, 'KB')
