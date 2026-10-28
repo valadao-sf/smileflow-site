@@ -908,6 +908,15 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .ocardx.big{min-height:112px;justify-content:space-between;gap:18px;padding:16px}
 .ocardx.big q{font-size:22px;line-height:1.1}
 .hsub{display:flex;flex-direction:column;gap:4px}
+.hsub .lede{margin:0}
+/* hero da tela inicial: foto de clínica bem apagada no fundo, o convite do guia e o botão */
+.hclinic{flex:none;position:relative;isolation:isolate;overflow:hidden;border-radius:22px;border:1px solid var(--line);padding:26px 20px 24px;background:var(--stage-hi)}
+.hclinic .hbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;z-index:-2;opacity:.22;filter:saturate(.5)}
+.hclinic::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg,rgba(26,17,36,.96) 0%,rgba(26,17,36,.82) 45%,rgba(44,31,61,.55) 100%)}
+.hclinic .stack{gap:14px}
+.hclinic .lede{margin:0}
+.hclinic .lede b{color:var(--paper)}
+.hclinic .btn{align-self:flex-start}
 .hsub h2{margin:0}
 .nameedit{font:inherit;color:var(--wine-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:5px;position:relative}
 .nameedit::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:max(100%,44px);transform:translateY(-50%)}
@@ -933,6 +942,9 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .guiacard .gc-cover{width:86px}
   .fq{font-size:30px}
   .hhead.solo{grid-template-columns:minmax(0,1fr)}
+  .hclinic{padding:52px 56px;min-height:340px;display:flex;align-items:center}
+  .hclinic .stack{max-width:600px}
+  .hclinic .hbg{opacity:.3}
   .hhero{min-height:360px;display:flex;align-items:center;padding-block:24px}
   .hhero .castm{left:0;right:0;opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);mask-composite:intersect}
     .hhero .castm{grid-template-columns:repeat(6,minmax(0,1fr))}
@@ -4373,24 +4385,23 @@ ENTER.hub = () => {
   const sc = $('#s-hub');
   sc.innerHTML = `
     ${nathRow()}
-    <header class="hhead">
-      <div class="hhero">
-        <div class="stack">
-          <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-          <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
-          <p class="lede">Escolha a frase que você mais escuta e treine a resposta em 2 minutos, com 2 conversas.</p>
-        </div>
+    <header class="hclinic">
+      <img class="hbg" src="/simulador-objecoes/assets/hero-clinica.webp" srcset="/simulador-objecoes/assets/hero-clinica-sm.webp 800w, /simulador-objecoes/assets/hero-clinica.webp 1600w" sizes="(min-width:900px) 1100px, 100vw" alt="" aria-hidden="true">
+      <div class="stack">
+        <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
+        <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
+        <p class="lede">Envie uma mensagem com a palavra <b>“${esc(CONFIG.guideWord)}”</b> para ${esc(CONFIG.igHandle)} e receba <b>GRATUITAMENTE</b> nosso Guia de Objeções.</p>
+        <a class="btn btn-main" data-out="instagram-guia" data-where="hub" href="${esc(CONFIG.igDm)}" target="_blank" rel="noopener">Quero receber meu guia <span class="arr">→</span></a>
       </div>
-      ${guideCard('hub')}
     </header>
     <div class="stack" style="gap:14px">
-      <div class="hsub"><h2 class="display" style="font-size:24px">${n ? `<button class="nameedit" data-editname aria-label="${esc(n)}: editar os seus dados">${esc(n)}</button>, qual frase mais trava você?` : 'Qual frase mais trava você?'}</h2>
+      <div class="hsub"><h2 class="display" style="font-size:24px">Escolha uma objeção para treinar</h2>
+        <p class="lede">Escolha a frase que você mais escuta e treine a resposta em 2 minutos, com 2 conversas.</p>
       </div>
       <div class="hgrid">${OBJ_LIST.map(o => hubCard(o.id)).join('')}</div>
     </div>`;
   sc.scrollTop = 0;
   $$('#s-hub [data-obj]').forEach(bt => { bt.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); startObjection(bt.dataset.obj, bt.dataset.ex || ''); }; });
-  const ed = $('#s-hub [data-editname]'); if (ed) ed.onclick = editProfile;
 };
 // O nome no subtítulo abre o formulário com os dados de antes, para corrigir. Lá também dá para começar do zero.
 function editProfile() {
