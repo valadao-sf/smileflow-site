@@ -71,6 +71,8 @@ NATH = {'@type': 'Person', '@id': f'{ORIGIN}/#nathalya-mello', 'name': 'Nathály
         'image': f'{ORIGIN}{BASE}/assets/nath-avatar.webp', 'sameAs': [INSTAGRAM, TIKTOK],
         'knowsAbout': ['Vendas em clínicas de saúde e estética', 'Objeções de pacientes', 'Negociação de orçamentos',
                        'Treinamento de equipes comerciais']}
+# Sobe quando as imagens de compartilhamento mudam, para WhatsApp, Facebook e LinkedIn buscarem a nova.
+OG_V = '2'
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'
 HUB_TITLE = 'Como responder objeções de pacientes | Simulador grátis'
@@ -158,8 +160,8 @@ for fname, oid, title, desc, graph in PAGES:
                   ("  updated: '',", f"  updated: '{UPDATED}',")]:
         body = sub1(body, a, bb)
     url = PERFIL_URL if oid == 'perfil' else f'{ORIGIN}{BASE}' + ('' if oid == 'hub' else '/' + oid)
-    og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg'   # perfil: share-perfil.jpg   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
-    og_sq = f'{ORIGIN}{BASE}/assets/share-{oid}-sq.jpg'   # 1200×1200 (quem prefere quadrado)
+    og = f'{ORIGIN}{BASE}/assets/share-{oid}.jpg?v={OG_V}'   # perfil: share-perfil.jpg   # 1200×630 (WhatsApp, Facebook, LinkedIn, X)
+    og_sq = f'{ORIGIN}{BASE}/assets/share-{oid}-sq.jpg?v={OG_V}'   # 1200×1200 (quem prefere quadrado)
     og_alt = 'Nathálya Mello, especialista em vendas, na simulação grátis: ' + title.split(' | ')[0]
     ld = json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False).replace('</', '<\\/')
     doc = f'''<!doctype html>
