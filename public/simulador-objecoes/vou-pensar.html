@@ -1468,6 +1468,8 @@ const SF_EVENTS = {
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
   // clique no botão do PDF do guia (página /simulador-objecoes/guia/<objeção> e tela do guia de quem volta)
   pdf_download: 'guia_pdf_baixado',
+  // clique em «Quero receber meu guia» (DM do Instagram, tela inicial e final): só GA4, sem pixel nem conversão
+  guia_ig: 'clique_guia_instagram',
   // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
   fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', funil_botao_whatsapp: 'funil_botao_whatsapp'
 };
@@ -4842,6 +4844,7 @@ document.addEventListener('click', e => {
   const a = e.target.closest('[data-out]');
   if (!a) return;
   track('cta', { target: a.dataset.out, where: a.dataset.wa || '' });
+  if (a.dataset.out === 'instagram-guia') track('guia_ig', { where: a.dataset.where || '' });
   if (a.dataset.wa) {
     a.href = waLink(a.dataset.wa === 'funil' ? funnelWaText() : contactWaText());
     const eid = uuid(); track('wa_click', { where: a.dataset.wa, event_id: eid }); postLead(contactPayload('whatsapp', { where: a.dataset.wa, event_id: eid }), eid);
@@ -4870,7 +4873,7 @@ paintMnc();
   let ex = '';
   try { ex = new URLSearchParams(location.search).get('ex') || ''; } catch (e) {}
   if (CONFIG.start !== 'hub' && CONFIG.start !== 'obj' && CONFIG.start !== 'fn' && ex !== 'flash' && ex !== 'sim') return;
-  $('#s-hero').hidden = true; S.scene = '';
+  $$('.scene').forEach(sc => { sc.hidden = true; sc.style.zIndex = ''; }); S.scene = '';
   if (CONFIG.start === 'fn') { S.fnAns = {}; S.fnFrom = 'perfil'; fnStep = 0; track('fn_start', { where: 'perfil' }); go('fn'); }
   else if (CONFIG.start === 'hub') go('hub');
   else if (ex === 'sim' || ex === 'flash') startSim();
