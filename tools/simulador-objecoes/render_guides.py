@@ -43,7 +43,7 @@ with sync_playwright() as p:
 srv.shutdown()
 print('erros:', errs or 'nenhum')
 
-# Guia de Objeções: capa + os 6 guias + contracapa, num PDF só (é o que a automação do Instagram envia com a palavra GUIA).
+# Guia de Objeções: capa + os 6 guias + contracapa, num PDF só (é o que a automação do Instagram envia com a palavra OBJEÇÃO).
 srv = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Quiet, directory=PUBLIC))
 threading.Thread(target=srv.serve_forever, daemon=True).start()
 base = f'http://127.0.0.1:{srv.server_address[1]}/simulador-objecoes'

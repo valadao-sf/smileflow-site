@@ -104,9 +104,9 @@ for d in DATA:
          'inLanguage': 'pt-BR', 'isPartOf': {'@id': HUB_URL + '#pagina'}, 'author': {'@id': NATH['@id']},
          'publisher': {'@id': ORG['@id']}, 'primaryImageOfPage': f'{ORIGIN}{BASE}/assets/share-{d["id"]}.jpg',
          'breadcrumb': {'@id': url + '#trilha'}, 'datePublished': PUBLISHED, 'dateModified': UPDATED},
-        # As perguntas e respostas que aparecem na página: a da objeção ("O que a Nath diz") e uma por conversa (seção das conversas).
+        # A pergunta e a resposta que aparecem na página ("O que a Nath diz").
         {'@type': 'FAQPage', '@id': url + '#perguntas', 'mainEntity': [{'@type': 'Question', 'name': f['q'],
-         'acceptedAnswer': {'@type': 'Answer', 'text': f['a']}} for f in d['faq']]},
+         'acceptedAnswer': {'@type': 'Answer', 'text': f['a']}} for f in d['faq'][:1]]},
         *([{'@type': 'VideoObject', '@id': url + '#video', 'name': f'Nathálya Mello: {d["video"]["title"]}',
             'description': d['snippet'], 'thumbnailUrl': f'{ORIGIN}{BASE}/{d["video"]["poster"]}', 'uploadDate': PUBLISHED,
             'embedUrl': PANDA_EMBED + d['video']['id'], 'inLanguage': 'pt-BR', 'transcript': ' '.join(d['video']['script']),
