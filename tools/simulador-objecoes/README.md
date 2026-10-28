@@ -103,3 +103,10 @@ Os vídeos de cada objeção ficam em `OBJECTIONS[id].videos.v1/v2`. Sem `id` do
 - Campos de triagem em todo evento: `business` (a grande área: `saude_estetica` | `servicos` | `comercio` | `outro`; perfis antigos com `odonto`, `estetica`, `fono` ou `saude` viram `saude_estetica`), `segment_group` (`saude_estetica` para saúde e estética, `fora_saude` para o resto), `business_label`, `business_other` (o que a pessoa escreveu em "Com o que você trabalha?", sempre preenchido, até 120 caracteres), `role_label`.
 - Na saúde, o texto livre escolhe os exemplos da simulação (odontologia, estética ou fono, em `inferArea`). Nas outras áreas, os exemplos são de odontologia.
 - Quem não é de `saude_estetica` vai para a lista de espera e não dispara Lead/Contact no Meta.
+
+## Mudanças de 28/out/2026
+
+- Simulação com 2 conversas (`SIM_N`): clicou na objeção (na tela inicial, no fim ou em "Treine outra"), abre direto o vídeo 1 → 1ª pessoa → vídeo 2 → 2ª pessoa → tela final. Sem perfil, guia, funil ou WhatsApp no caminho. As 4 conversas de cada objeção continuam no texto da página (AEO).
+- Guia único: `assets/guia-de-objecoes-nathalya-mello.pdf` (capa + os 6 guias + contracapa), gerado por `render_guides.py`. Vai pelo Instagram da Nath: o cartão da tela inicial e da tela final abre `CONFIG.igDm` e pede a palavra `CONFIG.guideWord` ("GUIA"); a automação do Instagram responde com o PDF.
+- Tela inicial: fundo roxo escuro com degradê leve, sem as fotos. Tela final: o resumo da objeção, o cartão do guia e "E se a próxima pessoa disser…?" com as outras objeções.
+- O funil do vídeo da Nath saiu do simulador e virou a página `/perfil-de-negociacao` (o mesmo motor com `standalone: true` e `start: 'fn'`), para tráfego pago. Ainda sem captação de lead; quando entrar, vai com formulário próprio no n8n.

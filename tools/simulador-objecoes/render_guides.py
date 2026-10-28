@@ -42,3 +42,22 @@ with sync_playwright() as p:
     b.close()
 srv.shutdown()
 print('erros:', errs or 'nenhum')
+
+# Guia de Objeções: capa + os 6 guias + contracapa, num PDF só (é o que a automação do Instagram envia com a palavra GUIA).
+srv = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Quiet, directory=PUBLIC))
+threading.Thread(target=srv.serve_forever, daemon=True).start()
+base = f'http://127.0.0.1:{srv.server_address[1]}/simulador-objecoes'
+with sync_playwright() as p:
+    b = p.chromium.launch(); pg = b.new_page(viewport={'width': 390, 'height': 844})
+    pg.goto(f'{base}/index.html'); pg.wait_for_timeout(1500)
+    covers = {k: pg.evaluate(f"drawGuideCover('{k}')") for k in ('capa', 'contracapa')}
+    b.close()
+srv.shutdown()
+def img(data_url): return Image.open(io.BytesIO(base64.b64decode(data_url.split(',')[1]))).convert('RGB')
+capa, contra = img(covers['capa']), img(covers['contracapa'])
+capa.save(os.path.join(ASSETS, 'guia-objecoes-capa.webp'), 'WEBP', quality=84, method=6)
+capa.resize((180, 320), Image.LANCZOS).save(os.path.join(ASSETS, 'guia-objecoes-capa-sm.webp'), 'WEBP', quality=82, method=6)
+pages = [capa] + [Image.open(os.path.join(ASSETS, f'guia1-{oid}.jpg')).convert('RGB') for oid in IDS] + [contra]
+pdf = os.path.join(ASSETS, 'guia-de-objecoes-nathalya-mello.pdf')
+pages[0].save(pdf, 'PDF', resolution=150, save_all=True, append_images=pages[1:])
+print('ok PDF', len(pages), 'páginas', os.path.getsize(pdf) // 1024, 'KB')

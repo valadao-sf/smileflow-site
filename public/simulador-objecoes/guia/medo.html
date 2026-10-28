@@ -822,12 +822,26 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 }
 
 /* ---------- tela inicial: igual para todos ---------- */
-/* hero: as pessoas das simulações passando no fundo do título; o card da Nath vem depois (à direita no computador) */
+/* tela inicial: fundo roxo escuro com um degradê leve; o cartão do Guia de Objeções vem depois do título (à direita no computador) */
+#s-hub{background:radial-gradient(110% 70% at 88% -10%,rgba(122,74,140,.30),transparent 60%),radial-gradient(90% 60% at -10% 110%,rgba(122,74,90,.16),transparent 60%),var(--ink)}
+.guiacard{gap:14px;background:linear-gradient(160deg,var(--plum-hi),var(--stage-hi) 60%);box-shadow:0 18px 44px rgba(0,0,0,.34)}
+.guiacard .gc-top{display:flex;gap:14px;align-items:center}
+.guiacard .gc-cover{flex:none;width:74px;aspect-ratio:9/16;object-fit:cover;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.guiacard .gc-txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.guiacard .eyebrow{margin:0;color:var(--wine-hi)}
+.guiacard h3{margin:0;font:700 23px/1.12 var(--display);letter-spacing:-.015em;text-wrap:balance}
+.guiacard h3 em{font-style:normal;color:var(--wine-hi)}
+.guiacard .gc-how{margin:0;font-size:15px;line-height:1.4;color:var(--sand)}
+.guiacard .gc-how b{color:var(--paper)}
+.guiacard .btn svg{width:18px;height:18px}
+.fq{font-size:24px;text-wrap:balance;margin:6px 0 0}
+.fq em{font-style:normal;color:var(--wine-hi)}
+.exfaces.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.exfaces.n2 figure{aspect-ratio:1/1}
+/* hero: as pessoas das simulações passando no fundo do título (sem uso desde out/2026) */
 .hhead{display:flex;flex-direction:column;gap:16px}
 .hhero{position:relative;isolation:isolate;padding-block:14px 18px}
 .hhero .castm{position:absolute;top:0;bottom:0;left:-20px;right:-20px;height:auto;z-index:-2;opacity:.62}
-.hhero::after{content:"";position:absolute;top:0;bottom:0;left:-20px;right:-20px;z-index:-1;pointer-events:none;
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 30%,transparent),color-mix(in srgb,var(--ink) 62%,transparent) 45%,color-mix(in srgb,var(--ink) 80%,transparent) 75%,var(--ink))}
 .hhero .castm .col:nth-child(n+5){display:none}
 .exbonus{margin:-2px 0 0;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-size:13px;line-height:1.35;color:var(--sand);text-align:center}
 .exbonus span{color:var(--paper)}
@@ -880,11 +894,14 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
   .hubtop div{flex:0 1 auto}
   .hubtop .follow{margin-left:12px}
   .hhead{display:grid;grid-template-columns:minmax(0,1fr) 400px;column-gap:48px;align-items:center}
+  .guiacard{padding:22px 24px}
+  .guiacard h3{font-size:26px}
+  .guiacard .gc-cover{width:86px}
+  .fq{font-size:30px}
   .hhead.solo{grid-template-columns:minmax(0,1fr)}
-  .hhero{min-height:420px;display:flex;align-items:center;padding-block:24px}
+  .hhero{min-height:360px;display:flex;align-items:center;padding-block:24px}
   .hhero .castm{left:0;right:0;opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,#000 78%,transparent);mask-composite:intersect}
-  .hhero::after{left:0;right:0;background:linear-gradient(90deg,var(--ink) 0%,color-mix(in srgb,var(--ink) 82%,transparent) 45%,color-mix(in srgb,var(--ink) 35%,transparent))}
-  .hhero .castm{grid-template-columns:repeat(6,minmax(0,1fr))}
+    .hhero .castm{grid-template-columns:repeat(6,minmax(0,1fr))}
   .hhero .castm .col:nth-child(n+5){display:block}
   .hhero .stack{max-width:520px}
   .castm{gap:10px;height:440px}
