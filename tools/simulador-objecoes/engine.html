@@ -1382,7 +1382,7 @@ const SF_EVENTS = {
   profile: 'perfil_preenchido', result: 'resultado_simulacao', quiz_done: 'cartoes_concluidos', gift_view: 'pedido_whatsapp_visto',
   // clique no botão do PDF do guia (página /simulador-objecoes/guia/<objeção> e tela do guia de quem volta)
   pdf_download: 'guia_pdf_baixado',
-  // clique em «Quero receber meu guia» (DM do Instagram, tela inicial e final): só GA4, sem pixel nem conversão
+  // clique em «Quero receber meu guia» (DM do Instagram, tela inicial e final): GA4 e Meta (Contact para saude_estetica, personalizado fora); sem TikTok, UET nem Ads
   guia_ig: 'clique_guia_instagram',
   // funil do VSL: entrou, cada resposta (em phase: pergunta:resposta), chegou ao vídeo e viu o botão do WhatsApp
   fn_start: 'funil_iniciado', fn_answer: 'funil_resposta', fn_video: 'funil_video', funil_botao_whatsapp: 'funil_botao_whatsapp'
@@ -4530,6 +4530,17 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-hub]')) { e.preventDefault(); goHub(); }
   const dl = e.target.closest('[data-dl]'); if (dl) track('guide_download', { obj: dl.dataset.dl, where: S.scene });
 });
+// Tela final: o próximo passo é o perfil de negociação (onde o Lead dispara) e, fora da lista de espera, o WhatsApp da equipe.
+// Os dois passam pelo handler de LINKS DE SAÍDA: data-out vira mnc_cta; data-wa usa o mesmo número, mensagem e clique_whatsapp do resto do motor.
+const finalNext = () => `
+    <section class="porta fnext" aria-label="O próximo passo">
+      <p class="eyebrow">O próximo passo</p>
+      <h3>Descubra o seu perfil de negociação.</h3>
+      <p class="note">Responda a algumas perguntas e veja por que você trava na hora do preço.</p>
+      <a class="btn btn-main" data-out="perfil" href="/perfil-de-negociacao">Fazer meu perfil de negociação <span class="arr">→</span></a>
+      ${isWaitlist() ? '' : `<a class="btn btn-ghost" data-out="whatsapp" data-wa="final" href="${esc(waLink(contactWaText()))}" target="_blank" rel="noopener">${ICON('wa')}Falar no WhatsApp</a>
+      <p class="small">A mensagem já vai pronta. Quem responde é uma pessoa da equipe.</p>`}
+    </section>`;
 ENTER.final = () => {
   const P = computeProfile(), n = firstName();
   const i = OBJ_LIST.findIndex(o => o.id === O.id), others = [...OBJ_LIST.slice(i + 1), ...OBJ_LIST.slice(0, i)].filter(o => OBJECTIONS[o.id]);
@@ -4552,6 +4563,7 @@ ENTER.final = () => {
       <h2 class="display">Na próxima conversa</h2>
       <ol class="fsteps">${steps.map(t => `<li>${esc(vocabP(t))}</li>`).join('')}</ol>
     </section>
+    ${finalNext()}
     <section class="stack" style="gap:12px" aria-label="Outras objeções">
       <h3 class="display fq">Treinar outra objeção</h3>
       <div class="hgrid">${others.map(o => hubCard(o.id)).join('')}</div>
