@@ -363,7 +363,7 @@ async function runViewport({ name, viewport }) {
     assert.equal(params.where, "botao");
   });
 
-  await check("8 clique_guia_instagram só no GA4 (tela inicial e final)", async () => {
+  await check("8 clique_guia_instagram no GA4 e na Meta (tela inicial e final)", async () => {
     const vendorState = () => page.evaluate(() => ({
       fbq: JSON.stringify((window.fbq && window.fbq.queue || []).map((a) => Array.from(a))),
       ttq: JSON.stringify((Array.isArray(window.ttq) ? window.ttq : []).filter(Array.isArray)),
@@ -385,7 +385,10 @@ async function runViewport({ name, viewport }) {
       assert.equal(events.length, 1, `clique_guia_instagram (${where}) encontrados: ${events.length}`);
       assert.equal(eventParams(events[0]).where, where);
       assert.equal(eventParams(events[0]).send_to, "G-TEST");
-      for (const k of ["fbq", "ttq", "uet"]) {
+      const seg = await page.evaluate(() => bizGroup());
+      const fbqNew = JSON.parse(after.fbq).slice(JSON.parse(before.fbq).length).map((a) => [a[0], a[1]]);
+      assert.deepEqual(fbqNew, [seg === "saude_estetica" ? ["track", "Contact"] : ["trackCustom", "clique_guia_instagram"]], `fbq (${where}, seg=${seg})`);
+      for (const k of ["ttq", "uet"]) {
         assert.doesNotMatch(after[k], /clique_guia_instagram|guia_ig/, `${k} recebeu o evento (${where})`);
         assert.equal(after[k], before[k], `${k} mudou com o clique (${where})`);
       }
@@ -412,6 +415,39 @@ async function runViewport({ name, viewport }) {
     await waitForScene("final");
     await page.waitForTimeout(600);
     await clickGuide("final");
+  });
+
+  await check("9 tela final: perfil de negociação e WhatsApp", async () => {
+    await waitForScene("final");
+    const { seg, waitlist, number } = await page.evaluate(() => ({ seg: bizGroup(), waitlist: isWaitlist(), number: CONFIG.whatsapp }));
+    const cta = page.locator('#s-final a[data-out="perfil"]');
+    assert.equal(await cta.count(), 1, "CTA do perfil ausente");
+    assert.ok(await cta.isVisible(), "CTA do perfil invisível");
+    assert.equal(await cta.getAttribute("href"), "/perfil-de-negociacao");
+    const ctaBefore = await page.evaluate(() => (window.dataLayer || []).filter((d) => d && d.event === "mnc_cta" && d.target === "perfil").length);
+    await cta.evaluate((anchor) => {
+      anchor.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      anchor.click();
+    });
+    const ctaAfter = await page.evaluate(() => (window.dataLayer || []).filter((d) => d && d.event === "mnc_cta" && d.target === "perfil").length);
+    assert.equal(ctaAfter - ctaBefore, 1, "mnc_cta do perfil");
+    const wa = page.locator('#s-final a[data-wa="final"]');
+    assert.equal(await wa.count(), waitlist ? 0 : 1, "WhatsApp da tela final");
+    if (waitlist) return;
+    assert.ok(await wa.isVisible(), "WhatsApp da tela final invisível");
+    const fbqBefore = await page.evaluate(() => (window.fbq && window.fbq.queue || []).length);
+    const waBefore = matchingEvents((await queueFrom(page)).queue, "clique_whatsapp").length;
+    await wa.evaluate((anchor) => {
+      anchor.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      anchor.click();
+    });
+    await page.waitForTimeout(300);
+    assert.ok((await wa.getAttribute("href")).startsWith(`https://wa.me/${number}?text=`), "número do WhatsApp");
+    const waEvents = matchingEvents((await queueFrom(page)).queue, "clique_whatsapp").slice(waBefore);
+    assert.equal(waEvents.length, 1, `clique_whatsapp encontrados: ${waEvents.length}`);
+    assert.equal(eventParams(waEvents[0]).where, "final");
+    const fbqNew = await page.evaluate((n) => (window.fbq.queue || []).slice(n).map((a) => [a[0], a[1]]), fbqBefore);
+    assert.deepEqual(fbqNew, [seg === "saude_estetica" ? ["track", "Lead"] : ["trackCustom", "clique_whatsapp"]], `fbq (seg=${seg})`);
   });
 
   await captureCurrentPage();

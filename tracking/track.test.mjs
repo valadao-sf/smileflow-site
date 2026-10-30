@@ -56,6 +56,18 @@ test("quem não é de saude_estetica nunca vira Lead/Contact padrão em platafor
   }
 });
 
+test("clique_guia_instagram: GA4 uma vez; Meta Contact só para saude_estetica, personalizado fora; nada nas outras plataformas", () => {
+  for (const [seg, meta] of [["saude_estetica", ["track", "Contact"]], ["", ["trackCustom", "clique_guia_instagram"]], ["fora_saude", ["trackCustom", "clique_guia_instagram"]]]) {
+    const g = load({ config: ALL });
+    g.w.sfTrack("clique_guia_instagram", { segment_group: seg, where: "final" }, { eventId: "g-1" });
+    g.w.sfTrack("clique_guia_instagram", { segment_group: seg, where: "final" }, { eventId: "g-1" });   // repetido
+    assert.equal(events(g, "clique_guia_instagram").length, 1, seg);
+    assert.deepEqual(g.calls.fbq.map((c) => [c[0], c[1], c[3]]), [[...meta, { eventID: "g-1" }]], seg);
+    assert.equal(g.calls.ttq.length + g.calls.uetq.length + g.calls.lintrk.length + g.calls.pintrk.length + g.calls.kwaiq.length, 0, seg);
+    assert.equal(events(g, "conversion").length, 0, seg);
+  }
+});
+
 test("diagnóstico sem WhatsApp não é a conversão principal", () => {
   const g = load({ config: ALL });
   g.w.sfTrack("diagnostico_concluido", { segment_group: "saude_estetica", has_whatsapp: false });

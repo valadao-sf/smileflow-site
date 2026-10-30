@@ -195,8 +195,9 @@
     pedido_contato: { ga4: 'pedido_contato', meta: 'Contact', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' },
     clique_whatsapp: { ga4: 'clique_whatsapp', meta: 'Lead', tiktok: 'Contact', uet: 'contact', kwai: 'EVENT_CONTACT' }
   };
-  // Só GA4: não vai ao Meta, TikTok, UET nem às conversões do Ads (o push sf_ no dataLayer continua, como em todo evento).
-  var GA4_ONLY = { clique_guia_instagram: 1 };
+  // GA4 e Meta: na Meta, o evento padrão indicado só para saude_estetica; fora disso, personalizado com o nome canônico.
+  // Não vai ao TikTok, UET, LinkedIn, Pinterest, Kwai nem às conversões do Ads (o push sf_ no dataLayer continua, como em todo evento).
+  var META_ONLY = { clique_guia_instagram: 'Contact' };
   var VIDEO_EVENTS = {
     video_start: { ga4: 'video_start', meta: 'vsl_play' },
     video_progress: { ga4: 'video_progress', meta: function (p) { return 'vsl_' + p.video_percent; } },
@@ -237,7 +238,11 @@
 
     // GA4 nunca recebe chamadas em ?teste=1.
     if (!IS_TEST && loaded.ga4) try { gtag('event', standard ? conv.ga4 : name, Object.assign({}, base, standard && conv.ga4p ? conv.ga4p : {}, { send_to: CFG.ga4.id })); } catch (e) {}
-    if (GA4_ONLY[name]) return eventId;
+    if (META_ONLY[name]) {
+      if (IS_TEST) return eventId;
+      try { if (loaded.meta && w.fbq) seg === 'saude_estetica' ? w.fbq('track', META_ONLY[name], base, { eventID: eventId }) : w.fbq('trackCustom', name, base, { eventID: eventId }); } catch (e) {}
+      return eventId;
+    }
     // Plataformas de anúncio: em teste não disparam (não ensinam o algoritmo). O teste delas é pelo servidor, com test_event_code.
     if (IS_TEST) return eventId;
     var custom = !!conv;   // conversões fora do público viram evento personalizado; eventos de funil só vão para GA4 e Meta (personalizado)
