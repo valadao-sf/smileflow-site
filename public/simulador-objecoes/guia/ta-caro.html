@@ -899,6 +899,20 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hport .tag{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);display:none;align-items:center;gap:6px;padding:6px 11px 6px 8px;border-radius:999px;background:var(--paper);color:#1b1029;font:750 12.5px/1 var(--ui);white-space:nowrap;box-shadow:0 8px 20px rgba(8,4,14,.4)}
 .hport .tag svg{width:15px;height:15px}
 .hsub h2{margin:0}
+/* celular: topo do hub mais baixo para o primeiro card de treino aparecer sem rolar (390×844 e 360×740); foto ao lado do sobretítulo */
+@media (max-width:599px){
+  .hnath{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:12px;row-gap:10px;padding:16px}
+  .hnath .stack{display:contents}
+  .hnath .hport{grid-column:1;align-self:center}
+  .hnath .hport .ring{width:56px;height:56px;padding:3px;box-shadow:0 8px 20px rgba(8,4,14,.5)}
+  .hnath .eyebrow{grid-column:2;align-self:center}
+  .hnath h1.display,.hnath .lede,.hnath .btn{grid-column:1/-1}
+  .hnath h1.display{font-size:27px}
+  .hnath .lede{font-size:14.5px}
+  .hnath .btn{justify-self:start;min-height:48px}
+  .hsub h2.display{font-size:21px!important}
+  .hsub .lede{font-size:14px}
+}
 .nameedit{font:inherit;color:var(--wine-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:5px;position:relative}
 .nameedit::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:max(100%,44px);transform:translateY(-50%)}
 .nameedit:focus-visible{outline:2px solid var(--wine-hi);outline-offset:3px;border-radius:4px}
