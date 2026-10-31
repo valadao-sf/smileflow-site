@@ -1,6 +1,6 @@
 # Simulador de objeções da Nathálya Mello (SmileFlow)
 
-> Treine em 3 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. Grátis, com Nathálya Mello.
+> Treine em 6 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. Grátis, com Nathálya Mello.
 
 Hub: https://www.smileflow.com.br/simulador-objecoes
 
@@ -48,7 +48,7 @@ Não. Muitas vezes, depois que a pessoa diz o que pesou, você percebe que não 
 
 **Como treinar a resposta ao “tá caro”?**
 
-Na minha simulação grátis, 4 pessoas dizem que está caro. Você escolhe o que responderia, vê como cada uma reage e ganha um guia no final. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas dizem que está caro. Você escolhe o que responderia, vê como cada uma reage e ganha um guia no final. Leva 6 minutos.
 
 ## O que responder quando o paciente diz “vou pensar”?
 
@@ -94,7 +94,7 @@ Tudo bem. Antes de encerrar, combine quando vocês vão se falar, por onde e o q
 
 **Como treinar a resposta ao “vou pensar”?**
 
-Na minha simulação grátis, 4 pessoas gostam do plano e dizem “vou pensar”. Você escolhe o que responderia e vê como cada uma reage. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas gostam do plano e dizem “vou pensar”. Você escolhe o que responderia e vê como cada uma reage. Leva 6 minutos.
 
 ## O que responder quando o paciente diz “preciso falar com meu marido”?
 
@@ -140,7 +140,7 @@ Ela pode cuidar do dinheiro, ter dúvidas ou reagir mal. Às vezes, quem está c
 
 **Como treinar essa conversa?**
 
-Na minha simulação grátis, 4 pessoas precisam falar com o marido, a esposa ou a mãe. Você responde e vê como cada uma reage. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas precisam falar com o marido, a esposa ou a mãe. Você responde e vê como cada uma reage. Leva 6 minutos.
 
 ## O que responder quando o paciente diz “tenho medo”?
 
@@ -186,7 +186,7 @@ De uma experiência ruim, de um caso que a pessoa viu, da falta de informação 
 
 **Como treinar essa conversa?**
 
-Na minha simulação grátis, 4 pessoas querem fazer o tratamento, mas têm medo. Você escolhe o que responderia e vê como cada uma reage. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas querem fazer o tratamento, mas têm medo. Você escolhe o que responderia e vê como cada uma reage. Leva 6 minutos.
 
 ## O que responder quando o paciente diz “na outra clínica é mais barato”?
 
@@ -232,7 +232,7 @@ Não invente diferença. Converse sobre o valor com transparência.
 
 **Como treinar essa conversa?**
 
-Na minha simulação grátis, 4 pessoas dizem que em outro lugar sai mais barato. Você responde e vê como cada uma reage. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas dizem que em outro lugar sai mais barato. Você responde e vê como cada uma reage. Leva 6 minutos.
 
 ## O que responder quando o paciente pede desconto?
 
@@ -278,7 +278,7 @@ Sim. Uma troca justa, como pagar à vista, pode justificar um desconto real.
 
 **Como treinar essa conversa?**
 
-Na minha simulação grátis, 4 pessoas gostam do plano e pedem desconto. Você responde e vê como cada uma reage. Leva 3 minutos.
+Na minha simulação grátis, 4 pessoas gostam do plano e pedem desconto. Você responde e vê como cada uma reage. Leva 6 minutos.
 
 ## Contato
 

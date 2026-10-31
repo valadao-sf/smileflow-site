@@ -1,6 +1,6 @@
 # Simulador de objeções da Nathálya Mello (SmileFlow)
 
-> Treine em 3 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. Grátis, com Nathálya Mello.
+> Treine em 6 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. Grátis, com Nathálya Mello.
 
 ## Simulador
 
