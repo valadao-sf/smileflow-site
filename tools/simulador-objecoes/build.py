@@ -76,7 +76,7 @@ OG_V = '3'
 HUB_URL = f'{ORIGIN}{BASE}'
 HUB_NAME = 'Simulador de objeções'
 HUB_TITLE = 'Como responder objeções de pacientes | Simulador grátis'
-HUB_DESC = ('Treine em 3 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. '
+HUB_DESC = ('Treine em 5 minutos o que responder quando o paciente diz “tá caro”, “vou pensar”, “tenho medo” ou pede desconto. '
             'Grátis, com Nathálya Mello.')
 BRAND = 'Treinos da Nath'   # nome que aparece na tela inicial
 
