@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MNC · Método Negociação Clínica | Nathálya Mello</title>
+<meta name="description" content="Pare de perder paciente no “tá caro” e no “vou pensar”. O método da Nathálya Mello para fechar o tratamento sem dar desconto e sem pressionar.">
+<link rel="canonical" href="https://www.smileflow.com.br/mnc">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="SmileFlow">
+<meta property="og:url" content="https://www.smileflow.com.br/mnc">
+<meta property="og:title" content="Pare de perder paciente no “tá caro” e no “vou pensar”">
+<meta property="og:description" content="MNC · Método Negociação Clínica, com Nathálya Mello.">
+<meta property="og:image" content="https://www.smileflow.com.br/simulador-objecoes/assets/share-mnc.jpg?v=1">
+<meta property="og:image:secure_url" content="https://www.smileflow.com.br/simulador-objecoes/assets/share-mnc.jpg?v=1">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image" content="https://www.smileflow.com.br/simulador-objecoes/assets/share-mnc-sq.jpg?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.smileflow.com.br/simulador-objecoes/assets/share-mnc.jpg?v=1">
+<meta name="theme-color" content="#140b1f">
+<link rel="icon" href="https://smileflow-marketing.vercel.app/favicon.ico">
+<link rel="preload" href="/simulador-objecoes/assets/fonts/inter-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/simulador-objecoes/assets/vp-nath-2.webp" as="image">
+<script>window.sfTrack=window.sfTrack||function(){(window.sfTrack.q=window.sfTrack.q||[]).push(arguments)};</script>
+<script async src="/_sf/track.js"></script>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:400 800;font-display:swap;src:url(/simulador-objecoes/assets/fonts/inter-normal.woff2) format('woff2')}
+/* Layout: uma coluna de leitura no celular; no desktop, seções em duas colunas (texto + foto/cartão), no mesmo roxo escuro do simulador. */
+:root{
+  --ink:#140b1f; --deep:#1b1029; --stage:#1d1626; --stage-hi:#251a33; --line:rgba(246,244,242,.12); --line-hi:rgba(246,244,242,.24);
+  --paper:#f6f4f2; --sand:#c9b9d6; --soft:#a397b0; --pink:#e7b9c7;
+  --ui:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ink);color:var(--paper);font:400 17px/1.55 var(--ui);letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+section{padding-block:64px}
+.eyebrow{margin:0;font:800 12px/1.2 var(--ui);letter-spacing:.09em;text-transform:uppercase;color:var(--soft)}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.035em;text-wrap:balance}
+h2{font-size:clamp(32px,7vw,52px);line-height:1.02}
+h3{font-size:21px;line-height:1.2;letter-spacing:-.02em}
+p{margin:0}
+.lede{font-size:19px;line-height:1.5;color:var(--sand);max-width:36em}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:58px;padding:16px 26px;border-radius:14px;background:var(--paper);color:#1b1029;
+  font:800 18px/1.2 var(--ui);letter-spacing:-.01em;text-decoration:none;box-shadow:0 14px 34px rgba(8,4,14,.45);transition:transform .12s,box-shadow .2s}
+.btn:hover{box-shadow:0 18px 40px rgba(8,4,14,.6)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.ghost:focus-visible,.follow:focus-visible,.tab:focus-visible,summary:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.btn .arr{font-size:20px}
+.ghost{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:14px 22px;border-radius:14px;border:1.5px solid var(--line-hi);color:var(--paper);font:700 16px/1.2 var(--ui);text-decoration:none}
+.ghost:hover{border-color:var(--paper)}
+
+/* topo */
+.top{padding-block:18px 0}
+.who{display:flex;align-items:center;gap:10px}
+.who-me{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none}
+.who-me img{width:44px;height:44px;border-radius:50%;object-fit:cover;padding:2px;background:var(--paper);flex:none}
+.who-me strong{display:block;font-size:14px;font-weight:700;white-space:nowrap}
+.who-me span{display:block;font-size:12.5px;color:var(--sand)}
+.follow{flex:none;padding:10px 14px;border-radius:999px;border:1px solid var(--line-hi);font:700 13px/1 var(--ui);text-decoration:none}
+
+/* hero */
+.hero{position:relative;isolation:isolate;padding-block:28px 56px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:80%;height:120%;z-index:-1;background:radial-gradient(closest-side,rgba(106,58,160,.55),rgba(61,33,96,.25) 55%,transparent);pointer-events:none}
+.hero .grid{display:grid;gap:28px;align-items:center}
+.hero h1{font-size:clamp(42px,11.5vw,76px);line-height:.98;letter-spacing:-.045em}
+.hero .lede{font-size:20px;color:var(--paper);opacity:.86}
+.hero .ctas{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.hero .note{font-size:14px;color:var(--soft);max-width:30em}
+.photo{position:relative;margin:0;border-radius:24px;overflow:hidden;aspect-ratio:4/5;max-width:100%;background:var(--stage)}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo figcaption{position:absolute;left:14px;bottom:14px;padding:8px 12px;border-radius:999px;background:rgba(20,11,31,.7);backdrop-filter:blur(6px);font:700 13px/1 var(--ui)}
+
+/* dor */
+.pain{background:var(--deep)}
+.pain .head{display:flex;flex-direction:column;gap:16px;max-width:780px}
+.thought{font-size:19px;color:var(--sand);font-style:italic}
+.cards{display:grid;gap:14px;margin-top:36px}
+.card{padding:22px;border-radius:18px;background:var(--stage);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.card .n{font:800 13px/1 var(--ui);color:var(--soft);letter-spacing:.06em}
+.card p{color:var(--sand);font-size:16px}
+.hit{margin-top:36px;padding:26px 24px;border-radius:20px;border:1.5px solid var(--paper);font-size:clamp(22px,4.6vw,30px);font-weight:800;line-height:1.2;letter-spacing:-.025em;text-wrap:balance}
+
+/* método */
+.method .intro{max-width:760px;display:flex;flex-direction:column;gap:16px}
+.steps{display:grid;gap:14px;margin-top:36px}
+.step{padding:24px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,var(--stage-hi),var(--stage));display:flex;flex-direction:column;gap:10px}
+.step .k{font:800 13px/1 var(--ui);color:var(--soft);letter-spacing:.06em}
+.step h3{font-size:30px;letter-spacing:-.035em}
+.step p{color:var(--sand);font-size:16px}
+.step .for{color:var(--paper);font-weight:700;font-size:15px;padding-top:10px;border-top:1px solid var(--line)}
+
+/* exemplos */
+.ex{background:var(--deep)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.tab{appearance:none;border:1.5px solid var(--line-hi);background:transparent;color:var(--paper);padding:11px 16px;border-radius:999px;font:700 15px/1 var(--ui);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--paper);color:#1b1029;border-color:var(--paper)}
+.duo{display:grid;gap:14px;margin-top:18px}
+.say{padding:24px;border-radius:18px;display:flex;flex-direction:column;gap:10px}
+.say.bad{background:var(--stage);border:1px solid var(--line)}
+.say.good{background:var(--paper);color:#1b1029}
+.say .lab{font:800 12px/1.2 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+.say.bad .lab{color:var(--soft)}
+.say.good .lab{color:#5a3e7a}
+.say q{quotes:none;font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-.025em}
+.say.bad q{color:var(--sand);text-decoration:line-through;text-decoration-color:rgba(201,185,214,.5);text-decoration-thickness:2px}
+.say p{font-size:16px}
+.say.bad p{color:var(--soft)}
+.small{font-size:14px;color:var(--soft);margin-top:14px}
+
+/* nath */
+.nath .grid{display:grid;gap:28px;align-items:center}
+.cred{font-size:18px;color:var(--paper);font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{padding:7px 12px;border-radius:999px;border:1px solid var(--line-hi);font:700 13px/1 var(--ui);color:var(--sand)}
+blockquote{margin:8px 0 0;padding-left:18px;border-left:3px solid var(--paper);font-size:24px;font-weight:800;line-height:1.25;letter-spacing:-.025em}
+blockquote cite{display:block;margin-top:10px;font:600 14px/1.3 var(--ui);font-style:normal;color:var(--soft);letter-spacing:0}
+
+/* arenas */
+.arena{background:var(--deep)}
+.arena .grid{display:grid;gap:28px}
+.drill{padding:26px;border-radius:20px;border:1.5px solid var(--line-hi);background:var(--stage);display:flex;flex-direction:column;gap:14px}
+.drill .q{font-size:26px;font-weight:800;line-height:1.2;letter-spacing:-.03em}
+.drill .a{color:var(--sand)}
+.loop{display:grid;gap:12px}
+.loop div{padding:18px 20px;border-radius:16px;border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.loop b{font-size:17px}
+.loop span{color:var(--sand);font-size:15.5px}
+.sched{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:24px;font-weight:700}
+.sched i{width:5px;height:5px;border-radius:50%;background:var(--soft)}
+
+/* aprende */
+.learn{display:grid;gap:12px;margin-top:32px}
+.learn div{padding:22px;border-radius:18px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.learn p{color:var(--sand);font-size:16px}
+
+/* prova */
+.proof{background:var(--deep)}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+.shot{aspect-ratio:9/16;border-radius:18px;border:1.5px dashed var(--line-hi);display:flex;align-items:flex-end;padding:14px;color:var(--soft);font:700 13px/1.3 var(--ui)}
+
+/* pra quem */
+.fit{display:grid;gap:14px;margin-top:28px}
+.fit > div{padding:24px;border-radius:18px;border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.fit ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.fit li{display:flex;gap:10px;align-items:flex-start;font-size:16.5px}
+.fit li::before{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:800 13px/1 var(--ui);margin-top:1px}
+.fit .yes li::before{content:"✓";background:var(--paper);color:#1b1029}
+.fit .no li::before{content:"✕";border:1.5px solid var(--soft);color:var(--soft)}
+.fit .no li{color:var(--sand)}
+
+/* oferta */
+.offer .grid{display:grid;gap:24px;align-items:start}
+.incl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.incl li{display:flex;gap:12px;align-items:flex-start;font-size:17px}
+.incl li::before{content:"✓";flex:none;width:24px;height:24px;border-radius:50%;background:var(--paper);color:#1b1029;display:grid;place-items:center;font:800 13px/1 var(--ui)}
+.roi{margin-top:22px;padding:20px 22px;border-radius:16px;background:var(--stage);border:1px solid var(--line);font-size:18px;font-weight:700;line-height:1.4}
+.price{padding:30px 26px;border-radius:24px;background:linear-gradient(170deg,#3a225a,#1d1229 70%);border:1.5px solid var(--line-hi);display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 70px rgba(8,4,14,.5)}
+.price .big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price .big small{font-size:22px;font-weight:700}
+.price .big strong{font-size:clamp(56px,14vw,72px);font-weight:800;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.price .alt{color:var(--sand);font-size:16px}
+.price .btn,.price .ghost{width:100%}
+.guar{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:16px;background:rgba(246,244,242,.06);border:1px solid var(--line)}
+.guar .seal{flex:none;width:52px;height:52px;border-radius:50%;border:2px solid var(--paper);display:grid;place-items:center;text-align:center;font:800 11px/1.05 var(--ui);letter-spacing:.02em}
+.guar .seal b{display:block;font-size:20px}
+.guar p{font-size:15px;color:var(--sand)}
+.guar strong{color:var(--paper)}
+.fine{font-size:13px;color:var(--soft)}
+
+/* faq */
+.faq{background:var(--deep)}
+.qa{margin-top:28px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;position:relative;font-size:18px;font-weight:700;letter-spacing:-.015em}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:400;color:var(--soft)}
+details[open] summary::after{content:"–"}
+details p{padding:0 0 20px;color:var(--sand);font-size:16px;max-width:42em}
+
+/* final */
+.final{text-align:left}
+.final .box{padding:40px 26px;border-radius:26px;background:radial-gradient(70% 90% at 80% 10%,#6a3aa0,#3d2160 45%,#1b1029 80%);display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+.final h2{max-width:14em}
+footer{padding-block:28px calc(110px + env(safe-area-inset-bottom,0px));color:var(--soft);font-size:13px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px}
+
+/* barra fixa no celular */
+.stick{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  background:rgba(20,11,31,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;transform:translateY(110%);transition:transform .25s}
+.stick.on{transform:none}
+.stick div{flex:1;min-width:0;font-size:13px;color:var(--sand);line-height:1.25}
+.stick b{display:block;color:var(--paper);font-size:16px}
+.stick .btn{min-height:48px;padding:12px 18px;font-size:16px;flex:none}
+
+@media (min-width:860px){
+  section{padding-block:80px}
+  .hero{padding-block:44px 88px}
+  .hero .grid{grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:56px}
+  .hero .ctas{flex-direction:row;align-items:center;gap:20px}
+  .cards,.steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .duo{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nath .grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px}
+  .arena .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
+  .learn{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .shots{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .fit{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .offer .grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px}
+  .final .box{padding:64px 56px}
+  .stick{display:none}
+  footer{padding-block:28px}
+}
+
+/* Página de venda no padrão dos lançamentos brasileiros: uma coluna, títulos e botões centralizados, palavras-chave em destaque, botão repetido. */
+.wrap{max-width:780px}
+section{padding-block:56px}
+h2{font-size:clamp(34px,8.4vw,54px);line-height:1.03}
+.hl{background:var(--paper);color:#1b1029;padding:0 .14em;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.eyebrow,h2,.lede,.thought,.hit,.small,.cred,.sched{text-align:center}
+.stack,.head,.intro{align-items:center;text-align:center;margin-inline:auto}
+.lede{margin-inline:auto}
+.btn.big{width:100%;max-width:520px;min-height:64px;font-size:19px;padding:18px 24px}
+.cta{display:flex;justify-content:center;margin-top:32px;width:100%}
+.hero{padding-block:24px 48px;text-align:center}
+.hero .grid{grid-template-columns:1fr!important;justify-items:center;gap:26px}
+.hero h1{font-size:clamp(44px,12vw,78px);line-height:1.1}
+h2{line-height:1.12}
+.hero .ctas{flex-direction:column!important;align-items:center!important;width:100%}
+.hero .photo{width:100%;max-width:420px;aspect-ratio:4/5}
+.card,.step,.learn div,.loop div,.drill{text-align:center;align-items:center}
+.cards,.steps,.learn{grid-template-columns:1fr!important}
+.duo{grid-template-columns:1fr!important}
+.say{text-align:center;align-items:center}
+.tabs{justify-content:center}
+.nath .grid,.arena .grid,.offer .grid{grid-template-columns:1fr!important;justify-items:center;gap:28px}
+.nath .photo{width:100%;max-width:420px}
+.tags{justify-content:center}
+blockquote{border-left:0;padding-left:0;text-align:center}
+.sched{justify-content:center}
+.loop{width:100%}
+.shots{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.fit{grid-template-columns:1fr!important}
+.fit h3{text-align:center}
+.offer .stack{width:100%}
+.incl{align-self:center;width:100%;max-width:460px}
+.incl li{text-align:left}
+.hl{white-space:nowrap}
+h2 .hl,h1 .hl{white-space:nowrap}
+.roi{text-align:center}
+.price{width:100%;max-width:520px;text-align:center;align-items:center}
+.price .big{justify-content:center}
+.guar{text-align:left}
+.final .box{align-items:center;text-align:center}
+.final h2{margin-inline:auto}
+.trust{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:0;font:700 13.5px/1.3 var(--ui);color:var(--paper)}
+.absolve{max-width:22em;margin:0 auto 40px;text-align:center;font-size:clamp(24px,5.6vw,34px);font-weight:800;line-height:1.2;letter-spacing:-.03em;text-wrap:balance}
+.learn.checks{gap:10px}
+.learn.checks div{display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:14px;row-gap:4px;text-align:left;padding:18px 20px}
+.learn.checks div::before{grid-row:1 / span 2;align-self:start}
+.learn.checks h3,.learn.checks p{grid-column:2}
+.learn.checks div::before{content:"✓";flex:none;width:26px;height:26px;border-radius:50%;background:var(--paper);color:#1b1029;display:grid;place-items:center;font:800 14px/1 var(--ui);margin-top:1px}
+.learn.checks h3{font-size:18px}
+.learn.checks p{font-size:15.5px;margin-top:4px}
+.learn.checks div > *{min-width:0}
+.day{font:800 15px/1.2 var(--ui);color:#1b1029;background:var(--paper);padding:7px 12px;border-radius:999px}
+@media (min-width:860px){
+  section{padding-block:80px}
+  .shots{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap who">
+    <a class="who-me" href="https://www.instagram.com/nathmellop/" target="_blank" rel="noopener"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello" width="44" height="44"><span><strong>Nathálya Mello</strong>Especialista em vendas</span></a>
+    <a class="follow" href="https://www.instagram.com/nathmellop/" target="_blank" rel="noopener">@nathmellop</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap grid">
+      <div class="stack" style="gap:22px">
+        <p class="eyebrow">MNC · Método Negociação Clínica</p>
+        <h1>Pare de perder paciente no <span class="hl">“tá caro”</span> e no <span class="hl">“vou pensar”</span>.</h1>
+        <p class="lede">O método da Nathálya Mello para fechar o tratamento sem dar desconto e sem pressionar ninguém.</p>
+        <div class="ctas">
+          <a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a>
+          <p class="trust"><span>✓ Garantia de 7 dias</span><span>✓ Pagamento seguro Hotmart</span><span>✓ Acesso assim que o pagamento aprova</span></p>
+          <p class="note">Para profissionais de saúde e estética que negociam com pacientes.</p>
+        </div>
+      </div>
+      <figure class="photo"><img src="/simulador-objecoes/assets/vp-nath-2.webp" alt="Nathálya Mello" width="900" height="1600" style="object-position:50% 30%"><figcaption>Nathálya Mello · criadora do MNC</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="pain">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Você reconhece essa consulta?</p>
+        <h2>Ela gostou da consulta. Entendeu o plano. <span class="hl">Mas não decidiu.</span></h2>
+        <p class="thought">E você sai pensando: “Será que cobrei caro? Será que eu deveria ter oferecido um desconto?”</p>
+      </div>
+      <div class="cards">
+        <div class="card"><h3>O preço sai. A justificativa vem logo atrás.</h3><p>“Mas podemos facilitar…”, “Posso ver um desconto…”. Você começa a ceder antes de descobrir o que ela está avaliando.</p></div>
+        <div class="card"><h3>O “vou pensar” vira um fim de conversa.</h3><p>Você responde “qualquer coisa, me chama”. A paciente vai embora, a proposta fica aberta e ninguém sabe o próximo passo.</p></div>
+        <div class="card"><h3>Você explica mais. Ela continua indecisa.</h3><p>Talvez a dúvida seja dinheiro, medo ou prioridade. Sem investigar, você tenta resolver tudo repetindo a explicação técnica.</p></div>
+      </div>
+      <p class="hit">Cada desconto que você dá sai do seu bolso. Cada “vou pensar” sem resposta é um tratamento que já era seu indo embora.</p>
+      <div class="cta"><a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="method">
+    <div class="wrap">
+      <p class="absolve">Não é falta de talento. Ninguém te ensinou essa parte da consulta.</p>
+      <div class="intro">
+        <p class="eyebrow">É aqui que o MNC entra</p>
+        <h2>O fechamento também precisa de <span class="hl">anamnese</span>.</h2>
+        <p class="lede">Na clínica, você investiga antes de recomendar. Na negociação, vale o mesmo rigor: descubra o que impede a decisão antes de tentar resolver com desconto.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="k">01</span><h3>Ler.</h3><p>Entenda o que a paciente quer resolver, o que teme e quem participa da decisão. Vá além da primeira resposta.</p><p class="for">Para apresentar um plano conectado ao que importa para ela.</p></div>
+        <div class="step"><span class="k">02</span><h3>Comandar.</h3><p>Conduza a recomendação, as etapas e as expectativas. Confirme o entendimento antes de apresentar o investimento.</p><p class="for">Para sustentar sua recomendação na hora de falar o preço.</p></div>
+        <div class="step"><span class="k">03</span><h3>Fechar.</h3><p>Investigue a reação, responda à dúvida e peça uma decisão. Se necessário, combinem o que falta e quando retomar.</p><p class="for">Para terminar com uma decisão ou um próximo passo claro.</p></div>
+      </div>
+      <div class="cta"><a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="ex">
+    <div class="wrap">
+      <div class="stack" style="max-width:760px">
+        <p class="eyebrow">Uma diferença que você pode ouvir</p>
+        <h2>Ela disse “tá caro”. Qual é a sua próxima pergunta?</h2>
+        <p class="lede">A frase é curta. O que muda é o raciocínio: investigar antes de conceder.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Exemplos">
+        <button class="tab" role="tab" id="t-caro" data-tab="caro" aria-selected="true">“Tá caro”</button>
+        <button class="tab" role="tab" id="t-pensar" data-tab="pensar" aria-selected="false">“Vou pensar”</button>
+        <button class="tab" role="tab" id="t-preco" data-tab="preco" aria-selected="false">A hora do preço</button>
+      </div>
+      <div class="duo" role="tabpanel">
+        <div class="say bad"><span class="lab" id="badlabel">Desconto antecipado</span><q id="badquote">“Posso ver um desconto para você…”</q><p id="badtext">Você mexe no valor antes de entender por que a paciente achou caro.</p></div>
+        <div class="say good"><span class="lab" id="goodlabel">Investigação da objeção</span><q id="goodquote">“Quando você diz caro, qual é a sua maior preocupação?”</q><p id="goodtext">Ouça antes de responder. A dúvida pode ser o valor, a condição de pagamento ou o benefício percebido.</p></div>
+      </div>
+      <p class="small">Demonstração didática. Adapte a pergunta ao contexto e à resposta da paciente.</p>
+    </div>
+  </section>
+
+  <section class="nath">
+    <div class="wrap grid">
+      <figure class="photo"><img src="/simulador-objecoes/assets/vp-nath-1.webp" alt="Nathálya Mello" width="900" height="1600" style="object-position:50% 28%"></figure>
+      <div class="stack" style="gap:18px">
+        <p class="eyebrow">Quem ensina</p>
+        <h2>Nathálya Mello.<br>A criadora do MNC.</h2>
+        <p class="cred">Mais de 10 anos em vendas, implantando e acompanhando equipes comerciais em clínicas de saúde e estética.</p>
+        <p class="lede">Cofundadora da SmileFlow, ela leva o rigor da investigação para a conversa sobre plano, preço e decisão.</p>
+        <p class="lede">No MNC, você aprende a condução e pratica como usá-la no atendimento.</p>
+        <div class="tags"><span>Odontologia</span><span>Estética</span><span>Medicina</span><span>Fisioterapia</span><span>Saúde</span></div>
+        <blockquote>“Fechamento não é agressão. É cuidado bem conduzido até virar decisão.”<cite>Nathálya Mello · Método Negociação Clínica</cite></blockquote>
+        <div class="cta"><a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="arena">
+    <div class="wrap grid">
+      <div class="stack">
+        <p class="eyebrow">Saber a frase é só o começo</p>
+        <h2>Na aula, faz sentido. Na consulta, <span class="hl">você trava.</span></h2>
+        <p class="lede">É a distância entre entender e fazer que as Arenas trabalham. Você pratica negociações em encontros coletivos duas vezes por semana, antes de levar o ajuste para o atendimento.</p>
+        <div class="drill"><span class="eyebrow">Situação de treino</span><p class="q">“Doutora, gostei do plano. Mas vou pensar…”</p><p class="a">O que você pergunta agora?</p></div>
+      </div>
+      <div class="stack">
+        <div class="loop">
+          <div><b>Treinar · Pratique o momento difícil.</b><span>Simule a hora do preço, a objeção e o pedido de decisão. Treine o ponto em que costuma recuar.</span></div>
+          <div><b>Observar · Encontre onde travou.</b><span>Observe sua execução e outras negociações. Onde explicou demais? Que pergunta deixou de fazer?</span></div>
+          <div><b>Ajustar · Repita com um ajuste.</b><span>Refaça a situação com outra condução e leve um ajuste concreto para a próxima conversa.</span></div>
+        </div>
+        <p class="sched"><span>Arenas: terças às 19h30</span><i></i><span>quintas às 12h</span></p>
+        <a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="learnsec">
+    <div class="wrap">
+      <div class="stack" style="max-width:760px">
+        <p class="eyebrow">O que você aprende a fazer</p>
+        <h2>Tenha um caminho para a conversa que hoje você improvisa.</h2>
+        <p class="lede">Do primeiro interesse à decisão, cada etapa trabalha uma habilidade que aparece na negociação com pacientes.</p>
+      </div>
+      <div class="learn checks">
+        <div><h3>Falar de venda sem recuar.</h3><p>Trabalhe postura e fundamentos para assumir a conversa comercial, sustentar sua recomendação e apresentar o investimento sem se desculpar por ele.</p></div>
+        <div><h3>Reconhecer como a paciente decide.</h3><p>Identifique quem participa da decisão, quais fatores importam e onde ainda existe incerteza.</p></div>
+        <div><h3>Perguntar até entender o que importa.</h3><p>Vá além da primeira resposta e descubra a preocupação que precisa ser esclarecida.</p></div>
+        <div><h3>Apresentar o plano e pedir uma decisão.</h3><p>Organize a recomendação, confira o entendimento e conduza o próximo passo com clareza.</p></div>
+        <div><h3>Investigar o “tá caro” e o “vou pensar”.</h3><p>Saiba quando aprofundar a dúvida, quando esclarecer e como combinar a retomada.</p></div>
+        <div><h3>Praticar antes da próxima negociação.</h3><p>Repetição guiada e ajustes concretos nas Arenas para levar o método ao atendimento.</p></div>
+      </div>
+      <div class="cta"><a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="proof" hidden>
+    <div class="wrap">
+      <div class="stack" style="max-width:760px">
+        <p class="eyebrow">Quem já aplicou o MNC</p>
+        <h2>Na consulta de verdade.</h2>
+      </div>
+      <div class="shots" aria-label="Espaço para prints de alunos">
+        <div class="shot">Print · Maria Clara</div>
+        <div class="shot">Print · Joyce</div>
+        <div class="shot">Print · Lucas, gerente</div>
+        <div class="shot">Print · Rosana, comercial</div>
+        <div class="shot">Print · Rafaella</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fitsec">
+    <div class="wrap">
+      <h2>Para quem é o MNC</h2>
+      <div class="fit">
+        <div class="yes"><h3>É para você se</h3><ul><li>você mesma apresenta o plano e fala o valor;</li><li>trava, se justifica ou dá desconto quando o preço aparece;</li><li>escuta “vou pensar” e não sabe o que fazer depois.</li></ul></div>
+        <div class="no"><h3>Não é para você se</h3><ul><li>quer frase pronta para empurrar tratamento;</li><li>não vai praticar.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="offer" id="inscricao">
+    <div class="wrap grid">
+      <div class="stack" style="gap:20px">
+        <p class="eyebrow">Seu próximo passo</p>
+        <h2>Entre no MNC. Aprenda a conduzir, em vez de recuar.</h2>
+        <p class="lede">Se você se reconheceu nessas situações, o MNC reúne a sequência para saber onde agir e o treino para executar.</p>
+        <ul class="incl">
+          <li>Método: Ler, Comandar e Fechar a negociação</li>
+          <li>Aulas gravadas para aprender e revisar</li>
+          <li>Exemplos sobre preço, objeções e decisão</li>
+          <li>Aplicação presencial, por WhatsApp, ligação e videochamada</li>
+          <li>Arenas duas vezes por semana para praticar em grupo</li>
+        </ul>
+        <p class="roi">Se o seu tratamento médio passa de R$ 3 mil, um único “sim” a mais já paga o MNC.</p>
+      </div>
+      <div class="price">
+        <p class="eyebrow">Sua inscrição no MNC</p>
+        <div class="big"><small>12×</small><strong>R$ 297</strong></div>
+        <p class="day">Menos de R$ 10 por dia</p>
+        <p class="alt">ou R$ 2.997 à vista</p>
+        <a class="btn checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar em 12× <span class="arr" aria-hidden="true">→</span></a>
+        <a class="ghost checkout" data-checkout="avista" href="https://pay.hotmart.com/F107458378C?off=sw3sqfgo" target="_blank" rel="noopener">Pagar R$ 2.997 à vista</a>
+        <div class="guar"><span class="seal"><span><b>7</b>DIAS</span></span><p><strong>Garantia de 7 dias.</strong> Entre, assista às aulas, vá a uma Arena. Se não for para você, peça o reembolso e receba 100% do valor de volta.</p></div>
+        <p class="fine">Pagamento processado pela Hotmart. Acesso após aprovação da compra. Total parcelado: R$ 3.564.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <div class="stack" style="max-width:760px">
+        <p class="eyebrow">Antes de decidir</p>
+        <h2>A dúvida que ficou também importa.</h2>
+      </div>
+      <div class="qa">
+        <details><summary>Não sou boa em vendas. Consigo acompanhar?</summary><p>O treinamento ensina a condução passo a passo e inclui situações práticas para treinar, inclusive quem costuma travar ao falar de preço.</p></details>
+        <details><summary>Vou ter que pressionar a paciente para fechar?</summary><p>Não. A proposta do MNC é investigar a dúvida real, apresentar a recomendação e combinar uma decisão ou próximo passo claro.</p></details>
+        <details><summary>Minha rotina é corrida. Como encaixar o MNC?</summary><p>O programa inclui aulas gravadas, que você pode estudar e revisar, e Arenas coletivas de prática. Consulte o calendário vigente de encontros antes da compra.</p></details>
+        <details><summary>As Arenas são encontros individuais?</summary><p>Não. São encontros coletivos de prática, conforme descrito na oferta.</p></details>
+        <details><summary>É mensalidade ou compra parcelada?</summary><p>O valor divulgado é R$ 2.997 à vista ou 12 parcelas de R$ 297, totalizando R$ 3.564. Verifique as condições finais na Hotmart.</p></details>
+        <details><summary>E se eu comprar e decidir cancelar?</summary><p>A oferta informa garantia de 7 dias. Para solicitar reembolso, use refund.hotmart.com com o código da transação e o e-mail da compra, conforme as regras informadas no checkout.</p></details>
+        <details><summary>Como recebo acesso e por quanto tempo posso estudar?</summary><p>A Hotmart fornece as instruções após a aprovação do pagamento. Confirme o período de acesso e as condições da turma antes de finalizar a compra. Dúvidas: contato@smileflow.com.br.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div class="box">
+        <p class="eyebrow" style="color:var(--sand)">Para a próxima consulta, tenha um caminho</p>
+        <h2>Quando vier o <span class="hl">“vou pensar”</span>, saiba como continuar.</h2>
+        <a class="btn big checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar no MNC <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>MNC · Método Negociação Clínica · Nathálya Mello · SmileFlow · 2026</span><span>Suporte: contato@smileflow.com.br</span></div>
+</footer>
+
+<div class="stick" id="stick"><div><b>MNC · 12× R$ 297</b>Método Negociação Clínica</div><a class="btn checkout" data-checkout="parcelado" href="https://pay.hotmart.com/F107458378C?off=ccojai4g" target="_blank" rel="noopener">Quero entrar</a></div>
+
+<script>
+(() => {
+  const EX = {
+    caro: { badlabel: 'Desconto antecipado', badquote: '“Posso ver um desconto para você…”', badtext: 'Você mexe no valor antes de entender por que a paciente achou caro.',
+            goodlabel: 'Investigação da objeção', goodquote: '“Quando você diz caro, qual é a sua maior preocupação?”', goodtext: 'Ouça antes de responder. A dúvida pode ser o valor, a condição de pagamento ou o benefício percebido.' },
+    pensar: { badlabel: 'Conversa encerrada', badquote: '“Qualquer coisa, me chama.”', badtext: 'A paciente vai embora sem compromisso de continuidade.',
+              goodlabel: 'Próximo passo claro', goodquote: '“O que você ainda precisa avaliar para decidir?”', goodtext: 'Descubra o que falta e, se fizer sentido, combinem quando retomar.' },
+    preco: { badlabel: 'Justificativa automática', badquote: '“Sei que é caro, mas podemos facilitar…”', badtext: 'Você se antecipa à reação e enfraquece a própria recomendação.',
+             goodlabel: 'Apresentação com clareza', goodquote: '“Este é o plano que recomendo. Posso te explicar o investimento?”', goodtext: 'Confirme o entendimento do plano antes de apresentar o valor.' }
+  };
+  document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(t => t.setAttribute('aria-selected', String(t === b)));
+    const e = EX[b.dataset.tab]; Object.keys(e).forEach(k => { document.getElementById(k).textContent = e[k]; });
+  }));
+  // Checkout: oferta limpa + origem (sck) e as UTMs da visita, para a Hotmart atribuir a venda.
+  try {
+    const q = new URLSearchParams(location.search);
+    document.querySelectorAll('a.checkout').forEach(a => {
+      const u = new URL(a.href);
+      u.searchParams.set('sck', q.get('sck') || 'lp_mnc');
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src'].forEach(k => { if (q.get(k)) u.searchParams.set(k, q.get(k)); });
+      a.href = u.toString();
+    });
+  } catch (e) {}
+  document.querySelectorAll('.checkout').forEach(a => a.addEventListener('click', () => {
+    try { (window.dataLayer = window.dataLayer || []).push({ event: 'mnc_checkout_click', checkout_type: a.dataset.checkout }); } catch (e) {}
+    try { window.sfTrack && window.sfTrack('clique_checkout', { where: 'lp_mnc', checkout_type: a.dataset.checkout, value: a.dataset.checkout === 'avista' ? 2997 : 3564, currency: 'BRL' }); } catch (e) {}
+  }));
+  const stick = document.getElementById('stick'), offer = document.getElementById('inscricao');
+  const upd = () => { const r = offer.getBoundingClientRect(); stick.classList.toggle('on', scrollY > 420 && (r.top > innerHeight * .9 || r.bottom < 0)); };
+  addEventListener('scroll', upd, { passive: true }); upd();
+})();
+</script>
+
+</body>
+</html>
