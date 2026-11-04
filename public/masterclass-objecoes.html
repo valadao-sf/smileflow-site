@@ -37,10 +37,14 @@ body{min-height:100svh;background:radial-gradient(80% 45% at 80% 0%,#6a3aa0 0%,#
   font:400 16px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
 main{width:100%;max-width:480px;margin:0 auto;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:18px;
   padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
-.who{display:flex;align-items:center;gap:12px}
-.who img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;padding:3px;background:var(--paper)}
-.who p{margin:0;font-size:14px;line-height:1.3;color:var(--sand)}
-.who b{display:block;color:var(--paper);font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+.who{display:flex;align-items:center;gap:10px}
+.who-me{display:flex;align-items:center;gap:10px;flex:1;min-width:0;color:inherit;text-decoration:none}
+.who-me img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;padding:2px;background:var(--paper)}
+.who-me span{display:block;font-size:12.5px;line-height:1.3;color:var(--sand);min-width:0}
+.who-me strong{display:block;font-size:14px;font-weight:700;color:var(--paper);white-space:nowrap}
+.follow{flex:none;display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(246,244,242,.35);color:var(--paper);font:700 13px/1 Inter,sans-serif;text-decoration:none}
+.follow:active{transform:scale(.97)}
+.eyebrow{margin:6px 0 -8px;font:800 12px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);opacity:.8}
 h1{margin:0;font-weight:800;font-size:clamp(48px,14vw,68px);line-height:.98;letter-spacing:-.04em}
 h1 em{font-style:normal}
 .meta{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-weight:700;font-size:17px}
@@ -65,7 +69,11 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
 </head>
 <body>
 <main>
-  <div class="who"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello" width="56" height="56"><p><b>Masterclass ao vivo</b>com Nathálya Mello · @nathmellop</p></div>
+  <div class="who">
+    <a class="who-me" href="https://www.instagram.com/nathmellop/" target="_blank" rel="noopener" data-out="instagram"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello" width="44" height="44"><span><strong>Nathálya Mello</strong>Especialista em vendas</span></a>
+    <a class="follow" href="https://www.instagram.com/nathmellop/" target="_blank" rel="noopener" data-out="instagram">@nathmellop</a>
+  </div>
+  <p class="eyebrow">Masterclass ao vivo</p>
   <h1>Destrave as <em>objeções</em></h1>
   <p class="meta"><span id="mc-date">Ter, 10/nov</span><i></i><span id="mc-time">19h30</span><i></i><s>R$ 129</s><strong>Grátis</strong></p>
   <span class="tag">Últimas vagas gratuitas</span>
@@ -124,6 +132,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   const ready = () => { const v = vals(); return v.name.length >= 2 && phoneOk(v.dg); };
   // O botão só fica ativo com nome e WhatsApp válidos. Autopreenchimento do navegador nem sempre dispara "input", por isso também "change" e uma checagem logo depois de carregar.
   const sync = () => { go.disabled = !ready(); if (ready()) err.textContent = ''; };
+  document.querySelectorAll('[data-out=instagram]').forEach(el => el.addEventListener('click', () => { try { window.sfTrack('clique_instagram', { where: 'masterclass' }); } catch (e) {} }));
   ['input', 'change', 'keyup'].forEach(ev => { nameEl.addEventListener(ev, sync); phoneEl.addEventListener(ev, sync); });
   setTimeout(sync, 600); setTimeout(sync, 1800);
 
