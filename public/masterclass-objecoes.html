@@ -80,7 +80,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   <form id="mc-form" novalidate>
     <input type="text" id="mc-name" autocomplete="name" maxlength="80" placeholder="Seu nome" aria-label="Seu nome">
     <input type="tel" id="mc-phone" autocomplete="tel-national" inputmode="tel" maxlength="20" placeholder="WhatsApp com DDD" aria-label="WhatsApp com DDD">
-    <button class="btn" type="submit" id="mc-go" disabled><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.2-1.4-.6-.5-1-1.2-1.2-1.6-.1-.2 0-.4.1-.5l.4-.5.3-.4v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg><span id="mc-label">Entrar no grupo VIP</span></button>
+    <button class="btn" type="submit" id="mc-go"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.2-1.4-.6-.5-1-1.2-1.2-1.6-.1-.2 0-.4.1-.5l.4-.5.3-.4v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg><span id="mc-label">Entrar no grupo VIP</span></button>
     <p class="err" id="mc-err" role="alert"></p>
     <p class="fine" id="mc-consent">Ao entrar, aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp. Posso pedir para sair quando quiser.</p>
   </form>
@@ -128,10 +128,10 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'].forEach(k => { if (q.get(k)) o[k] = q.get(k).slice(0, 200); }); } catch (e) {} return o; };
 
   const nameEl = $('#mc-name'), phoneEl = $('#mc-phone'), go = $('#mc-go'), err = $('#mc-err');
-  const vals = () => ({ name: nameEl.value.replace(/\s+/g, ' ').trim(), dg: phoneEl.value.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '') });
+  const vals = () => ({ name: nameEl.value.replace(/\s+/g, ' ').trim(), dg: phoneEl.value.replace(/\D/g, '').replace(/^0(?=\d{10,11}$)/, '').replace(/^55(?=\d{10,11}$)/, '') });
   const ready = () => { const v = vals(); return v.name.length >= 2 && phoneOk(v.dg); };
-  // O botão só fica ativo com nome e WhatsApp válidos. Autopreenchimento do navegador nem sempre dispara "input", por isso também "change" e uma checagem logo depois de carregar.
-  const sync = () => { go.disabled = !ready(); if (ready()) err.textContent = ''; };
+  // Autopreenchimento do navegador nem sempre dispara "input", por isso também "change" e uma checagem logo depois de carregar.
+  const sync = () => { if (ready()) err.textContent = ''; };
   document.querySelectorAll('[data-out=instagram]').forEach(el => el.addEventListener('click', () => { try { window.sfTrack('clique_instagram', { where: 'masterclass' }); } catch (e) {} }));
   ['input', 'change', 'keyup'].forEach(ev => { nameEl.addEventListener(ev, sync); phoneEl.addEventListener(ev, sync); });
   setTimeout(sync, 600); setTimeout(sync, 1800);
@@ -141,14 +141,15 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
 
   let sent = '', busy = false;
   // Volta pelo botão Voltar do navegador (bfcache): libera o formulário de novo.
-  window.addEventListener('pageshow', () => { busy = false; sync(); });
+  window.addEventListener('pageshow', () => { busy = false; go.disabled = false; sync(); });
   // Celular: o WhatsApp abre no app e a aba fica; ao voltar, libera o botão (reclique não reenvia: vale sent === key).
   const LABEL0 = $('#mc-label').textContent;
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && busy) { busy = false; $('#mc-label').textContent = LABEL0; sync(); } });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && busy) { busy = false; go.disabled = false; $('#mc-label').textContent = LABEL0; sync(); } });
   $('#mc-form').addEventListener('submit', e => {
     e.preventDefault();
     const { name, dg } = vals();
     if (name.length < 2) { err.textContent = 'Escreva o seu nome.'; nameEl.focus(); return; }
+    if (/^\d{8,9}$/.test(dg)) { err.textContent = 'Inclua o DDD. Ex.: (11) 98765-4321'; phoneEl.focus(); return; }
     if (!phoneOk(dg)) { err.textContent = 'Confira o WhatsApp: DDD e 8 ou 9 dígitos.'; phoneEl.focus(); return; }
     // Duplo clique: o 2º envio não faz nada enquanto o 1º segue para o grupo.
     if (busy) return;
@@ -162,13 +163,15 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
         page: location.pathname, source: 'masterclass-objecoes', session: sess.id, name, phone: '55' + dg, consent: true, consent_text: $('#mc-consent').textContent,
         where: 'masterclass', first_contact: true, utm: utm(), attribution: attr(), ts: new Date().toISOString(),
         event_source_url: location.origin + location.pathname, content_name: 'masterclass-objecoes' });
+      try { if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'masterclass-objecoes' }, { eventID: id }); } catch (e) {}
+      try { window.sfTrack('pedido_contato', { where: 'masterclass', session: sess.id, has_whatsapp: true }, { eventId: id }); } catch (e) {}
+      const beacon = () => { try { return navigator.sendBeacon(WEBHOOK, new Blob([body], { type: 'text/plain;charset=UTF-8' })); } catch (e) { return false; } };
       try {
         const cors = /(^|\.)smileflow\.com\.br$/.test(location.hostname);
         send = fetch(WEBHOOK, { method: 'POST', mode: cors ? 'cors' : 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: true })
-          .then(res => { const ok = res.type === 'opaque' || res.ok; if (ok) { try { if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'masterclass-objecoes' }, { eventID: id }); } catch (e) {} } return ok; })
-          .catch(() => { try { const ok = navigator.sendBeacon(WEBHOOK, new Blob([body], { type: 'text/plain;charset=UTF-8' })); if (ok) { try { if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'masterclass-objecoes' }, { eventID: id }); } catch (e) {} } return ok; } catch (e3) { return false; } });
+          .then(res => { const ok = res.type === 'opaque' || res.ok; if (!ok) return beacon(); return true; })
+          .catch(() => beacon());
       } catch (e1) { send = Promise.resolve(false); }
-      try { window.sfTrack('pedido_contato', { where: 'masterclass', session: sess.id, has_whatsapp: true }, { eventId: id }); } catch (e) {}
       store.set(KEY, { session: sess.id, name, at: Date.now() });
       const p = store.get(PERFIL_KEY) || {}; store.set(PERFIL_KEY, { ...p, name: p.name || name, phone: '55' + dg });
     }
