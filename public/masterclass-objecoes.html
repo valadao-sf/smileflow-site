@@ -55,7 +55,8 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;padding:14px 20px;border:0;border-radius:14px;background:var(--paper);color:#1b1029;
   font:800 18px/1.2 Inter,sans-serif;letter-spacing:-.01em;cursor:pointer;transition:opacity .2s,transform .12s;box-shadow:0 14px 34px rgba(8,4,14,.45)}
 .btn:active{transform:scale(.98)}
-.btn[aria-disabled=true]{opacity:.42;cursor:not-allowed;box-shadow:none}
+.btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.btn:disabled:active{transform:none}
 .btn svg{width:22px;height:22px;flex:none}
 .fine{margin:0;font-size:12px;line-height:1.35;color:var(--sand);text-align:center}
 .err{margin:0;font-size:14px;color:var(--err);text-align:center}
@@ -71,7 +72,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   <form id="mc-form" novalidate>
     <input type="text" id="mc-name" autocomplete="name" maxlength="80" placeholder="Seu nome" aria-label="Seu nome">
     <input type="tel" id="mc-phone" autocomplete="tel-national" inputmode="tel" maxlength="20" placeholder="WhatsApp com DDD" aria-label="WhatsApp com DDD">
-    <button class="btn" type="submit" id="mc-go" aria-disabled="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.2-1.4-.6-.5-1-1.2-1.2-1.6-.1-.2 0-.4.1-.5l.4-.5.3-.4v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg><span id="mc-label">Entrar no grupo VIP</span></button>
+    <button class="btn" type="submit" id="mc-go" disabled><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.2-1.4-.6-.5-1-1.2-1.2-1.6-.1-.2 0-.4.1-.5l.4-.5.3-.4v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg><span id="mc-label">Entrar no grupo VIP</span></button>
     <p class="err" id="mc-err" role="alert"></p>
     <p class="fine" id="mc-consent">Ao entrar, aceito receber mensagens da equipe da Nathálya Mello pelo WhatsApp. Posso pedir para sair quando quiser.</p>
   </form>
@@ -121,8 +122,10 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   const nameEl = $('#mc-name'), phoneEl = $('#mc-phone'), go = $('#mc-go'), err = $('#mc-err');
   const vals = () => ({ name: nameEl.value.replace(/\s+/g, ' ').trim(), dg: phoneEl.value.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '') });
   const ready = () => { const v = vals(); return v.name.length >= 2 && phoneOk(v.dg); };
-  const sync = () => { go.setAttribute('aria-disabled', ready() ? 'false' : 'true'); if (ready()) err.textContent = ''; };
-  nameEl.addEventListener('input', sync); phoneEl.addEventListener('input', sync);
+  // O botão só fica ativo com nome e WhatsApp válidos. Autopreenchimento do navegador nem sempre dispara "input", por isso também "change" e uma checagem logo depois de carregar.
+  const sync = () => { go.disabled = !ready(); if (ready()) err.textContent = ''; };
+  ['input', 'change', 'keyup'].forEach(ev => { nameEl.addEventListener(ev, sync); phoneEl.addEventListener(ev, sync); });
+  setTimeout(sync, 600); setTimeout(sync, 1800);
 
   const prev = store.get(PERFIL_KEY);
   if (prev && prev.name) nameEl.value = prev.name;
