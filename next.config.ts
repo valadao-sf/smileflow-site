@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { source: "/simulador-objecoes", destination: "/simulador-objecoes/index.html" },
       // Perfil de negociação (o funil do vídeo da Nath, fora do simulador): mesma base, página própria para tráfego pago.
       { source: "/perfil-de-negociacao", destination: "/perfil-de-negociacao.html" },
+      { source: "/masterclass", destination: "/masterclass.html" },
       {
         source: "/simulador-objecoes/:slug(ta-caro|vou-pensar|marido|medo|outra-clinica|desconto)",
         destination: "/simulador-objecoes/:slug.html",
