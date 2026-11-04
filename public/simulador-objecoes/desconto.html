@@ -74,7 +74,7 @@ html,body{height:100%}
 body{margin:0;background:var(--ink-deep);color:var(--paper);font-family:var(--ui);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
 #app{position:relative;height:100%;max-width:480px;margin:0 auto;overflow:hidden;background:var(--ink)}
 @media (min-width:520px){#app{border-inline:1px solid var(--line)}}
-.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;background:var(--ink)}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;overscroll-behavior-x:none;background:var(--ink)}
 .pad{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 img{display:block;max-width:100%}
 button,input{font:inherit;color:inherit}
@@ -918,6 +918,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hnath .stack{gap:14px}
 .hnath .lede{margin:0}
 .hnath .lede b{color:var(--paper)}
+.hnath h1.display{line-height:1.28}
 .hnath .hlt{background:var(--paper);color:#1b1029;padding:0 .14em;border-radius:6px;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .hnath .btn{align-self:flex-start}
 .hport{margin:0;position:relative;align-self:flex-start;cursor:pointer}
@@ -3309,7 +3310,10 @@ function back() {
 // O voltar do celular (botão ou gesto) e o do navegador passam pelo mesmo back() da seta da tela.
 // Uma entrada extra no histórico segura a pessoa no treino; na primeira tela, o voltar sai da página como sempre.
 const NAV_GUARD = { sim: 'nath' };
+// só segura quando há uma tela do treino para onde voltar; na primeira tela, o voltar do navegador sai direto
+const canBack = () => S.hist.length > 0 || FLOW.indexOf(S.scene) > 0;
 function armBackGuard() {
+  if (!canBack()) return;
   try { if (!(history.state && history.state.sim)) history.pushState(NAV_GUARD, ''); } catch (e) {}
 }
 addEventListener('popstate', () => {
@@ -3317,7 +3321,7 @@ addEventListener('popstate', () => {
   else try { history.back(); } catch (e) {}
 });
 document.addEventListener('click', e => {
-  if (e.target.closest('[data-back]')) { e.preventDefault(); back(); return; }
+  if (e.target.closest('[data-back]')) { e.preventDefault(); if (!back()) goHub(); return; }
   if (e.target.closest('[data-flash]')) { e.preventDefault(); startSim(); return; }
   if (e.target.closest('[data-sim]')) { e.preventDefault(); startSim(); return; }
   const g = e.target.closest('[data-go]');
