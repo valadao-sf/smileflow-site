@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Masterclass Destrave as Objeções | Nathálya Mello</title>
 <meta name="description" content="Masterclass ao vivo e gratuita com Nathálya Mello: o que responder quando o paciente trava a venda. Últimas vagas gratuitas.">
-<link rel="canonical" href="https://www.smileflow.com.br/masterclass">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.smileflow.com.br/masterclass-objecoes">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="SmileFlow">
-<meta property="og:url" content="https://www.smileflow.com.br/masterclass">
+<meta property="og:url" content="https://www.smileflow.com.br/masterclass-objecoes">
 <meta property="og:title" content="Masterclass Destrave as Objeções · grátis, ao vivo">
 <meta property="og:description" content="Com Nathálya Mello. De R$ 129 por grátis. Últimas vagas gratuitas.">
 <meta property="og:image" content="https://www.smileflow.com.br/simulador-objecoes/assets/share-masterclass.jpg?v=1">
@@ -65,7 +66,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
 <main>
   <div class="who"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello" width="56" height="56"><p><b>Masterclass ao vivo</b>com Nathálya Mello · @nathmellop</p></div>
   <h1>Destrave as <em>objeções</em></h1>
-  <p class="meta"><span id="mc-date">Ter, 10/nov</span><i></i><span>19h30</span><i></i><s>R$ 129</s><strong>Grátis</strong></p>
+  <p class="meta"><span id="mc-date">Ter, 10/nov</span><i></i><span id="mc-time">19h30</span><i></i><s>R$ 129</s><strong>Grátis</strong></p>
   <span class="tag">Últimas vagas gratuitas</span>
   <form id="mc-form" novalidate>
     <input type="text" id="mc-name" autocomplete="name" maxlength="80" placeholder="Seu nome" aria-label="Seu nome">
@@ -94,7 +95,11 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   const sess = SESSIONS.find(s => now < Date.parse(s.at)) || SESSIONS[SESSIONS.length - 1];
   const MES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   const [, mm, dd] = sess.id.split('-').map(Number);
-  $('#mc-date').textContent = `Ter, ${dd}/${MES[mm - 1]}`;
+  // Data e hora da turma, no horário de Brasília (vêm de "at", então mudam junto com a turma).
+  const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const brt = new Date(Date.parse(sess.at) - 3 * 36e5);
+  $('#mc-date').textContent = `${DIAS[brt.getUTCDay()]}, ${dd}/${MES[mm - 1]}`;
+  $('#mc-time').textContent = `${brt.getUTCHours()}h${String(brt.getUTCMinutes()).padStart(2, '0')}`;
 
   const DDDS = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
   const phoneOk = d => {

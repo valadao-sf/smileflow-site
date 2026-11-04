@@ -7,12 +7,16 @@ const nextConfig: NextConfig = {
   turbopack: { root: process.cwd() },
   // Simulador de objeções da Nath: páginas estáticas em public/simulador-objecoes,
   // geradas a partir de um motor único (uma página por objeção, para anúncio e compartilhamento).
+  // Endereço antigo da inscrição na masterclass: links já compartilhados continuam funcionando.
+  async redirects() {
+    return [{ source: "/masterclass", destination: "/masterclass-objecoes", permanent: true }];
+  },
   async rewrites() {
     return [
       { source: "/simulador-objecoes", destination: "/simulador-objecoes/index.html" },
       // Perfil de negociação (o funil do vídeo da Nath, fora do simulador): mesma base, página própria para tráfego pago.
       { source: "/perfil-de-negociacao", destination: "/perfil-de-negociacao.html" },
-      { source: "/masterclass", destination: "/masterclass.html" },
+      { source: "/masterclass-objecoes", destination: "/masterclass-objecoes.html" },
       {
         source: "/simulador-objecoes/:slug(ta-caro|vou-pensar|marido|medo|outra-clinica|desconto)",
         destination: "/simulador-objecoes/:slug.html",
