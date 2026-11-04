@@ -80,9 +80,9 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   // Turmas: vale a próxima; passou do horário de uma, vale a seguinte; depois da última, fica a última.
   // group: link do grupo de WhatsApp de cada turma.
   const SESSIONS = [
-    { id: '2026-11-10', at: '2026-11-10T19:30:00-03:00', group: '' },
-    { id: '2026-11-17', at: '2026-11-17T19:30:00-03:00', group: '' },
-    { id: '2026-11-24', at: '2026-11-24T19:30:00-03:00', group: '' },
+    { id: '2026-11-10', at: '2026-11-10T19:30:00-03:00', group: 'https://chat.whatsapp.com/IeDl8CI4m8q4SoWUVqC9Z4?mode=gi_t' },
+    { id: '2026-11-17', at: '2026-11-17T19:30:00-03:00', group: 'https://chat.whatsapp.com/EqsnD6mE1feGkvXAkD5R0q?mode=gi_t' },
+    { id: '2026-11-24', at: '2026-11-24T19:30:00-03:00', group: 'https://chat.whatsapp.com/BkH8yILtwBA7YZiEmWycVx?mode=gi_t' },
   ];
   const WEBHOOK = 'https://n8n.smileflow.me/webhook/simulador-objecoes';
   const FORM = { id: 'masterclass_objecoes_v1', version: '1.1.0' };
@@ -130,8 +130,6 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
     const { name, dg } = vals();
     if (name.length < 2) { err.textContent = 'Escreva o seu nome.'; nameEl.focus(); return; }
     if (!phoneOk(dg)) { err.textContent = 'Confira o WhatsApp: DDD e 8 ou 9 dígitos.'; phoneEl.focus(); return; }
-    // Abre o grupo já no clique (antes de qualquer espera), para o navegador não bloquear a nova aba.
-    if (sess.group) { try { window.open(sess.group, '_blank', 'noopener'); } catch (e2) {} }
     const key = sess.id + ':' + dg;
     if (sent !== key) {
       sent = key;
@@ -148,8 +146,10 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
       store.set(KEY, { session: sess.id, name, at: Date.now() });
       const p = store.get(PERFIL_KEY) || {}; store.set(PERFIL_KEY, { ...p, name: p.name || name, phone: '55' + dg });
     }
-    if (!sess.group) $('#mc-label').textContent = 'Vaga garantida · link do grupo em breve';
-    else $('#mc-label').textContent = 'Vaga garantida · abrir o grupo';
+    // O envio usa keepalive/beacon, então segue mesmo saindo da página. O grupo abre na mesma aba (no celular, vai direto ao WhatsApp).
+    if (!sess.group) { $('#mc-label').textContent = 'Vaga garantida · link do grupo em breve'; return; }
+    $('#mc-label').textContent = 'Abrindo o grupo…';
+    setTimeout(() => { location.assign(sess.group); }, 180);
   });
 })();
 </script>
