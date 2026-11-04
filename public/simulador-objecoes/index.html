@@ -918,6 +918,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hnath .stack{gap:14px}
 .hnath .lede{margin:0}
 .hnath .lede b{color:var(--paper)}
+.hnath .hlt{background:var(--paper);color:#1b1029;padding:0 .14em;border-radius:6px;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .hnath .btn{align-self:flex-start}
 .hport{margin:0;position:relative;align-self:flex-start;cursor:pointer}
 .hport .ring{display:block;width:112px;height:112px;border-radius:50%;padding:5px;background:linear-gradient(140deg,#e7b9c7,#b57ac9 55%,#6a3aa0);box-shadow:0 18px 44px rgba(8,4,14,.55)}
@@ -1187,7 +1188,7 @@ small,.note,.small,.eyebrow,.chip,.exhead em{letter-spacing:0}
       <figure class="hport" data-bio=""><span class="ring"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello"></span><span class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"></use></svg>@nathmellop</span></figure>
       <div class="stack">
         <p class="eyebrow" style="color:var(--wine-hi)">MNC · Método Negociação Clínica</p>
-        <h1 class="display">Pare de perder paciente no “tá caro” <em>e no “vou pensar”.</em></h1>
+        <h1 class="display">Pare de perder paciente no <span class="hlt">“tá caro”</span> e no <span class="hlt">“vou pensar”</span>.</h1>
         <p class="lede">Responder uma objeção é só o começo. No MNC, a Nathálya Mello ensina a conduzir a venda inteira: <b>fechar o tratamento sem dar desconto e sem pressionar.</b></p>
         <a class="btn btn-main" data-out="mnc" data-where="hub" href="https://www.smileflow.com.br/mnc?utm_source=simulador-objecoes&amp;utm_medium=hub&amp;utm_campaign=mnc" target="_blank" rel="noopener">Quero conhecer o MNC <span class="arr">→</span></a>
       </div>
@@ -4452,7 +4453,7 @@ ENTER.hub = () => {
       <figure class="hport" data-bio><span class="ring"><img src="/simulador-objecoes/assets/share-nath-roxo.webp" alt="Nathálya Mello"></span><span class="tag">${ICON('ig')}${esc(CONFIG.igHandle)}</span></figure>
       <div class="stack">
         <p class="eyebrow" style="color:var(--wine-hi)">MNC · Método Negociação Clínica</p>
-        <h1 class="display">Pare de perder paciente no “tá caro” <em>e no “vou pensar”.</em></h1>
+        <h1 class="display">Pare de perder paciente no <span class="hlt">“tá caro”</span> e no <span class="hlt">“vou pensar”</span>.</h1>
         <p class="lede">Responder uma objeção é só o começo. No MNC, a Nathálya Mello ensina a conduzir a venda inteira: <b>fechar o tratamento sem dar desconto e sem pressionar.</b></p>
         <a class="btn btn-main" data-out="mnc" data-where="hub" href="${esc(CONFIG.mncLp)}" target="_blank" rel="noopener">Quero conhecer o MNC <span class="arr">→</span></a>
       </div>
