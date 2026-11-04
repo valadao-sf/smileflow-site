@@ -70,6 +70,8 @@ with sync_playwright() as p:
     pg.close()
     pages = [{'id': 'hub', 'chip': 'Treinos da Nath · simulação grátis', 'h1': 'Como responder às objeções de pacientes <em>que travam a venda.</em>',
               'short': 'Objeções que <em>travam a venda</em>'}]
+    pages.append({'id': 'mnc', 'chip': 'MNC · Método Negociação Clínica', 'h1': 'Pare de perder paciente no <em>“tá caro”</em> e no <em>“vou pensar”</em>.',
+                  'short': 'Método <em>Negociação Clínica</em>'})
     pages.append({'id': 'masterclass', 'chip': 'Masterclass ao vivo · grátis', 'h1': 'Destrave as <em>objeções</em> que travam a venda.',
                   'short': 'Masterclass <em>Destrave as objeções</em>'})
     pages.append({'id': 'perfil', 'chip': 'Perfil de negociação · grátis', 'h1': 'Por que você trava <em>na hora do preço?</em>',
