@@ -122,7 +122,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
     try { if (sessionStorage.getItem('sf_test')) return true; } catch (e) {}
     return !/(^|\.)smileflow\.com\.br$/.test(location.hostname);
   })();
-  const uuid = () => { try { return crypto.randomUUID(); } catch (e) { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12); } };
+  const uuid = () => { try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (e) {} try { const b = new Uint8Array(16); if (crypto.getRandomValues) crypto.getRandomValues(b); else for (let i = 0; i < 16; i++) b[i] = Math.random() * 256; b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128; return [...b].map((v, i) => (i === 4 || i === 6 || i === 8 || i === 10 ? '-' : '') + v.toString(16).padStart(2, '0')).join(''); } catch (e) { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }); } };
   const attr = () => { try { return window.sfTrack && window.sfTrack.attribution ? { ...window.sfTrack.attribution(), ids: window.sfTrack.ids() } : null; } catch (e) { return null; } };
   const utm = () => { const o = {}; try { const q = new URLSearchParams(location.search);
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'].forEach(k => { if (q.get(k)) o[k] = q.get(k).slice(0, 200); }); } catch (e) {} return o; };
@@ -139,32 +139,48 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   // Sem preencher com dados salvos: o botão sempre espera a pessoa digitar nome e WhatsApp.
   sync();
 
-  let sent = '';
+  let sent = '', busy = false;
+  // Volta pelo botão Voltar do navegador (bfcache): libera o formulário de novo.
+  window.addEventListener('pageshow', () => { busy = false; sync(); });
+  // Celular: o WhatsApp abre no app e a aba fica; ao voltar, libera o botão (reclique não reenvia: vale sent === key).
+  const LABEL0 = $('#mc-label').textContent;
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && busy) { busy = false; $('#mc-label').textContent = LABEL0; sync(); } });
   $('#mc-form').addEventListener('submit', e => {
     e.preventDefault();
     const { name, dg } = vals();
     if (name.length < 2) { err.textContent = 'Escreva o seu nome.'; nameEl.focus(); return; }
     if (!phoneOk(dg)) { err.textContent = 'Confira o WhatsApp: DDD e 8 ou 9 dígitos.'; phoneEl.focus(); return; }
+    // Duplo clique: o 2º envio não faz nada enquanto o 1º segue para o grupo.
+    if (busy) return;
+    busy = true; go.disabled = true;
     const key = sess.id + ':' + dg;
+    let send = null;
     if (sent !== key) {
       sent = key;
       const id = uuid();
       const body = JSON.stringify({ event_id: id, type: 'masterclass', form_id: FORM.id, form_version: FORM.version, audience_type: 'lead', is_test: IS_TEST,
         page: location.pathname, source: 'masterclass-objecoes', session: sess.id, name, phone: '55' + dg, consent: true, consent_text: $('#mc-consent').textContent,
-        where: 'masterclass', first_contact: true, utm: utm(), attribution: attr(), ts: new Date().toISOString() });
+        where: 'masterclass', first_contact: true, utm: utm(), attribution: attr(), ts: new Date().toISOString(),
+        event_source_url: location.origin + location.pathname, content_name: 'masterclass-objecoes' });
       try {
         const cors = /(^|\.)smileflow\.com\.br$/.test(location.hostname);
-        fetch(WEBHOOK, { method: 'POST', mode: cors ? 'cors' : 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: true })
-          .catch(() => { try { navigator.sendBeacon(WEBHOOK, new Blob([body], { type: 'text/plain;charset=UTF-8' })); } catch (e3) {} });
-      } catch (e1) {}
+        send = fetch(WEBHOOK, { method: 'POST', mode: cors ? 'cors' : 'no-cors', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body, keepalive: true })
+          .then(res => { const ok = res.type === 'opaque' || res.ok; if (ok) { try { if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'masterclass-objecoes' }, { eventID: id }); } catch (e) {} } return ok; })
+          .catch(() => { try { const ok = navigator.sendBeacon(WEBHOOK, new Blob([body], { type: 'text/plain;charset=UTF-8' })); if (ok) { try { if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'masterclass-objecoes' }, { eventID: id }); } catch (e) {} } return ok; } catch (e3) { return false; } });
+      } catch (e1) { send = Promise.resolve(false); }
       try { window.sfTrack('pedido_contato', { where: 'masterclass', session: sess.id, has_whatsapp: true }, { eventId: id }); } catch (e) {}
       store.set(KEY, { session: sess.id, name, at: Date.now() });
       const p = store.get(PERFIL_KEY) || {}; store.set(PERFIL_KEY, { ...p, name: p.name || name, phone: '55' + dg });
     }
-    // O envio usa keepalive/beacon, então segue mesmo saindo da página. O grupo abre na mesma aba (no celular, vai direto ao WhatsApp).
+    // O envio aguarda antes do redirecionamento, com limite para não prender a navegação.
     if (!sess.group) { $('#mc-label').textContent = 'Vaga garantida · link do grupo em breve'; return; }
     $('#mc-label').textContent = 'Abrindo o grupo…';
-    setTimeout(() => { location.assign(sess.group); }, 180);
+    const redirect = () => { location.assign(sess.group); };
+    if (!send) { setTimeout(redirect, 180); return; }
+    let redirected = false;
+    const once = () => { if (redirected) return; redirected = true; redirect(); };
+    const timer = setTimeout(once, 1500);
+    Promise.resolve(send).then(() => { setTimeout(() => { clearTimeout(timer); once(); }, 180); }, () => { setTimeout(() => { clearTimeout(timer); once(); }, 180); });
   });
 })();
 </script>
