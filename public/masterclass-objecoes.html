@@ -136,9 +136,7 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   ['input', 'change', 'keyup'].forEach(ev => { nameEl.addEventListener(ev, sync); phoneEl.addEventListener(ev, sync); });
   setTimeout(sync, 600); setTimeout(sync, 1800);
 
-  const prev = store.get(PERFIL_KEY);
-  if (prev && prev.name) nameEl.value = prev.name;
-  if (prev && prev.phone) { const d = String(prev.phone).replace(/^55/, ''); phoneEl.value = d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d; }
+  // Sem preencher com dados salvos: o botão sempre espera a pessoa digitar nome e WhatsApp.
   sync();
 
   let sent = '';
