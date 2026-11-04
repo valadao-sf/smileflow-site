@@ -882,6 +882,7 @@ button.nathchip{border:0;background:none;padding:0;font:inherit;text-align:left;
 .hnath .stack{gap:14px}
 .hnath .lede{margin:0}
 .hnath .lede b{color:var(--paper)}
+.hnath .hlt{background:var(--paper);color:#1b1029;padding:0 .14em;border-radius:6px;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .hnath .btn{align-self:flex-start}
 .hport{margin:0;position:relative;align-self:flex-start;cursor:pointer}
 .hport .ring{display:block;width:112px;height:112px;border-radius:50%;padding:5px;background:linear-gradient(140deg,#e7b9c7,#b57ac9 55%,#6a3aa0);box-shadow:0 18px 44px rgba(8,4,14,.55)}
@@ -1267,7 +1268,8 @@ const CONFIG = {
   objection: 'ta-caro',    // objeção que abre primeiro; no site, ?obj=vou-pensar escolhe outra
   instagram: 'https://www.instagram.com/nathmellop/',
   igDm: 'https://www.instagram.com/nathmellop/', // botão «Quero receber meu guia»: abre o perfil da Nath no Instagram (antes, o link direto da conversa); a pessoa manda a palavra por DM
-  guideWord: 'OBJEÇÃO',               // palavra que a automação do Instagram responde com o Guia de Objeções
+  guideWord: 'OBJEÇÃO',
+  mncLp: 'https://www.smileflow.com.br/mnc?utm_source=simulador-objecoes&utm_medium=hub&utm_campaign=mnc', // landing de venda do MNC (banner da tela inicial)               // palavra que a automação do Instagram responde com o Guia de Objeções
   standalone: false,               // true = página do perfil de negociação (só o funil, sem o simulador)
   tiktok: 'https://www.tiktok.com/@nathmellop', tiktokHandle: '@nathmellop',
   igHandle: '@nathmellop',
@@ -4373,10 +4375,10 @@ ENTER.hub = () => {
     <header class="hnath">
       <figure class="hport" data-bio><span class="ring"><img src="assets/share-nath-roxo.webp" alt="Nathálya Mello"></span><span class="tag">${ICON('ig')}${esc(CONFIG.igHandle)}</span></figure>
       <div class="stack">
-        <p class="eyebrow" style="color:var(--wine-hi)">Treinos da Nath</p>
-        <h1 class="display">Como responder às objeções de pacientes <em>que travam a venda.</em></h1>
-        <p class="lede">Envie uma mensagem com a palavra <b>“${esc(CONFIG.guideWord)}”</b> para ${esc(CONFIG.igHandle)} e receba <b>GRATUITAMENTE</b> nosso Guia de Objeções.</p>
-        <a class="btn btn-main" data-out="instagram-guia" data-where="hub" href="${esc(CONFIG.igDm)}" target="_blank" rel="noopener">Quero receber meu guia <span class="arr">→</span></a>
+        <p class="eyebrow" style="color:var(--wine-hi)">MNC · Método Negociação Clínica</p>
+        <h1 class="display">Pare de perder paciente no <span class="hlt">“tá caro”</span> e no <span class="hlt">“vou pensar”</span>.</h1>
+        <p class="lede">Responder uma objeção é só o começo. No MNC, a Nathálya Mello ensina a conduzir a venda inteira: <b>fechar o tratamento sem dar desconto e sem pressionar.</b></p>
+        <a class="btn btn-main" data-out="mnc" data-where="hub" href="${esc(CONFIG.mncLp)}" target="_blank" rel="noopener">Quero conhecer o MNC <span class="arr">→</span></a>
       </div>
     </header>
     <div class="stack" style="gap:14px">
