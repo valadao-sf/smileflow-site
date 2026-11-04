@@ -142,6 +142,9 @@ input:focus{border-color:var(--paper);box-shadow:0 0 0 3px rgba(246,244,242,.18)
   let sent = '', busy = false;
   // Volta pelo botão Voltar do navegador (bfcache): libera o formulário de novo.
   window.addEventListener('pageshow', () => { busy = false; sync(); });
+  // Celular: o WhatsApp abre no app e a aba fica; ao voltar, libera o botão (reclique não reenvia: vale sent === key).
+  const LABEL0 = $('#mc-label').textContent;
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && busy) { busy = false; $('#mc-label').textContent = LABEL0; sync(); } });
   $('#mc-form').addEventListener('submit', e => {
     e.preventDefault();
     const { name, dg } = vals();
